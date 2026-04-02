@@ -1,0 +1,304 @@
+{
+  "nodes": [
+    {
+      "id": "dataset:week3_extractions",
+      "name": "week3_extractions",
+      "type": "dataset",
+      "metadata": {
+        "dataset": "week3_extractions",
+        "description": "Projection of ExtractionCompleted events from apexLedger seed_events.jsonl."
+      },
+      "evidence": []
+    },
+    {
+      "id": "dataset:week5_events",
+      "name": "week5_events",
+      "type": "dataset",
+      "metadata": {
+        "dataset": "week5_events",
+        "description": "Full Week 5 event stream from apexLedger seed_events.jsonl."
+      },
+      "evidence": []
+    },
+    {
+      "id": "file:events_schema",
+      "name": "ledger/schema/events.py",
+      "type": "code",
+      "metadata": {
+        "datasets": [
+          "week3_extractions",
+          "week5_events"
+        ],
+        "columns": [
+          "stream_id",
+          "event_type",
+          "event_version",
+          "recorded_at",
+          "document_id",
+          "document_type",
+          "package_id",
+          "processing_ms",
+          "raw_text_length",
+          "tables_extracted",
+          "field_confidence",
+          "currency",
+          "fiscal_year_end",
+          "balance_sheet_balances",
+          "deadline",
+          "recommendation",
+          "confidence",
+          "risk_tier",
+          "recommended_limit_usd",
+          "overall_confidence"
+        ],
+        "column_prefixes": [
+          "payload.facts.field_confidence.",
+          "payload.facts.",
+          "payload.decision."
+        ]
+      },
+      "evidence": [
+        {
+          "file_path": "/home/rata/Documents/Ephrata/work/10Acadamy/training/apexLedger/ledger/schema/events.py",
+          "line_start": 98,
+          "line_end": 570,
+          "method": "manual_apex_context",
+          "metadata": {
+            "source": "chat-context"
+          }
+        }
+      ]
+    },
+    {
+      "id": "file:event_simulator",
+      "name": "datagen/event_simulator.py",
+      "type": "code",
+      "metadata": {
+        "datasets": [
+          "week3_extractions",
+          "week5_events"
+        ],
+        "columns": [
+          "processing_ms",
+          "raw_text_length",
+          "tables_extracted",
+          "field_confidence",
+          "overall_confidence",
+          "confidence",
+          "recommended_limit_usd",
+          "risk_tier"
+        ],
+        "column_prefixes": [
+          "payload.facts.field_confidence.",
+          "payload.decision.",
+          "payload."
+        ]
+      },
+      "evidence": [
+        {
+          "file_path": "/home/rata/Documents/Ephrata/work/10Acadamy/training/apexLedger/datagen/event_simulator.py",
+          "line_start": 187,
+          "line_end": 443,
+          "method": "manual_apex_context",
+          "metadata": {
+            "source": "chat-context"
+          }
+        }
+      ]
+    },
+    {
+      "id": "file:document_processing_agent",
+      "name": "ledger/agents/document_processing_agent.py",
+      "type": "code",
+      "metadata": {
+        "datasets": [
+          "week3_extractions",
+          "week5_events"
+        ],
+        "columns": [
+          "field_confidence",
+          "overall_confidence",
+          "processing_ms",
+          "raw_text_length",
+          "tables_extracted",
+          "balance_sheet_balances",
+          "auditor_notes"
+        ],
+        "column_prefixes": [
+          "payload.facts.field_confidence.",
+          "payload.facts.",
+          "payload."
+        ]
+      },
+      "evidence": [
+        {
+          "file_path": "/home/rata/Documents/Ephrata/work/10Acadamy/training/apexLedger/ledger/agents/document_processing_agent.py",
+          "line_start": 72,
+          "line_end": 572,
+          "method": "manual_apex_context",
+          "metadata": {
+            "source": "chat-context"
+          }
+        }
+      ]
+    },
+    {
+      "id": "file:extraction_api_client",
+      "name": "ledger/agents/extraction_api_client.py",
+      "type": "code",
+      "metadata": {
+        "datasets": [
+          "week3_extractions"
+        ],
+        "columns": [
+          "field_confidence",
+          "document_id",
+          "document_type"
+        ],
+        "column_prefixes": [
+          "payload.facts.field_confidence.",
+          "payload."
+        ]
+      },
+      "evidence": [
+        {
+          "file_path": "/home/rata/Documents/Ephrata/work/10Acadamy/training/apexLedger/ledger/agents/extraction_api_client.py",
+          "line_start": 152,
+          "line_end": 197,
+          "method": "manual_apex_context",
+          "metadata": {
+            "source": "chat-context"
+          }
+        }
+      ]
+    },
+    {
+      "id": "file:credit_analysis_agent",
+      "name": "ledger/agents/credit_analysis_agent.py",
+      "type": "code",
+      "metadata": {
+        "datasets": [
+          "week5_events"
+        ],
+        "columns": [
+          "confidence",
+          "risk_tier",
+          "recommended_limit_usd",
+          "data_quality_caveats"
+        ],
+        "column_prefixes": [
+          "payload.decision.",
+          "payload."
+        ]
+      },
+      "evidence": [
+        {
+          "file_path": "/home/rata/Documents/Ephrata/work/10Acadamy/training/apexLedger/ledger/agents/credit_analysis_agent.py",
+          "line_start": 33,
+          "line_end": 533,
+          "method": "manual_apex_context",
+          "metadata": {
+            "source": "chat-context"
+          }
+        }
+      ]
+    },
+    {
+      "id": "file:decision_orchestrator_agent",
+      "name": "ledger/agents/decision_orchestrator_agent.py",
+      "type": "code",
+      "metadata": {
+        "datasets": [
+          "week5_events"
+        ],
+        "columns": [
+          "recommendation",
+          "confidence",
+          "executive_summary",
+          "key_risks",
+          "contributing_sessions"
+        ],
+        "column_prefixes": [
+          "payload.",
+          "payload.decision."
+        ]
+      },
+      "evidence": [
+        {
+          "file_path": "/home/rata/Documents/Ephrata/work/10Acadamy/training/apexLedger/ledger/agents/decision_orchestrator_agent.py",
+          "line_start": 237,
+          "line_end": 510,
+          "method": "manual_apex_context",
+          "metadata": {
+            "source": "chat-context"
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "dataset:week3_extractions",
+      "target": "file:document_processing_agent",
+      "metadata": {
+        "relationship": "producer"
+      }
+    },
+    {
+      "source": "dataset:week3_extractions",
+      "target": "file:extraction_api_client",
+      "metadata": {
+        "relationship": "upstream_adapter"
+      }
+    },
+    {
+      "source": "dataset:week3_extractions",
+      "target": "file:events_schema",
+      "metadata": {
+        "relationship": "schema_contract"
+      }
+    },
+    {
+      "source": "dataset:week3_extractions",
+      "target": "file:event_simulator",
+      "metadata": {
+        "relationship": "seed_generator"
+      }
+    },
+    {
+      "source": "dataset:week3_extractions",
+      "target": "dataset:week5_events",
+      "metadata": {
+        "relationship": "feeds_downstream_decisioning"
+      }
+    },
+    {
+      "source": "dataset:week5_events",
+      "target": "file:events_schema",
+      "metadata": {
+        "relationship": "schema_contract"
+      }
+    },
+    {
+      "source": "dataset:week5_events",
+      "target": "file:event_simulator",
+      "metadata": {
+        "relationship": "seed_generator"
+      }
+    },
+    {
+      "source": "dataset:week5_events",
+      "target": "file:credit_analysis_agent",
+      "metadata": {
+        "relationship": "credit_scoring"
+      }
+    },
+    {
+      "source": "dataset:week5_events",
+      "target": "file:decision_orchestrator_agent",
+      "metadata": {
+        "relationship": "decisioning"
+      }
+    }
+  ]
+}

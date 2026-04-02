@@ -59,3 +59,81 @@ def evidence_files(snapshot: dict[str, Any] | None, keywords: list[str]) -> list
             if any(keyword.lower() in normalized for keyword in keywords):
                 matches.append(path)
     return sorted(dict.fromkeys(matches))
+
+
+def lineage_candidate_files(
+    snapshot: dict[str, Any] | None,
+    dataset_name: str,
+    column_name: str | None = None,
+) -> list[dict[str, Any]]:
+    if not snapshot:
+        return []
+    nodes = {node["id"]: node for node in snapshot.get("nodes", [])}
+    adjacency: dict[str, list[str]] = {}
+    for edge in snapshot.get("edges", []):
+        source = edge.get("source_dataset_id") or edge.get("source") or ""
+        target = edge.get("target_dataset_id") or edge.get("target") or ""
+        if not source or not target:
+            continue
+        adjacency.setdefault(source, []).append(target)
+
+    start_nodes = [node_id for node_id, node in nodes.items() if _matches_dataset_node(node, dataset_name)]
+    column_tokens = _column_tokens(column_name)
+    ranked: list[dict[str, Any]] = []
+    seen_files: set[str] = set()
+
+    queue = deque((node_id, 0) for node_id in start_nodes)
+    seen_nodes = set(start_nodes)
+    while queue:
+        node_id, hops = queue.popleft()
+        node = nodes.get(node_id, {})
+        for file_path in _node_evidence_matches(node, dataset_name, column_tokens):
+            if file_path in seen_files:
+                continue
+            ranked.append(
+                {
+                    "file_path": file_path,
+                    "lineage_hops": hops,
+                    "source_node": node_id,
+                }
+            )
+            seen_files.add(file_path)
+        for target in adjacency.get(node_id, []):
+            if target in seen_nodes:
+                continue
+            seen_nodes.add(target)
+            queue.append((target, hops + 1))
+    return ranked
+
+
+def _matches_dataset_node(node: dict[str, Any], dataset_name: str) -> bool:
+    metadata = node.get("metadata", {})
+    if metadata.get("dataset") == dataset_name:
+        return True
+    node_id = node.get("id", "")
+    node_name = node.get("name", "")
+    return dataset_name in node_id or dataset_name in node_name
+
+
+def _column_tokens(column_name: str | None) -> list[str]:
+    if not column_name:
+        return []
+    ignored = {"payload", "facts", "decision"}
+    return [part.lower() for part in column_name.split(".") if part and part.lower() not in ignored]
+
+
+def _node_evidence_matches(node: dict[str, Any], dataset_name: str, column_tokens: list[str]) -> list[str]:
+    metadata = node.get("metadata", {})
+    node_columns = [value.lower() for value in metadata.get("columns", [])]
+    column_prefixes = [value.lower() for value in metadata.get("column_prefixes", [])]
+    node_datasets = [value.lower() for value in metadata.get("datasets", [])]
+    dataset_match = not node_datasets or dataset_name.lower() in node_datasets
+    token_match = True
+    if column_tokens:
+        token_match = any(token in node_columns for token in column_tokens) or any(
+            any(token.startswith(prefix.rstrip(".")) or prefix in token for prefix in column_prefixes)
+            for token in column_tokens
+        )
+    if not dataset_match or not token_match:
+        return []
+    return [evidence.get("file_path") for evidence in node.get("evidence", []) if evidence.get("file_path")]

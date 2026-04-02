@@ -3,10 +3,17 @@ kind: data_contract
 version: '1.0'
 dataset: week3_extractions
 source: /home/rata/Documents/Ephrata/work/10Acadamy/training/apexLedger/data/seed_events.jsonl
-generated_at: '2026-04-02T03:01:36.610214+00:00'
+generated_at: '2026-04-02T06:59:59.687788+00:00'
 lineage:
   snapshot_path: /home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/schema_snapshots/lineage/apex_lineage_graph.json
-  downstream_consumers: []
+  downstream_consumers:
+  - dataset:week5_events
+  - file:credit_analysis_agent
+  - file:decision_orchestrator_agent
+  - file:document_processing_agent
+  - file:event_simulator
+  - file:events_schema
+  - file:extraction_api_client
 clauses:
 - id: w3_event_type_fixed
   description: The extraction dataset must only contain ExtractionCompleted events.

@@ -5,7 +5,7 @@ from pathlib import Path
 import subprocess
 from typing import Any
 
-from .lineage_loader import evidence_files, load_lineage_snapshot
+from .lineage_loader import lineage_candidate_files, load_lineage_snapshot
 from .models import AttributionResult, Violation
 from .utils import clamp
 
@@ -35,7 +35,9 @@ def attribute_violations(
             continue
         candidate_files = _candidate_files(violation, apex_root, snapshot)
         best_result = None
-        for hops, candidate in enumerate(candidate_files, start=1):
+        for candidate_info in candidate_files:
+            candidate = candidate_info["path"]
+            hops = candidate_info["lineage_hops"]
             line_number = _find_line_number(candidate, violation.column)
             blame = _git_blame(candidate, line_number)
             confidence = _confidence_from_blame(blame.get("author_time"), hops)
@@ -48,7 +50,7 @@ def attribute_violations(
                 author=blame.get("author"),
                 confidence=confidence,
                 lineage_hops=hops,
-                rationale=f"Matched {violation.column} to {candidate.name} using fallback evidence mapping.",
+                rationale=candidate_info["rationale"],
             )
             if best_result is None or result.confidence > best_result.confidence:
                 best_result = result
@@ -62,24 +64,54 @@ def _candidate_files(
     apex_root: Path,
     snapshot: dict[str, Any] | None,
 ) -> list[Path]:
-    keywords = [violation.column or "", violation.dataset]
-    candidates: list[Path] = []
+    candidates: list[dict[str, Any]] = []
+    snapshot_candidates = lineage_candidate_files(snapshot, violation.dataset, violation.column)
+    for item in snapshot_candidates:
+        path_obj = Path(item["file_path"])
+        if path_obj.exists():
+            candidates.append(
+                {
+                    "path": path_obj,
+                    "lineage_hops": max(1, item["lineage_hops"]),
+                    "rationale": f"Matched {violation.column} through lineage node {item['source_node']}.",
+                }
+            )
     for relative in DEFAULT_APEX_FILES:
-        candidates.append(apex_root / relative)
+        path = apex_root / relative
+        if path.exists():
+            candidates.append(
+                {
+                    "path": path,
+                    "lineage_hops": 1,
+                    "rationale": f"Matched {violation.column} to {path.name} using fallback evidence mapping.",
+                }
+            )
     if violation.column and "confidence" in violation.column.lower():
-        candidates.extend(apex_root / relative for relative in CONFIDENCE_FILES)
+        for relative in CONFIDENCE_FILES:
+            path = apex_root / relative
+            if path.exists():
+                candidates.append(
+                    {
+                        "path": path,
+                        "lineage_hops": 2,
+                        "rationale": f"Matched {violation.column} to {path.name} using confidence-specific fallback evidence.",
+                    }
+                )
     if violation.dataset == "week3_extractions":
-        candidates.append(apex_root / "ledger/agents/extraction_api_client.py")
-    if snapshot:
-        for path in evidence_files(snapshot, keywords):
-            path_obj = Path(path)
-            if path_obj.exists():
-                candidates.append(path_obj)
-    unique: list[Path] = []
+        path = apex_root / "ledger/agents/extraction_api_client.py"
+        if path.exists():
+            candidates.append(
+                {
+                    "path": path,
+                    "lineage_hops": 2,
+                    "rationale": f"Matched {violation.column} to {path.name} using extraction fallback evidence.",
+                }
+            )
+    unique: list[dict[str, Any]] = []
     seen: set[str] = set()
     for candidate in candidates:
-        key = str(candidate)
-        if key not in seen and candidate.exists():
+        key = str(candidate["path"])
+        if key not in seen:
             unique.append(candidate)
             seen.add(key)
     return unique
