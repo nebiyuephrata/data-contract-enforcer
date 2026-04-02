@@ -1,0 +1,84 @@
+{
+  "ai_checks": [
+    {
+      "check": "embedding_drift",
+      "dataset": "week3_extractions",
+      "message": "No text samples available.",
+      "status": "ERROR"
+    },
+    {
+      "check": "embedding_drift",
+      "dataset": "week5_events",
+      "message": "OPENAI_API_KEY is not configured.",
+      "status": "ERROR"
+    },
+    {
+      "check": "llm_schema_QualityAssessmentCompleted",
+      "dataset": "week5_events",
+      "status": "PASS",
+      "total": 25,
+      "violation_rate": 0.0
+    },
+    {
+      "check": "llm_schema_CreditAnalysisCompleted",
+      "dataset": "week5_events",
+      "status": "PASS",
+      "total": 21,
+      "violation_rate": 0.0
+    },
+    {
+      "check": "llm_schema_DecisionGenerated",
+      "dataset": "week5_events",
+      "status": "PASS",
+      "total": 15,
+      "violation_rate": 0.0
+    }
+  ],
+  "attributions": [],
+  "business_risks": [
+    "The enforcer encountered an operational error around unknown field, which reduces confidence in monitoring coverage until the underlying issue is fixed."
+  ],
+  "data_health_score": 70,
+  "generated_at": "2026-04-02T02:52:46.995081+00:00",
+  "schema_changes": [],
+  "summary": [
+    {
+      "dataset": "week3_extractions",
+      "generated_at": "2026-04-02T02:52:35.113792+00:00",
+      "record_count": 50,
+      "status": "PASS",
+      "violation_count": 0
+    },
+    {
+      "dataset": "week5_events",
+      "generated_at": "2026-04-02T02:52:36.505358+00:00",
+      "record_count": 1847,
+      "status": "PASS",
+      "violation_count": 0
+    }
+  ],
+  "violations": [
+    {
+      "actual": null,
+      "category": "ai",
+      "column": null,
+      "dataset": "week3_extractions",
+      "expected": null,
+      "message": "Embedding drift could not run because no text samples were found.",
+      "row_locator": null,
+      "severity": "HIGH",
+      "status": "ERROR"
+    },
+    {
+      "actual": null,
+      "category": "ai",
+      "column": null,
+      "dataset": "week5_events",
+      "expected": null,
+      "message": "Embedding drift skipped because OPENAI_API_KEY is not configured.",
+      "row_locator": null,
+      "severity": "HIGH",
+      "status": "ERROR"
+    }
+  ]
+}

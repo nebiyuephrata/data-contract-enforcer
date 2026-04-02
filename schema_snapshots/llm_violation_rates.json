@@ -1,0 +1,16 @@
+{
+  "week5_events": {
+    "CreditAnalysisCompleted": {
+      "generated_at": "2026-04-02T02:53:01.807115+00:00",
+      "violation_rate": 0.0
+    },
+    "DecisionGenerated": {
+      "generated_at": "2026-04-02T02:53:01.807134+00:00",
+      "violation_rate": 0.06666666666666667
+    },
+    "QualityAssessmentCompleted": {
+      "generated_at": "2026-04-02T02:53:01.807070+00:00",
+      "violation_rate": 0.0
+    }
+  }
+}
