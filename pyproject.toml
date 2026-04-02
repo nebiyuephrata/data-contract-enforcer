@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "data-contract-enforcer"
+version = "0.1.0"
+description = "Shift-left data contract enforcement for JSONL datasets using ODCS-style contracts."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "anthropic>=0.30.0,<1.0",
+  "gitpython>=3.1.43,<4.0",
+  "jsonschema>=4.23.0,<5.0",
+  "openai>=1.40.0,<2.0",
+  "pandas>=2.2.0,<3.0",
+  "pyyaml>=6.0.0,<7.0",
+  "reportlab>=4.2.0,<5.0",
+  "scikit-learn>=1.5.0,<2.0",
+  "soda-core>=3.3.0,<4.0",
+  "ydata-profiling>=4.9.0,<5.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0,<9.0",
+]
+
+[project.scripts]
+data-contract-enforcer = "contracts.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["contracts*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

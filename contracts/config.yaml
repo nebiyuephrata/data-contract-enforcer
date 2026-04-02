@@ -1,0 +1,61 @@
+paths:
+  generated_contracts: generated_contracts
+  validation_reports: validation_reports
+  violation_log: violation_log/violations.jsonl
+  baselines: schema_snapshots/baselines.json
+  embedding_baselines: schema_snapshots/embedding_baselines.json
+  llm_violation_rates: schema_snapshots/llm_violation_rates.json
+  schema_snapshots: schema_snapshots/contracts
+  schema_evolution: validation_reports/schema-evolution-latest.json
+  attribution: validation_reports/attribution-latest.json
+  report_json: enforcer_report/report.json
+  report_pdf: enforcer_report/report.pdf
+
+repositories:
+  apexLedger: ../apexLedger
+
+lineage:
+  default_snapshot: schema_snapshots/lineage/apex_lineage_graph.json
+
+validation:
+  uuid_pattern: "^[0-9a-f-]{36}$"
+  min_observations_for_drift: 20
+
+ai:
+  embedding_provider: openai
+  embedding_model: text-embedding-3-small
+  text_sample_size: 200
+  drift_threshold: 0.15
+
+datasets:
+  week3_extractions:
+    source: ../apexLedger/data/seed_events.jsonl
+    filter_equals:
+      event_type: ExtractionCompleted
+    baseline_namespace: week3_extractions
+    primary_key_fields:
+      - stream_id
+      - payload.package_id
+      - payload.document_id
+    contract_path: generated_contracts/week3_extractions.odcs.yaml
+    dbt_schema_path: generated_contracts/week3_extractions.schema.yml
+    text_fields:
+      - payload.facts.extraction_notes
+    lineage_snapshot: schema_snapshots/lineage/apex_lineage_graph.json
+  week5_events:
+    source: ../apexLedger/data/seed_events.jsonl
+    filter_equals: {}
+    baseline_namespace: week5_events
+    primary_key_fields:
+      - stream_id
+      - event_type
+      - recorded_at
+    contract_path: generated_contracts/week5_events.odcs.yaml
+    dbt_schema_path: generated_contracts/week5_events.schema.yml
+    text_fields:
+      - payload.rationale
+      - payload.executive_summary
+      - payload.auditor_notes
+      - payload.tool_output_summary
+      - payload.output_summary
+    lineage_snapshot: schema_snapshots/lineage/apex_lineage_graph.json

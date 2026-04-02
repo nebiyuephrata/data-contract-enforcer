@@ -1,0 +1,14 @@
+__pycache__/
+.pytest_cache/
+.venv/
+*.pyc
+.DS_Store
+.qodo/
+.codex
+*.egg-info/
+
+validation_reports/*
+!validation_reports/.gitkeep
+
+violation_log/*
+!violation_log/.gitkeep
