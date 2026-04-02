@@ -1,6 +1,26 @@
 version: 2
 models:
 - name: week3_extractions
+  tests:
+  - dbt_utils.unique_combination_of_columns:
+      combination_of_columns:
+      - stream_id
+      - payload.package_id
+      - payload.document_id
+  - dbt_utils.expression_is_true:
+      expression: payload_processing_ms > 0
+  - dbt_utils.expression_is_true:
+      expression: payload_raw_text_length > 0
+  - dbt_utils.expression_is_true:
+      expression: payload_tables_extracted >= 1
+  - dbt_utils.expression_is_true:
+      expression: payload_facts_current_assets >= payload_facts_cash_and_equivalents
+  - dbt_utils.expression_is_true:
+      expression: payload_facts_field_confidence_total_revenue between 0 and 1
+  - dbt_utils.expression_is_true:
+      expression: payload_facts_field_confidence_net_income between 0 and 1
+  - dbt_utils.expression_is_true:
+      expression: payload_facts_field_confidence_total_assets between 0 and 1
   columns:
   - name: __source_line
     description: Inferred integer field from week3_extractions

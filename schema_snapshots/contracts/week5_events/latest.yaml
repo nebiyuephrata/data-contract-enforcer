@@ -3,10 +3,117 @@ kind: data_contract
 version: '1.0'
 dataset: week5_events
 source: /home/rata/Documents/Ephrata/work/10Acadamy/training/apexLedger/data/seed_events.jsonl
-generated_at: '2026-04-02T02:52:23.013136+00:00'
+generated_at: '2026-04-02T03:01:37.180607+00:00'
 lineage:
   snapshot_path: /home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/schema_snapshots/lineage/apex_lineage_graph.json
   downstream_consumers: []
+clauses:
+- id: w5_stream_prefix
+  description: Event stream ids must use one of the known aggregate prefixes.
+  check:
+    type: startswith_any
+    field: stream_id
+    prefixes:
+    - loan-
+    - docpkg-
+    - agent-
+    - credit-
+    - compliance-
+    - fraud-
+    - audit-
+- id: w5_event_version_positive
+  description: All event versions must be at least 1.
+  check:
+    type: min_value
+    field: event_version
+    minimum: 1
+- id: w5_recorded_at_iso
+  description: Every event must have an ISO-8601 recorded timestamp.
+  check:
+    type: format
+    field: recorded_at
+    format: date-time
+- id: w5_agent_type_enum
+  description: Agent events must use a recognized agent type when present.
+  check:
+    type: accepted_values_if_present
+    field: payload.agent_type
+    values:
+    - document_processing
+    - credit_analysis
+    - fraud_detection
+    - compliance
+    - decision_orchestrator
+- id: w5_confidence_range
+  description: Top-level confidence values must remain on the 0.0 to 1.0 scale.
+  check:
+    type: range_if_present
+    field: payload.confidence
+    minimum: 0.0
+    maximum: 1.0
+- id: w5_decision_confidence_range
+  description: Nested decision confidence values must remain on the 0.0 to 1.0 scale.
+  check:
+    type: range_if_present
+    field: payload.decision.confidence
+    minimum: 0.0
+    maximum: 1.0
+- id: w5_document_format_enum
+  description: Document format values must stay within the known format set.
+  check:
+    type: accepted_values_if_present
+    field: payload.document_format
+    values:
+    - pdf
+    - xlsx
+    - csv
+- id: w5_decision_confidence_floor
+  description: DecisionGenerated events below the confidence floor must resolve to
+    REFER.
+  check:
+    type: conditional_numeric_floor_requires_value
+    when_field: event_type
+    when_equals: DecisionGenerated
+    numeric_field: payload.confidence
+    less_than: 0.6
+    required_field: payload.recommendation
+    required_value: REFER
+- id: w5_extraction_runtime_positive
+  description: ExtractionCompleted events must report positive runtime and text volume.
+  check:
+    type: conditional_min_pair
+    when_field: event_type
+    when_equals: ExtractionCompleted
+    checks:
+    - field: payload.processing_ms
+      minimum: 1
+    - field: payload.raw_text_length
+      minimum: 1
+- id: w5_deadline_after_request
+  description: Document upload deadlines must occur after the event recorded timestamp.
+  check:
+    type: conditional_datetime_order
+    when_field: event_type
+    when_equals: DocumentUploadRequested
+    earlier_field: recorded_at
+    later_field: payload.deadline
+- id: w5_credit_decision_enum
+  description: CreditAnalysisCompleted events must use a recognized risk tier and
+    positive limit.
+  check:
+    type: conditional_composite
+    when_field: event_type
+    when_equals: CreditAnalysisCompleted
+    checks:
+    - type: accepted_values
+      field: payload.decision.risk_tier
+      values:
+      - LOW
+      - MEDIUM
+      - HIGH
+    - type: min_value
+      field: payload.decision.recommended_limit_usd
+      minimum: 1
 fields:
 - name: __source_line
   type: integer

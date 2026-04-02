@@ -3,10 +3,81 @@ kind: data_contract
 version: '1.0'
 dataset: week3_extractions
 source: /home/rata/Documents/Ephrata/work/10Acadamy/training/apexLedger/data/seed_events.jsonl
-generated_at: '2026-04-02T02:52:21.947408+00:00'
+generated_at: '2026-04-02T03:01:36.610214+00:00'
 lineage:
   snapshot_path: /home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/schema_snapshots/lineage/apex_lineage_graph.json
   downstream_consumers: []
+clauses:
+- id: w3_event_type_fixed
+  description: The extraction dataset must only contain ExtractionCompleted events.
+  check:
+    type: accepted_values
+    field: event_type
+    values:
+    - ExtractionCompleted
+- id: w3_document_type_enum
+  description: Only income statement and balance sheet extraction payloads are valid
+    in the pilot.
+  check:
+    type: accepted_values
+    field: payload.document_type
+    values:
+    - income_statement
+    - balance_sheet
+- id: w3_currency_usd
+  description: Extracted financial facts must use USD in the pilot baseline.
+  check:
+    type: accepted_values
+    field: payload.facts.currency
+    values:
+    - USD
+- id: w3_field_confidence_range
+  description: All field confidence scores must remain on the 0.0 to 1.0 scale.
+  check:
+    type: prefix_range
+    field_prefix: payload.facts.field_confidence.
+    minimum: 0.0
+    maximum: 1.0
+- id: w3_processing_time_positive
+  description: Extraction processing time must be a positive value.
+  check:
+    type: min_value
+    field: payload.processing_ms
+    minimum: 1
+- id: w3_raw_text_positive
+  description: Completed extractions must include non-zero raw text length.
+  check:
+    type: min_value
+    field: payload.raw_text_length
+    minimum: 1
+- id: w3_tables_extracted_nonnegative
+  description: Completed extractions must report at least one extracted table in this
+    pilot corpus.
+  check:
+    type: min_value
+    field: payload.tables_extracted
+    minimum: 1
+- id: w3_assets_cover_cash
+  description: Current assets must be greater than or equal to cash and equivalents.
+  check:
+    type: field_gte
+    left_field: payload.facts.current_assets
+    right_field: payload.facts.cash_and_equivalents
+- id: w3_completion_after_recorded
+  description: Extraction completion time cannot occur before the event recorded time.
+  check:
+    type: datetime_order
+    earlier_field: recorded_at
+    later_field: payload.completed_at
+- id: w3_balance_sheet_integrity
+  description: Balance sheet extractions must explicitly report that the balance sheet
+    balances.
+  check:
+    type: conditional_equals
+    when_field: payload.document_type
+    when_equals: balance_sheet
+    field: payload.facts.balance_sheet_balances
+    value: true
 fields:
 - name: __source_line
   type: integer

@@ -28,3 +28,31 @@ def test_drift_thresholds_warn_and_fail():
         {"min_observations_for_drift": 20},
     )
     assert any(item.status == "FAIL" and item.category == "drift" for item in fail_violations)
+
+
+def test_clause_logic_detects_invalid_confidence_scale():
+    dataset = DatasetConfig(name="week3_extractions", source="demo.jsonl")
+    contract = {
+        "fields": [
+            {"name": "payload.facts.field_confidence.total_revenue", "type": "number", "required": True, "nullable": False, "null_fraction": 0.0},
+        ],
+        "clauses": [
+            {
+                "id": "w3_field_confidence_range",
+                "check": {
+                    "type": "prefix_range",
+                    "field_prefix": "payload.facts.field_confidence.",
+                    "minimum": 0.0,
+                    "maximum": 1.0,
+                },
+            }
+        ],
+    }
+    summary, violations = validate_dataset(
+        dataset,
+        contract,
+        [{"payload.facts.field_confidence.total_revenue": 92.0, "__source_line": 1}],
+        {},
+        {"min_observations_for_drift": 20},
+    )
+    assert any("w3_field_confidence_range" in item.message for item in violations)

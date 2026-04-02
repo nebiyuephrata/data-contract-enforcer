@@ -1,6 +1,32 @@
 version: 2
 models:
 - name: week5_events
+  tests:
+  - unique:
+      column_name: __source_line
+  - dbt_utils.unique_combination_of_columns:
+      combination_of_columns:
+      - stream_id
+      - event_type
+      - recorded_at
+      - __source_line
+  - dbt_utils.expression_is_true:
+      expression: event_version >= 1
+  - dbt_utils.expression_is_true:
+      expression: case when payload_confidence is null then true else payload_confidence
+        between 0 and 1 end
+  - dbt_utils.expression_is_true:
+      expression: case when payload_decision_confidence is null then true else payload_decision_confidence
+        between 0 and 1 end
+  - dbt_utils.expression_is_true:
+      expression: case when event_type = 'DecisionGenerated' and payload_confidence
+        < 0.60 then payload_recommendation = 'REFER' else true end
+  - dbt_utils.expression_is_true:
+      expression: case when event_type = 'ExtractionCompleted' then payload_processing_ms
+        > 0 and payload_raw_text_length > 0 else true end
+  - dbt_utils.expression_is_true:
+      expression: case when event_type = 'DocumentUploadRequested' then payload_deadline
+        > recorded_at else true end
   columns:
   - name: __source_line
     description: Inferred integer field from week5_events

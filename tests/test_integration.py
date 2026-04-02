@@ -22,9 +22,15 @@ def test_generate_contracts_for_apex_pilot(apex_seed_events_path: Path):
 
     contract3 = build_contract(week3, records3)
     contract5 = build_contract(week5, records5)
+    assert len(contract3["clauses"]) >= 8
+    assert len(contract5["clauses"]) >= 8
     assert any(field["name"] == "payload.facts.field_confidence.total_revenue" for field in contract3["fields"])
     assert any(field["name"] == "event_type" for field in contract5["fields"])
-    assert build_dbt_schema(contract3)["models"][0]["name"] == "week3_extractions"
+    dbt_schema3 = build_dbt_schema(contract3)
+    dbt_schema5 = build_dbt_schema(contract5)
+    assert dbt_schema3["models"][0]["name"] == "week3_extractions"
+    assert len(dbt_schema3["models"][0]["tests"]) >= 5
+    assert len(dbt_schema5["models"][0]["tests"]) >= 5
 
 
 def test_clean_data_validates_with_low_penalty(apex_seed_events_path: Path, tmp_path: Path):

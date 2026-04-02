@@ -9,8 +9,6 @@ import yaml
 from .lineage_loader import downstream_consumers, load_lineage_snapshot
 from .models import DatasetConfig
 from .utils import (
-    coerce_scalar,
-    dump_json,
     flatten_record,
     infer_column_type,
     is_iso8601_date,
@@ -101,6 +99,7 @@ def build_contract(dataset: DatasetConfig, records: list[dict[str, Any]]) -> dic
         if metadata.get("stats"):
             field["stats"] = metadata["stats"]
         fields.append(field)
+    clauses = build_contract_clauses(dataset)
     return {
         "standard": "odcs",
         "kind": "data_contract",
@@ -112,6 +111,7 @@ def build_contract(dataset: DatasetConfig, records: list[dict[str, Any]]) -> dic
             "snapshot_path": dataset.lineage_snapshot,
             "downstream_consumers": downstream_consumers(snapshot, dataset.name),
         },
+        "clauses": clauses,
         "fields": fields,
     }
 
@@ -133,7 +133,16 @@ def build_dbt_schema(contract: dict[str, Any]) -> dict[str, Any]:
                 "tests": tests,
             }
         )
-    return {"version": 2, "models": [{"name": contract["dataset"], "columns": columns}]}
+    return {
+        "version": 2,
+        "models": [
+            {
+                "name": contract["dataset"],
+                "tests": build_dbt_model_tests(contract["dataset"]),
+                "columns": columns,
+            }
+        ],
+    }
 
 
 def write_contract_outputs(dataset: DatasetConfig, contract: dict[str, Any], dbt_schema: dict[str, Any]) -> dict[str, str]:
@@ -174,3 +183,262 @@ def build_baselines(dataset: DatasetConfig, records: list[dict[str, Any]]) -> di
             "generated_at": utc_now().astimezone(UTC).isoformat(),
         }
     return baselines
+
+
+def build_contract_clauses(dataset: DatasetConfig) -> list[dict[str, Any]]:
+    if dataset.name == "week3_extractions":
+        return [
+            {
+                "id": "w3_event_type_fixed",
+                "description": "The extraction dataset must only contain ExtractionCompleted events.",
+                "check": {"type": "accepted_values", "field": "event_type", "values": ["ExtractionCompleted"]},
+            },
+            {
+                "id": "w3_document_type_enum",
+                "description": "Only income statement and balance sheet extraction payloads are valid in the pilot.",
+                "check": {
+                    "type": "accepted_values",
+                    "field": "payload.document_type",
+                    "values": ["income_statement", "balance_sheet"],
+                },
+            },
+            {
+                "id": "w3_currency_usd",
+                "description": "Extracted financial facts must use USD in the pilot baseline.",
+                "check": {"type": "accepted_values", "field": "payload.facts.currency", "values": ["USD"]},
+            },
+            {
+                "id": "w3_field_confidence_range",
+                "description": "All field confidence scores must remain on the 0.0 to 1.0 scale.",
+                "check": {
+                    "type": "prefix_range",
+                    "field_prefix": "payload.facts.field_confidence.",
+                    "minimum": 0.0,
+                    "maximum": 1.0,
+                },
+            },
+            {
+                "id": "w3_processing_time_positive",
+                "description": "Extraction processing time must be a positive value.",
+                "check": {"type": "min_value", "field": "payload.processing_ms", "minimum": 1},
+            },
+            {
+                "id": "w3_raw_text_positive",
+                "description": "Completed extractions must include non-zero raw text length.",
+                "check": {"type": "min_value", "field": "payload.raw_text_length", "minimum": 1},
+            },
+            {
+                "id": "w3_tables_extracted_nonnegative",
+                "description": "Completed extractions must report at least one extracted table in this pilot corpus.",
+                "check": {"type": "min_value", "field": "payload.tables_extracted", "minimum": 1},
+            },
+            {
+                "id": "w3_assets_cover_cash",
+                "description": "Current assets must be greater than or equal to cash and equivalents.",
+                "check": {
+                    "type": "field_gte",
+                    "left_field": "payload.facts.current_assets",
+                    "right_field": "payload.facts.cash_and_equivalents",
+                },
+            },
+            {
+                "id": "w3_completion_after_recorded",
+                "description": "Extraction completion time cannot occur before the event recorded time.",
+                "check": {
+                    "type": "datetime_order",
+                    "earlier_field": "recorded_at",
+                    "later_field": "payload.completed_at",
+                },
+            },
+            {
+                "id": "w3_balance_sheet_integrity",
+                "description": "Balance sheet extractions must explicitly report that the balance sheet balances.",
+                "check": {
+                    "type": "conditional_equals",
+                    "when_field": "payload.document_type",
+                    "when_equals": "balance_sheet",
+                    "field": "payload.facts.balance_sheet_balances",
+                    "value": True,
+                },
+            },
+        ]
+    return [
+        {
+            "id": "w5_stream_prefix",
+            "description": "Event stream ids must use one of the known aggregate prefixes.",
+            "check": {
+                "type": "startswith_any",
+                "field": "stream_id",
+                "prefixes": ["loan-", "docpkg-", "agent-", "credit-", "compliance-", "fraud-", "audit-"],
+            },
+        },
+        {
+            "id": "w5_event_version_positive",
+            "description": "All event versions must be at least 1.",
+            "check": {"type": "min_value", "field": "event_version", "minimum": 1},
+        },
+        {
+            "id": "w5_recorded_at_iso",
+            "description": "Every event must have an ISO-8601 recorded timestamp.",
+            "check": {"type": "format", "field": "recorded_at", "format": "date-time"},
+        },
+        {
+            "id": "w5_agent_type_enum",
+            "description": "Agent events must use a recognized agent type when present.",
+            "check": {
+                "type": "accepted_values_if_present",
+                "field": "payload.agent_type",
+                "values": ["document_processing", "credit_analysis", "fraud_detection", "compliance", "decision_orchestrator"],
+            },
+        },
+        {
+            "id": "w5_confidence_range",
+            "description": "Top-level confidence values must remain on the 0.0 to 1.0 scale.",
+            "check": {"type": "range_if_present", "field": "payload.confidence", "minimum": 0.0, "maximum": 1.0},
+        },
+        {
+            "id": "w5_decision_confidence_range",
+            "description": "Nested decision confidence values must remain on the 0.0 to 1.0 scale.",
+            "check": {
+                "type": "range_if_present",
+                "field": "payload.decision.confidence",
+                "minimum": 0.0,
+                "maximum": 1.0,
+            },
+        },
+        {
+            "id": "w5_document_format_enum",
+            "description": "Document format values must stay within the known format set.",
+            "check": {
+                "type": "accepted_values_if_present",
+                "field": "payload.document_format",
+                "values": ["pdf", "xlsx", "csv"],
+            },
+        },
+        {
+            "id": "w5_decision_confidence_floor",
+            "description": "DecisionGenerated events below the confidence floor must resolve to REFER.",
+            "check": {
+                "type": "conditional_numeric_floor_requires_value",
+                "when_field": "event_type",
+                "when_equals": "DecisionGenerated",
+                "numeric_field": "payload.confidence",
+                "less_than": 0.60,
+                "required_field": "payload.recommendation",
+                "required_value": "REFER",
+            },
+        },
+        {
+            "id": "w5_extraction_runtime_positive",
+            "description": "ExtractionCompleted events must report positive runtime and text volume.",
+            "check": {
+                "type": "conditional_min_pair",
+                "when_field": "event_type",
+                "when_equals": "ExtractionCompleted",
+                "checks": [
+                    {"field": "payload.processing_ms", "minimum": 1},
+                    {"field": "payload.raw_text_length", "minimum": 1},
+                ],
+            },
+        },
+        {
+            "id": "w5_deadline_after_request",
+            "description": "Document upload deadlines must occur after the event recorded timestamp.",
+            "check": {
+                "type": "conditional_datetime_order",
+                "when_field": "event_type",
+                "when_equals": "DocumentUploadRequested",
+                "earlier_field": "recorded_at",
+                "later_field": "payload.deadline",
+            },
+        },
+        {
+            "id": "w5_credit_decision_enum",
+            "description": "CreditAnalysisCompleted events must use a recognized risk tier and positive limit.",
+            "check": {
+                "type": "conditional_composite",
+                "when_field": "event_type",
+                "when_equals": "CreditAnalysisCompleted",
+                "checks": [
+                    {
+                        "type": "accepted_values",
+                        "field": "payload.decision.risk_tier",
+                        "values": ["LOW", "MEDIUM", "HIGH"],
+                    },
+                    {
+                        "type": "min_value",
+                        "field": "payload.decision.recommended_limit_usd",
+                        "minimum": 1,
+                    },
+                ],
+            },
+        },
+    ]
+
+
+def build_dbt_model_tests(dataset_name: str) -> list[dict[str, Any]]:
+    if dataset_name == "week3_extractions":
+        return [
+            {
+                "dbt_utils.unique_combination_of_columns": {
+                    "combination_of_columns": ["stream_id", "payload.package_id", "payload.document_id"],
+                }
+            },
+            {"dbt_utils.expression_is_true": {"expression": "payload_processing_ms > 0"}},
+            {"dbt_utils.expression_is_true": {"expression": "payload_raw_text_length > 0"}},
+            {"dbt_utils.expression_is_true": {"expression": "payload_tables_extracted >= 1"}},
+            {
+                "dbt_utils.expression_is_true": {
+                    "expression": "payload_facts_current_assets >= payload_facts_cash_and_equivalents"
+                }
+            },
+            {
+                "dbt_utils.expression_is_true": {
+                    "expression": "payload_facts_field_confidence_total_revenue between 0 and 1"
+                }
+            },
+            {
+                "dbt_utils.expression_is_true": {
+                    "expression": "payload_facts_field_confidence_net_income between 0 and 1"
+                }
+            },
+            {
+                "dbt_utils.expression_is_true": {
+                    "expression": "payload_facts_field_confidence_total_assets between 0 and 1"
+                }
+            },
+        ]
+    return [
+        {"unique": {"column_name": "__source_line"}},
+        {
+            "dbt_utils.unique_combination_of_columns": {
+                "combination_of_columns": ["stream_id", "event_type", "recorded_at", "__source_line"],
+            }
+        },
+        {"dbt_utils.expression_is_true": {"expression": "event_version >= 1"}},
+        {
+            "dbt_utils.expression_is_true": {
+                "expression": "case when payload_confidence is null then true else payload_confidence between 0 and 1 end"
+            }
+        },
+        {
+            "dbt_utils.expression_is_true": {
+                "expression": "case when payload_decision_confidence is null then true else payload_decision_confidence between 0 and 1 end"
+            }
+        },
+        {
+            "dbt_utils.expression_is_true": {
+                "expression": "case when event_type = 'DecisionGenerated' and payload_confidence < 0.60 then payload_recommendation = 'REFER' else true end"
+            }
+        },
+        {
+            "dbt_utils.expression_is_true": {
+                "expression": "case when event_type = 'ExtractionCompleted' then payload_processing_ms > 0 and payload_raw_text_length > 0 else true end"
+            }
+        },
+        {
+            "dbt_utils.expression_is_true": {
+                "expression": "case when event_type = 'DocumentUploadRequested' then payload_deadline > recorded_at else true end"
+            }
+        },
+    ]
