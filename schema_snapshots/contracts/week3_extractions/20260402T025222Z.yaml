@@ -1,0 +1,450 @@
+standard: odcs
+kind: data_contract
+version: '1.0'
+dataset: week3_extractions
+source: /home/rata/Documents/Ephrata/work/10Acadamy/training/apexLedger/data/seed_events.jsonl
+generated_at: '2026-04-02T02:52:21.947408+00:00'
+lineage:
+  snapshot_path: /home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/schema_snapshots/lineage/apex_lineage_graph.json
+  downstream_consumers: []
+fields:
+- name: __source_line
+  type: integer
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 105.0
+    max: 1782.0
+    mean: 814.56
+    stddev: 540.0317827683848
+- name: event_type
+  type: string
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  enum:
+  - ExtractionCompleted
+- name: event_version
+  type: integer
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 1.0
+    max: 1.0
+    mean: 1.0
+    stddev: 0.0
+- name: payload.completed_at
+  type: string
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  format: date-time
+- name: payload.document_id
+  type: string
+  required: true
+  nullable: false
+  null_fraction: 0.0
+- name: payload.document_type
+  type: string
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  enum:
+  - income_statement
+  - balance_sheet
+- name: payload.facts.accounts_receivable
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 112831.87
+    max: 5339401.82
+    mean: 2190496.8564
+    stddev: 1631621.897854409
+- name: payload.facts.balance_discrepancy_usd
+  type: string
+  required: false
+  nullable: true
+  null_fraction: 1.0
+- name: payload.facts.balance_sheet_balances
+  type: boolean
+  required: true
+  nullable: false
+  null_fraction: 0.0
+- name: payload.facts.cash_and_equivalents
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 88344.19
+    max: 5575794.99
+    mean: 1865996.316
+    stddev: 1598045.7846267386
+- name: payload.facts.currency
+  type: string
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  enum:
+  - USD
+- name: payload.facts.current_assets
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 268444.55
+    max: 18262165.62
+    mean: 6773796.7628
+    stddev: 4972857.75647881
+- name: payload.facts.current_liabilities
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 164961.78
+    max: 8799679.96
+    mean: 3298507.3308
+    stddev: 2432331.5472133895
+- name: payload.facts.current_ratio
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 1.36
+    max: 2.79
+    mean: 2.0968
+    stddev: 0.43936973040936717
+- name: payload.facts.debt_to_ebitda
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 1.28
+    max: 24.64
+    mean: 7.2148
+    stddev: 5.436665978336356
+- name: payload.facts.debt_to_equity
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 0.34
+    max: 1.53
+    mean: 0.7968
+    stddev: 0.36252139247222365
+- name: payload.facts.depreciation_amortization
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 14666.15
+    max: 816655.99
+    mean: 271818.5068
+    stddev: 199888.78299761706
+- name: payload.facts.ebitda
+  type: number
+  required: false
+  nullable: true
+  null_fraction: 0.5
+  stats:
+    min: 114919.59
+    max: 3628489.79
+    mean: 1149279.1392
+    stddev: 880979.3331262807
+- name: payload.facts.extraction_notes
+  type: array
+  required: true
+  nullable: false
+  null_fraction: 0.0
+- name: payload.facts.field_confidence.net_income
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  constraints:
+    minimum: 0.0
+    maximum: 1.0
+  stats:
+    min: 0.8202273285626535
+    max: 0.9472507802748626
+    mean: 0.8822309817215591
+    stddev: 0.03830243110445218
+- name: payload.facts.field_confidence.total_assets
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  constraints:
+    minimum: 0.0
+    maximum: 1.0
+  stats:
+    min: 0.8879386620327511
+    max: 0.9682621596224048
+    mean: 0.9247027891323012
+    stddev: 0.02239550887168622
+- name: payload.facts.field_confidence.total_revenue
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  constraints:
+    minimum: 0.0
+    maximum: 1.0
+  stats:
+    min: 0.8815326995083786
+    max: 0.9794841124374641
+    mean: 0.9331047518188438
+    stddev: 0.025834679097369008
+- name: payload.facts.financing_cash_flow
+  type: string
+  required: false
+  nullable: true
+  null_fraction: 1.0
+- name: payload.facts.fiscal_year_end
+  type: string
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  format: date-time
+  enum:
+  - '2024-12-31'
+- name: payload.facts.free_cash_flow
+  type: string
+  required: false
+  nullable: true
+  null_fraction: 1.0
+- name: payload.facts.gaap_compliant
+  type: boolean
+  required: true
+  nullable: false
+  null_fraction: 0.0
+- name: payload.facts.gross_margin
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 0.19
+    max: 0.64
+    mean: 0.386
+    stddev: 0.15864425612041552
+- name: payload.facts.gross_profit
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 298285.12
+    max: 11621054.47
+    mean: 3309029.2048
+    stddev: 2753275.9210733133
+- name: payload.facts.income_before_tax
+  type: string
+  required: false
+  nullable: true
+  null_fraction: 1.0
+- name: payload.facts.interest_coverage
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 0.37
+    max: 6.92
+    mean: 3.4256
+    stddev: 1.545846253674666
+- name: payload.facts.interest_expense
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 26167.43
+    max: 798274.92
+    mean: 280288.5172
+    stddev: 223905.1586333641
+- name: payload.facts.inventory
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 49072.3
+    max: 5784083.54
+    mean: 2002957.1072
+    stddev: 1440146.8703420681
+- name: payload.facts.investing_cash_flow
+  type: string
+  required: false
+  nullable: true
+  null_fraction: 1.0
+- name: payload.facts.long_term_debt
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 298305.65
+    max: 13252116.65
+    mean: 4014108.0092
+    stddev: 3322216.8587950226
+- name: payload.facts.net_income
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: -42576.17
+    max: 1539074.24
+    mean: 451514.0964
+    stddev: 420798.28856094036
+- name: payload.facts.net_margin
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: -0.02
+    max: 0.15
+    mean: 0.0564
+    stddev: 0.03686515970398067
+- name: payload.facts.operating_cash_flow
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: -44365.43
+    max: 3042892.24
+    mean: 861455.876
+    stddev: 716592.3308974762
+- name: payload.facts.operating_expenses
+  type: string
+  required: false
+  nullable: true
+  null_fraction: 1.0
+- name: payload.facts.operating_income
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 24688.78
+    max: 2811833.8
+    mean: 877460.6332
+    stddev: 730295.6687896962
+- name: payload.facts.page_references.net_income
+  type: string
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  enum:
+  - page 1, table 1, row 9
+- name: payload.facts.page_references.total_revenue
+  type: string
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  enum:
+  - page 1, table 1, row 1
+- name: payload.facts.tax_expense
+  type: string
+  required: false
+  nullable: true
+  null_fraction: 1.0
+- name: payload.facts.total_assets
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 727798.42
+    max: 52224041.59
+    mean: 16772248.1944
+    stddev: 13859616.120931642
+- name: payload.facts.total_equity
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 542656.61
+    max: 33110493.55
+    mean: 9257766.7184
+    stddev: 7555667.135442747
+- name: payload.facts.total_liabilities
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 185141.81
+    max: 26692565.79
+    mean: 7514481.4784
+    stddev: 6982877.448260393
+- name: payload.facts.total_revenue
+  type: number
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 549024.54
+    max: 22827789.95
+    mean: 8503581.0164
+    stddev: 5835523.806139405
+- name: payload.package_id
+  type: string
+  required: true
+  nullable: false
+  null_fraction: 0.0
+- name: payload.processing_ms
+  type: integer
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 2137.0
+    max: 7892.0
+    mean: 5255.52
+    stddev: 1817.5228883290577
+- name: payload.raw_text_length
+  type: integer
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 2028.0
+    max: 5960.0
+    mean: 3912.24
+    stddev: 1107.4555442093376
+- name: payload.tables_extracted
+  type: integer
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  stats:
+    min: 2.0
+    max: 5.0
+    mean: 3.38
+    stddev: 1.0934349546269315
+- name: recorded_at
+  type: string
+  required: true
+  nullable: false
+  null_fraction: 0.0
+  format: date-time
+- name: stream_id
+  type: string
+  required: true
+  nullable: false
+  null_fraction: 0.0

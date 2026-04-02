@@ -1,0 +1,824 @@
+version: 2
+models:
+- name: week5_events
+  columns:
+  - name: __source_line
+    description: Inferred integer field from week5_events
+    tests:
+    - not_null
+  - name: event_type
+    description: Inferred string field from week5_events
+    tests:
+    - not_null
+  - name: event_version
+    description: Inferred integer field from week5_events
+    tests:
+    - not_null
+  - name: payload.added_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.adverse_action_codes
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.adverse_action_notice_required
+    description: Inferred boolean field from week5_events
+    tests: []
+  - name: payload.agent_id
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - doc-agent-1
+        - credit-agent-1
+        - fraud-agent-1
+        - compliance-agent-1
+        - orchestrator-1
+  - name: payload.agent_type
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - document_processing
+        - credit_analysis
+        - fraud_detection
+        - compliance
+        - decision_orchestrator
+  - name: payload.all_analyses_complete
+    description: Inferred boolean field from week5_events
+    tests: []
+  - name: payload.analysis_duration_ms
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.anomalies
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.anomalies_found
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.applicant_id
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.application_id
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.application_reference
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.approved_amount_usd
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.approved_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.approved_by
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - auto
+  - name: payload.assessed_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.auditor_notes
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - Financial statements appear internally consistent. Balance sheet balances.
+          Revenue consistent with prior year trajectory.
+  - name: payload.called_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.completed_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.conditions
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.confidence
+    description: Inferred number field from week5_events
+    tests:
+    - range:
+        minimum: 0.0
+        maximum: 1.0
+  - name: payload.consumed_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.contact_email
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.contact_name
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.context_source
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - fresh
+  - name: payload.context_token_count
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.contributing_sessions
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.created_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.critical_missing_fields
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.data_hash
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.deadline
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.decision.confidence
+    description: Inferred number field from week5_events
+    tests:
+    - range:
+        minimum: 0.0
+        maximum: 1.0
+  - name: payload.decision.data_quality_caveats
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.decision.key_concerns
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.decision.policy_overrides_applied
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.decision.rationale
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.decision.recommended_limit_usd
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.decision.risk_tier
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - MEDIUM
+        - HIGH
+        - LOW
+  - name: payload.decline_reasons
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.declined_at
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - '2026-03-19T13:08:31.015663'
+        - '2026-03-25T11:11:35.042434'
+        - '2026-03-13T15:03:26.067704'
+  - name: payload.declined_by
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - auto
+        - compliance-system
+  - name: payload.detected_format
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - pdf
+  - name: payload.document_format
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - pdf
+        - xlsx
+  - name: payload.document_id
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.document_ids_consumed
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.document_type
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - application_proposal
+        - income_statement
+        - balance_sheet
+  - name: payload.documents_processed
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.duration_ms
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.effective_date
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - '2026-03-28'
+  - name: payload.evaluated_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.evaluation_notes
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - 'Bank Secrecy Act (BSA): Clear.'
+        - 'OFAC Sanctions: Clear.'
+        - 'Jurisdiction Eligibility: Clear.'
+        - 'Legal Entity Eligibility: Clear.'
+        - 'Operating History: Clear.'
+  - name: payload.events_written
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.evidence_hash
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.executed_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.executive_summary
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - Approval recommended. RECOVERING trajectory. Compliance clear. Fraud screening
+          low risk.
+        - Approval recommended. DECLINING trajectory. Compliance clear. Fraud screening
+          low risk.
+        - Approval recommended. GROWTH trajectory. Compliance clear. Fraud screening
+          low risk.
+        - Approval recommended. VOLATILE trajectory. Compliance clear. Fraud screening
+          low risk.
+        - Approval recommended. STABLE trajectory. Compliance clear. Fraud screening
+          low risk.
+        - Decline recommended. STABLE trajectory. Compliance clear. Fraud screening
+          low risk.
+        - Decline recommended. GROWTH trajectory. Compliance clear. Fraud screening
+          low risk.
+        - Human review recommended. VOLATILE trajectory. Compliance clear. Fraud screening
+          low risk.
+  - name: payload.extraction_model
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - mineru-1.0
+  - name: payload.facts.accounts_receivable
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.balance_discrepancy_usd
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.facts.balance_sheet_balances
+    description: Inferred boolean field from week5_events
+    tests: []
+  - name: payload.facts.cash_and_equivalents
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.currency
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - USD
+  - name: payload.facts.current_assets
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.current_liabilities
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.current_ratio
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.debt_to_ebitda
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.debt_to_equity
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.depreciation_amortization
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.ebitda
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.extraction_notes
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.facts.field_confidence.net_income
+    description: Inferred number field from week5_events
+    tests:
+    - range:
+        minimum: 0.0
+        maximum: 1.0
+  - name: payload.facts.field_confidence.total_assets
+    description: Inferred number field from week5_events
+    tests:
+    - range:
+        minimum: 0.0
+        maximum: 1.0
+  - name: payload.facts.field_confidence.total_revenue
+    description: Inferred number field from week5_events
+    tests:
+    - range:
+        minimum: 0.0
+        maximum: 1.0
+  - name: payload.facts.financing_cash_flow
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.facts.fiscal_year_end
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - '2024-12-31'
+  - name: payload.facts.free_cash_flow
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.facts.gaap_compliant
+    description: Inferred boolean field from week5_events
+    tests: []
+  - name: payload.facts.gross_margin
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.gross_profit
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.income_before_tax
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.facts.interest_coverage
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.interest_expense
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.inventory
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.investing_cash_flow
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.facts.long_term_debt
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.net_income
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.net_margin
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.operating_cash_flow
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.operating_expenses
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.facts.operating_income
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.page_references.net_income
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - page 1, table 1, row 9
+  - name: payload.facts.page_references.total_revenue
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - page 1, table 1, row 1
+  - name: payload.facts.tax_expense
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.facts.total_assets
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.total_equity
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.total_liabilities
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts.total_revenue
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.facts_summary
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.failure_reason
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - Legal Entity Eligibility check failed.
+        - Jurisdiction Eligibility check failed.
+  - name: payload.file_hash
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - 8eb66e9cbdaaa5ba
+        - d794b166001141a2
+        - a86210f5fdceb84f
+        - 3a3a2439911766f6
+  - name: payload.file_path
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.file_size_bytes
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.filename
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.fiscal_year
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.fiscal_years_loaded
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.fraud_score
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.generated_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.has_defaults
+    description: Inferred boolean field from week5_events
+    tests: []
+  - name: payload.has_hard_block
+    description: Inferred boolean field from week5_events
+    tests: []
+  - name: payload.has_prior_loans
+    description: Inferred boolean field from week5_events
+    tests: []
+  - name: payload.has_quality_flags
+    description: Inferred boolean field from week5_events
+    tests: []
+  - name: payload.initiated_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.input_data_hash
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.input_keys
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.inputs_validated
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.interest_rate_pct
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.is_coherent
+    description: Inferred boolean field from week5_events
+    tests: []
+  - name: payload.is_hard_block
+    description: Inferred boolean field from week5_events
+    tests: []
+  - name: payload.key_risks
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.langgraph_graph_version
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - 1.0.0-sim
+  - name: payload.llm_called
+    description: Inferred boolean field from week5_events
+    tests: []
+  - name: payload.llm_cost_usd
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.llm_tokens_input
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.llm_tokens_output
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.loan_purpose
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - working_capital
+        - refinancing
+        - expansion
+        - equipment_financing
+        - acquisition
+        - real_estate
+  - name: payload.loan_term_months
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.model_deployment_id
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.model_version
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - claude-sonnet-4-20250514
+  - name: payload.model_versions.orchestrator
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - claude-sonnet-4-20250514
+  - name: payload.next_agent_triggered
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - credit_analysis
+        - fraud_detection
+        - compliance
+        - decision_orchestrator
+  - name: payload.node_name
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.node_sequence
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.note_text
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - Applicant jurisdiction qualifies for CRA consideration.
+  - name: payload.note_type
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - CRA_CONSIDERATION
+  - name: payload.opened_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.orchestrator_session_id
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.output_keys
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.output_summary
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.overall_confidence
+    description: Inferred number field from week5_events
+    tests:
+    - range:
+        minimum: 0.0
+        maximum: 1.0
+  - name: payload.overall_verdict
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - CLEAR
+        - CONDITIONAL
+        - BLOCKED
+  - name: payload.package_id
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.page_count
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.pipeline_version
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - week3-v1.0
+  - name: payload.priority
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - NORMAL
+  - name: payload.processing_ms
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.quality_flag_count
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.quality_flags_present
+    description: Inferred boolean field from week5_events
+    tests: []
+  - name: payload.raw_text_length
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.ready_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.recommendation
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - PROCEED
+        - APPROVE
+        - DECLINE
+        - REFER
+  - name: payload.reextraction_recommended
+    description: Inferred boolean field from week5_events
+    tests: []
+  - name: payload.regulation_set_version
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - 2026-Q1
+  - name: payload.regulatory_basis
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.remediation_available
+    description: Inferred boolean field from week5_events
+    tests: []
+  - name: payload.remediation_description
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.requested_amount_usd
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.requested_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.requested_by
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.required_document_types
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.required_documents
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.revenue_trajectory
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - STABLE
+        - GROWTH
+        - VOLATILE
+        - RECOVERING
+        - DECLINING
+  - name: payload.risk_level
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - LOW
+        - MEDIUM
+  - name: payload.rule_id
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - REG-001
+        - REG-002
+        - REG-003
+        - REG-004
+        - REG-005
+        - REG-006
+  - name: payload.rule_name
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - Bank Secrecy Act (BSA)
+        - OFAC Sanctions
+        - Jurisdiction Eligibility
+        - Legal Entity Eligibility
+        - Operating History
+        - CRA Consideration
+  - name: payload.rule_version
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - 2026-Q1-v1
+  - name: payload.rules_evaluated
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.rules_failed
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.rules_noted
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.rules_passed
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.rules_to_evaluate
+    description: Inferred array field from week5_events
+    tests: []
+  - name: payload.screening_model_version
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - claude-sonnet-4-20250514
+  - name: payload.session_id
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.started_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.submission_channel
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - branch
+        - mobile
+        - agent
+        - web
+  - name: payload.submitted_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.tables_extracted
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.term_months
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.tool_duration_ms
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.tool_input_summary
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.tool_name
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - week3_extraction_pipeline
+        - query_applicant_registry
+  - name: payload.tool_output_summary
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - Extracted 12 financial line items
+        - Extracted 8 financial line items
+        - Extracted 11 financial line items
+        - Extracted 9 financial line items
+        - Extracted 14 financial line items
+        - Extracted 13 financial line items
+        - Extracted 10 financial line items
+        - 3yr financials, 0 flags
+        - 3yr financials, 1 flags
+  - name: payload.total_cost_usd
+    description: Inferred number field from week5_events
+    tests: []
+  - name: payload.total_duration_ms
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.total_llm_calls
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.total_nodes_executed
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.total_tokens_used
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.triggered_by_event_id
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.uploaded_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.uploaded_by
+    description: Inferred string field from week5_events
+    tests:
+    - accepted_values:
+        values:
+        - applicant
+  - name: payload.validated_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: payload.validation_duration_ms
+    description: Inferred integer field from week5_events
+    tests: []
+  - name: payload.written_at
+    description: Inferred string field from week5_events
+    tests: []
+  - name: recorded_at
+    description: Inferred string field from week5_events
+    tests:
+    - not_null
+  - name: stream_id
+    description: Inferred string field from week5_events
+    tests:
+    - not_null
