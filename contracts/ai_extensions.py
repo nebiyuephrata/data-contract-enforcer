@@ -119,10 +119,17 @@ def run_embedding_drift(
                 )
             ],
         )
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
+    provider_settings = _embedding_client_settings(ai_config)
+    if provider_settings.get("error_message"):
         return (
-            [{"dataset": dataset_name, "check": "embedding_drift", "status": "ERROR", "message": "OPENAI_API_KEY is not configured."}],
+            [
+                {
+                    "dataset": dataset_name,
+                    "check": "embedding_drift",
+                    "status": "ERROR",
+                    "message": provider_settings["error_message"],
+                }
+            ],
             [
                 Violation(
                     dataset=dataset_name,
@@ -130,7 +137,7 @@ def run_embedding_drift(
                     status="ERROR",
                     severity="HIGH",
                     category="ai",
-                    message="Embedding drift skipped because OPENAI_API_KEY is not configured.",
+                    message=f"Embedding drift skipped because {provider_settings['error_message'].rstrip('.')}.",
                 )
             ],
         )
@@ -151,8 +158,13 @@ def run_embedding_drift(
             ],
         )
 
-    client = OpenAI(api_key=api_key)
-    response = client.embeddings.create(model=ai_config.get("embedding_model", "text-embedding-3-small"), input=texts)
+    client_kwargs: dict[str, Any] = {"api_key": provider_settings["api_key"]}
+    if provider_settings.get("base_url"):
+        client_kwargs["base_url"] = provider_settings["base_url"]
+    if provider_settings.get("default_headers"):
+        client_kwargs["default_headers"] = provider_settings["default_headers"]
+    client = OpenAI(**client_kwargs)
+    response = client.embeddings.create(model=provider_settings["model"], input=texts)
     vectors = [list(item.embedding) for item in response.data]
     centroid = [sum(values) / len(values) for values in zip(*vectors)]
 
@@ -274,6 +286,38 @@ def run_llm_schema_checks(
         }
     dump_json(rate_path, history)
     return checks, violations
+
+
+def _embedding_client_settings(ai_config: dict[str, Any]) -> dict[str, Any]:
+    provider = str(ai_config.get("embedding_provider", "openai")).lower()
+    if provider == "openrouter":
+        api_key = os.getenv("OPENROUTER_API_KEY")
+        if not api_key:
+            return {"error_message": "OPENROUTER_API_KEY is not configured."}
+        headers = {}
+        http_referer = os.getenv("OPENROUTER_HTTP_REFERER")
+        app_title = os.getenv("OPENROUTER_APP_TITLE")
+        if http_referer:
+            headers["HTTP-Referer"] = http_referer
+        if app_title:
+            headers["X-Title"] = app_title
+        return {
+            "provider": provider,
+            "api_key": api_key,
+            "base_url": ai_config.get("embedding_base_url", "https://openrouter.ai/api/v1"),
+            "model": ai_config.get("embedding_model", "google/gemini-embedding-001"),
+            "default_headers": headers or None,
+        }
+
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        return {"error_message": "OPENAI_API_KEY is not configured."}
+    return {
+        "provider": "openai",
+        "api_key": api_key,
+        "base_url": ai_config.get("embedding_base_url"),
+        "model": ai_config.get("embedding_model", "text-embedding-3-small"),
+    }
 
 
 def _collect_text_samples(records: list[dict[str, Any]], text_fields: list[str], limit: int) -> list[str]:

@@ -1,9 +1,10 @@
+id: week5_events
 standard: odcs
 kind: data_contract
 version: '1.0'
 dataset: week5_events
 source: /home/rata/Documents/Ephrata/work/10Acadamy/training/apexLedger/data/seed_events.jsonl
-generated_at: '2026-04-04T07:16:36.718183+00:00'
+generated_at: '2026-04-04T07:26:11.205272+00:00'
 lineage:
   snapshot_path: /home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/schema_snapshots/lineage/apex_lineage_graph.json
   downstream_consumers:
@@ -11,6 +12,12 @@ lineage:
   - file:decision_orchestrator_agent
   - file:event_simulator
   - file:events_schema
+  registry_subscribers:
+  - governance_health_dashboard
+  - executive_decisioning_dashboard
+  - compliance_boundary_gate
+  note: Blast radius uses registry_subscribers as the primary source. Lineage consumers
+    are enrichment only.
 clauses:
 - id: w5_stream_prefix
   description: Event stream ids must use one of the known aggregate prefixes.

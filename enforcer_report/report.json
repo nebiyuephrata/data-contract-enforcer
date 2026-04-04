@@ -9,7 +9,7 @@
     {
       "check": "embedding_drift",
       "dataset": "week5_events",
-      "message": "OPENAI_API_KEY is not configured.",
+      "message": "OPENROUTER_API_KEY is not configured.",
       "status": "ERROR"
     },
     {
@@ -45,7 +45,7 @@
     "The enforcer encountered an operational error around unknown field, which reduces confidence in monitoring coverage until the underlying issue is fixed."
   ],
   "data_health_score": 70,
-  "generated_at": "2026-04-04T07:17:06.031188+00:00",
+  "generated_at": "2026-04-04T07:26:25.656240+00:00",
   "recommended_actions": [
     "Increase contract registry coverage for high-value fields so blast radius is explicit before the next release.",
     "Confirm all consumer-ingestion validators are using the latest generated contracts and baselines before the next scheduled run.",
@@ -73,14 +73,14 @@
   "summary": [
     {
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-04T07:16:47.572635+00:00",
+      "generated_at": "2026-04-04T07:26:10.448384+00:00",
       "record_count": 50,
       "status": "PASS",
       "violation_count": 0
     },
     {
       "dataset": "week5_events",
-      "generated_at": "2026-04-04T07:16:48.816702+00:00",
+      "generated_at": "2026-04-04T07:26:11.828565+00:00",
       "record_count": 1847,
       "status": "PASS",
       "violation_count": 0
@@ -105,7 +105,7 @@
       "column": null,
       "dataset": "week5_events",
       "expected": null,
-      "message": "Embedding drift skipped because OPENAI_API_KEY is not configured.",
+      "message": "Embedding drift skipped because OPENROUTER_API_KEY is not configured.",
       "row_locator": null,
       "severity": "HIGH",
       "status": "ERROR"

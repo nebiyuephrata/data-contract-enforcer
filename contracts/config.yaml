@@ -24,8 +24,9 @@ validation:
   min_observations_for_drift: 20
 
 ai:
-  embedding_provider: openai
-  embedding_model: text-embedding-3-small
+  embedding_provider: openrouter
+  embedding_model: google/gemini-embedding-001
+  embedding_base_url: https://openrouter.ai/api/v1
   text_sample_size: 200
   drift_threshold: 0.15
 

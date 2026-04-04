@@ -8,6 +8,7 @@ import yaml
 
 from .lineage_loader import downstream_consumers, load_lineage_snapshot
 from .models import DatasetConfig
+from .registry import load_registry, registry_contract_subscribers
 from .utils import (
     flatten_record,
     infer_column_type,
@@ -78,9 +79,14 @@ def profile_records(records: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
     return profile
 
 
-def build_contract(dataset: DatasetConfig, records: list[dict[str, Any]]) -> dict[str, Any]:
+def build_contract(
+    dataset: DatasetConfig,
+    records: list[dict[str, Any]],
+    registry_path: str | None = None,
+) -> dict[str, Any]:
     profile = profile_records(records)
     snapshot = load_lineage_snapshot(dataset.lineage_snapshot)
+    registry = load_registry(registry_path or str(project_root() / "contract_registry" / "subscriptions.yaml"))
     fields: list[dict[str, Any]] = []
     for name, metadata in profile.items():
         field: dict[str, Any] = {
@@ -101,6 +107,7 @@ def build_contract(dataset: DatasetConfig, records: list[dict[str, Any]]) -> dic
         fields.append(field)
     clauses = build_contract_clauses(dataset)
     return {
+        "id": dataset.name,
         "standard": "odcs",
         "kind": "data_contract",
         "version": "1.0",
@@ -110,6 +117,12 @@ def build_contract(dataset: DatasetConfig, records: list[dict[str, Any]]) -> dic
         "lineage": {
             "snapshot_path": dataset.lineage_snapshot,
             "downstream_consumers": downstream_consumers(snapshot, dataset.name),
+            "registry_subscribers": [
+                subscriber.get("subscriber_id")
+                for subscriber in registry_contract_subscribers(registry, dataset.name)
+                if subscriber.get("subscriber_id")
+            ],
+            "note": "Blast radius uses registry_subscribers as the primary source. Lineage consumers are enrichment only.",
         },
         "clauses": clauses,
         "fields": fields,

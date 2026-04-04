@@ -1,9 +1,10 @@
+id: week3_extractions
 standard: odcs
 kind: data_contract
 version: '1.0'
 dataset: week3_extractions
 source: /home/rata/Documents/Ephrata/work/10Acadamy/training/apexLedger/data/seed_events.jsonl
-generated_at: '2026-04-04T07:16:36.414530+00:00'
+generated_at: '2026-04-04T07:26:10.360709+00:00'
 lineage:
   snapshot_path: /home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/schema_snapshots/lineage/apex_lineage_graph.json
   downstream_consumers:
@@ -14,6 +15,12 @@ lineage:
   - file:event_simulator
   - file:events_schema
   - file:extraction_api_client
+  registry_subscribers:
+  - credit_analysis_ingestion
+  - fraud_screening_ingestion
+  - decision_orchestrator_ingestion
+  note: Blast radius uses registry_subscribers as the primary source. Lineage consumers
+    are enrichment only.
 clauses:
 - id: w3_event_type_fixed
   description: The extraction dataset must only contain ExtractionCompleted events.

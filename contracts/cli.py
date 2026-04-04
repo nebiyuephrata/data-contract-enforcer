@@ -69,7 +69,7 @@ def cmd_generate_contracts(args: argparse.Namespace, config: dict[str, Any]) -> 
     outputs = []
     for dataset in config["datasets"]:
         _, records = load_dataset_records(dataset)
-        contract = build_contract(dataset, records)
+        contract = build_contract(dataset, records, config["paths"].get("registry"))
         dbt_schema = build_dbt_schema(contract)
         outputs.append(write_contract_outputs(dataset, contract, dbt_schema))
     print(json.dumps(outputs, indent=2))

@@ -26,6 +26,18 @@ python3 -m venv .venv
 .venv/bin/pip install -e ".[dev]"
 ```
 
+## Embedding Providers
+
+OpenAI remains supported, but the default embedding path is now OpenRouter with Gemini embeddings.
+
+```bash
+export OPENROUTER_API_KEY=...
+export OPENROUTER_HTTP_REFERER=https://your-app.example
+export OPENROUTER_APP_TITLE=data-contract-enforcer
+```
+
+The default embedding model in [contracts/config.yaml](/home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/contracts/config.yaml) is `google/gemini-embedding-001` through the OpenRouter OpenAI-compatible embeddings API.
+
 ## CLI
 
 ```bash
@@ -42,5 +54,6 @@ data-contract-enforcer stress-test
 ## Notes
 
 - The enforcer never crashes the run on malformed data. It records `ERROR` diagnostics and continues.
+- Registry blast radius is `registry-first`: [contract_registry/subscriptions.yaml](/home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/contract_registry/subscriptions.yaml) is the primary subscriber source, and lineage only enriches transitive contamination inside visible systems.
 - Lineage is treated as cached/offline input. If no lineage snapshot is available, attribution falls back to file-level evidence and Git blame.
-- OpenAI embeddings are optional. If `OPENAI_API_KEY` is not configured, embedding drift is recorded as an `ERROR` and the rest of the run still completes.
+- Embedding drift is optional. If the configured provider key is missing, the run records an `ERROR` and continues.

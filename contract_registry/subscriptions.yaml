@@ -1,92 +1,135 @@
-datasets:
-  week3_extractions:
-    subscribers:
-      - consumer: credit_analysis_ingestion
-        boundary: consumer_ingestion
-        owner: credit-risk@apexledger.local
-        severity: high
-        depends_on_fields:
-          - payload.document_type
-          - payload.facts.total_revenue
-          - payload.facts.ebitda
-          - payload.facts.net_income
-          - payload.facts.debt_to_ebitda
-          - payload.facts.current_ratio
-          - payload.facts.field_confidence.total_revenue
-          - payload.facts.field_confidence.net_income
-        depends_on_prefixes:
-          - payload.facts.field_confidence.
-      - consumer: fraud_screening_ingestion
-        boundary: consumer_ingestion
-        owner: fraud@apexledger.local
-        severity: medium
-        depends_on_fields:
-          - payload.document_id
-          - payload.document_type
-          - payload.facts.total_assets
-          - payload.facts.total_liabilities
-          - payload.facts.balance_sheet_balances
-          - payload.processing_ms
-      - consumer: decision_orchestrator_ingestion
-        boundary: consumer_ingestion
-        owner: orchestrator@apexledger.local
-        severity: high
-        depends_on_fields:
-          - payload.facts.total_revenue
-          - payload.facts.ebitda
-          - payload.facts.net_income
-          - payload.facts.field_confidence.total_revenue
-          - payload.facts.field_confidence.total_assets
-          - payload.completed_at
-    migration_plans:
-      - plan_id: w3-confidence-range-hardening
-        field_name: payload.facts.field_confidence.total_revenue
-        change_type: metadata_change
-        status: approved
-      - plan_id: w3-balance-sheet-nullability
-        field_name: payload.facts.balance_sheet_balances
-        change_type: tighten_nullability
-        status: approved
+subscriptions:
+  - contract_id: week3_extractions
+    subscriber_id: credit_analysis_ingestion
+    fields_consumed:
+      - payload.document_type
+      - payload.facts.total_revenue
+      - payload.facts.ebitda
+      - payload.facts.net_income
+      - payload.facts.debt_to_ebitda
+      - payload.facts.current_ratio
+      - payload.facts.field_confidence.total_revenue
+      - payload.facts.field_confidence.net_income
+    breaking_fields:
+      - field: payload.document_type
+        reason: Credit policy routing changes if the upstream extraction type taxonomy changes.
+      - field: payload.facts.field_confidence
+        reason: Score normalization depends on confidence staying on a 0.0 to 1.0 scale.
+      - field: payload.facts.total_revenue
+        reason: Revenue is a primary underwriting feature and a rename or type change blocks scoring.
+    validation_mode: AUDIT
+    contact: credit-risk@apexledger.local
+    registered_at: "2026-04-04T07:00:00Z"
 
-  week5_events:
-    subscribers:
-      - consumer: governance_health_dashboard
-        boundary: consumer_ingestion
-        owner: governance@apexledger.local
-        severity: medium
-        depends_on_fields:
-          - stream_id
-          - event_type
-          - event_version
-          - recorded_at
-          - payload.agent_type
-          - payload.confidence
-          - payload.decision.confidence
-      - consumer: executive_decisioning_dashboard
-        boundary: consumer_ingestion
-        owner: exec-ops@apexledger.local
-        severity: high
-        depends_on_fields:
-          - payload.recommendation
-          - payload.confidence
-          - payload.executive_summary
-          - payload.decision.risk_tier
-          - payload.decision.recommended_limit_usd
-      - consumer: compliance_boundary_gate
-        boundary: consumer_ingestion
-        owner: compliance@apexledger.local
-        severity: high
-        depends_on_fields:
-          - payload.document_format
-          - payload.deadline
-          - payload.decline_reasons
-          - payload.approved_amount_usd
-    migration_plans:
-      - plan_id: w5-recommendation-enum-broadening
-        field_name: payload.recommendation
-        change_type: widen_enum
-        status: approved
-      - plan_id: w5-confidence-floor-rule
-        field_name: payload.confidence
-        change_type: metadata_change
-        status: approved
+  - contract_id: week3_extractions
+    subscriber_id: fraud_screening_ingestion
+    fields_consumed:
+      - payload.document_id
+      - payload.document_type
+      - payload.facts.total_assets
+      - payload.facts.total_liabilities
+      - payload.facts.balance_sheet_balances
+      - payload.processing_ms
+    breaking_fields:
+      - field: payload.document_id
+        reason: Fraud graph joins use document identity as a stable foreign key.
+      - field: payload.facts.balance_sheet_balances
+        reason: Screening logic assumes the balance check flag is present for suspicious package escalation.
+    validation_mode: AUDIT
+    contact: fraud@apexledger.local
+    registered_at: "2026-04-04T07:00:00Z"
+
+  - contract_id: week3_extractions
+    subscriber_id: decision_orchestrator_ingestion
+    fields_consumed:
+      - payload.facts.total_revenue
+      - payload.facts.ebitda
+      - payload.facts.net_income
+      - payload.facts.field_confidence.total_revenue
+      - payload.facts.field_confidence.total_assets
+      - payload.completed_at
+    breaking_fields:
+      - field: payload.facts.field_confidence
+        reason: Confidence-weighted orchestration degrades if extraction confidence changes scale or disappears.
+      - field: payload.completed_at
+        reason: Orchestration SLAs use extraction completion time for deadline sequencing.
+    validation_mode: ENFORCE
+    contact: orchestrator@apexledger.local
+    registered_at: "2026-04-04T07:00:00Z"
+
+  - contract_id: week5_events
+    subscriber_id: governance_health_dashboard
+    fields_consumed:
+      - stream_id
+      - event_type
+      - event_version
+      - recorded_at
+      - payload.agent_type
+      - payload.confidence
+      - payload.decision.confidence
+    breaking_fields:
+      - field: event_type
+        reason: Dashboard rollups partition by event type and would silently miscount if values drift.
+      - field: payload.confidence
+        reason: Executive health metrics assume normalized confidence values.
+    validation_mode: AUDIT
+    contact: governance@apexledger.local
+    registered_at: "2026-04-04T07:00:00Z"
+
+  - contract_id: week5_events
+    subscriber_id: executive_decisioning_dashboard
+    fields_consumed:
+      - payload.recommendation
+      - payload.confidence
+      - payload.executive_summary
+      - payload.decision.risk_tier
+      - payload.decision.recommended_limit_usd
+    breaking_fields:
+      - field: payload.recommendation
+        reason: Recommendation enums drive decision funnel counts and executive alerts.
+      - field: payload.confidence
+        reason: Confidence scale changes would distort downstream ranking and analyst escalation thresholds.
+    validation_mode: ENFORCE
+    contact: exec-ops@apexledger.local
+    registered_at: "2026-04-04T07:00:00Z"
+
+  - contract_id: week5_events
+    subscriber_id: compliance_boundary_gate
+    fields_consumed:
+      - payload.document_format
+      - payload.deadline
+      - payload.decline_reasons
+      - payload.approved_amount_usd
+    breaking_fields:
+      - field: payload.document_format
+        reason: Compliance routing depends on known file-type categories.
+      - field: payload.deadline
+        reason: Deadline timestamps are used to trigger escalation paths and late-file alerts.
+    validation_mode: ENFORCE
+    contact: compliance@apexledger.local
+    registered_at: "2026-04-04T07:00:00Z"
+
+migration_plans:
+  - contract_id: week3_extractions
+    plan_id: w3-confidence-range-hardening
+    field_name: payload.facts.field_confidence.total_revenue
+    change_type: metadata_change
+    status: approved
+
+  - contract_id: week3_extractions
+    plan_id: w3-balance-sheet-nullability
+    field_name: payload.facts.balance_sheet_balances
+    change_type: tighten_nullability
+    status: approved
+
+  - contract_id: week5_events
+    plan_id: w5-recommendation-enum-broadening
+    field_name: payload.recommendation
+    change_type: widen_enum
+    status: approved
+
+  - contract_id: week5_events
+    plan_id: w5-confidence-floor-rule
+    field_name: payload.confidence
+    change_type: metadata_change
+    status: approved

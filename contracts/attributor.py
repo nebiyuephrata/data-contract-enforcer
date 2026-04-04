@@ -56,7 +56,9 @@ def attribute_violations(
                 confidence=confidence,
                 lineage_hops=hops,
                 rationale=candidate_info["rationale"],
-                impacted_consumers=[subscriber.get("name", "unknown") for subscriber in blast_radius],
+                impacted_consumers=[
+                    subscriber.get("subscriber_id") or subscriber.get("name", "unknown") for subscriber in blast_radius
+                ],
                 transitive_consumers=transitive,
             )
             if best_result is None or result.confidence > best_result.confidence:

@@ -5,29 +5,25 @@ from contracts.registry import registry_blast_radius, registry_migration_gate
 
 def test_registry_blast_radius_prefers_declared_subscribers():
     registry = {
-        "datasets": {
-            "week3_extractions": {
-                "subscribers": [
-                    {
-                        "name": "credit_analysis_ingestion",
-                        "depends_on_fields": ["payload.facts.field_confidence.total_revenue"],
-                        "depends_on_prefixes": [],
-                    },
-                    {
-                        "name": "decision_orchestrator_ingestion",
-                        "depends_on_fields": [],
-                        "depends_on_prefixes": ["payload.facts.field_confidence."],
-                    },
-                ]
-            }
-        }
+        "subscriptions": [
+            {
+                "contract_id": "week3_extractions",
+                "subscriber_id": "credit_analysis_ingestion",
+                "breaking_fields": [{"field": "payload.facts.field_confidence.total_revenue", "reason": "Exact dependency."}],
+            },
+            {
+                "contract_id": "week3_extractions",
+                "subscriber_id": "decision_orchestrator_ingestion",
+                "breaking_fields": [{"field": "payload.facts.field_confidence", "reason": "Prefix dependency."}],
+            },
+        ]
     }
     matches = registry_blast_radius(
         registry,
         "week3_extractions",
         "payload.facts.field_confidence.total_revenue",
     )
-    assert [item["name"] for item in matches] == [
+    assert [item["subscriber_id"] for item in matches] == [
         "credit_analysis_ingestion",
         "decision_orchestrator_ingestion",
     ]
@@ -35,17 +31,14 @@ def test_registry_blast_radius_prefers_declared_subscribers():
 
 def test_registry_migration_gate_passes_with_approved_plan():
     registry = {
-        "datasets": {
-            "week5_events": {
-                "migration_plans": [
-                    {
-                        "field_name": "payload.confidence",
-                        "change_type": "narrow_range",
-                        "status": "approved",
-                    }
-                ]
+        "migration_plans": [
+            {
+                "contract_id": "week5_events",
+                "field_name": "payload.confidence",
+                "change_type": "narrow_range",
+                "status": "approved",
             }
-        }
+        ]
     }
     gate = registry_migration_gate(
         registry,

@@ -31,7 +31,7 @@ def test_schema_analyzer_detects_breaking_non_nullable_addition(tmp_path: Path):
 
 
 def test_registry_gate_fails_without_migration_plan():
-    registry = {"datasets": {"demo": {"migration_plans": []}}}
+    registry = {"migration_plans": []}
     gate = evaluate_registry_gate(
         "demo",
         [
