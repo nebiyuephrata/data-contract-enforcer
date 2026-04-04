@@ -25,6 +25,7 @@ class Violation:
     severity: str
     category: str
     message: str
+    check_id: str | None = None
     row_locator: str | None = None
     expected: Any | None = None
     actual: Any | None = None

@@ -4,7 +4,7 @@ kind: data_contract
 version: '1.0'
 dataset: week5_events
 source: /home/rata/Documents/Ephrata/work/10Acadamy/training/apexLedger/data/seed_events.jsonl
-generated_at: '2026-04-04T07:26:11.205272+00:00'
+generated_at: '2026-04-04T08:25:08.403597+00:00'
 lineage:
   snapshot_path: /home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/schema_snapshots/lineage/apex_lineage_graph.json
   downstream_consumers:
@@ -131,6 +131,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field __source_line for dataset week5_events.
   stats:
     min: 1.0
     max: 1847.0
@@ -141,11 +142,15 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include ['ApplicationSubmitted', 'DocumentUploadRequested', 'PackageCreated'].
+    Review semantic meaning with the domain owner.
 - name: event_version
   type: integer
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field event_version for dataset week5_events.
   stats:
     min: 1.0
     max: 2.0
@@ -156,22 +161,26 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9328641039523552
+  description: Profiled field payload.added_at for dataset week5_events.
   format: date-time
 - name: payload.adverse_action_codes
   type: array
   required: false
   nullable: true
   null_fraction: 0.9983757444504602
+  description: Profiled field payload.adverse_action_codes for dataset week5_events.
 - name: payload.adverse_action_notice_required
   type: boolean
   required: false
   nullable: true
   null_fraction: 0.9983757444504602
+  description: Profiled field payload.adverse_action_notice_required for dataset week5_events.
 - name: payload.agent_id
   type: string
   required: false
   nullable: true
   null_fraction: 0.9485652409312398
+  description: Profiled field payload.agent_id for dataset week5_events.
   enum:
   - doc-agent-1
   - credit-agent-1
@@ -183,6 +192,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.4959393611261505
+  description: Profiled field payload.agent_type for dataset week5_events.
   enum:
   - document_processing
   - credit_analysis
@@ -194,51 +204,67 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.991878722252301
+  description: Profiled field payload.all_analyses_complete for dataset week5_events.
 - name: payload.analysis_duration_ms
   type: integer
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Profiled field payload.analysis_duration_ms for dataset week5_events.
   stats:
     min: 16331.0
     max: 44318.0
     mean: 30414.285714285714
     stddev: 8246.552307842738
+  warnings:
+  - 'Suspicious distribution warning: payload.analysis_duration_ms mean is above 0.99
+    and may indicate saturation or scale drift.'
 - name: payload.anomalies
   type: array
   required: false
   nullable: true
   null_fraction: 0.9864645370871684
+  description: Profiled field payload.anomalies for dataset week5_events.
 - name: payload.anomalies_found
   type: integer
   required: false
   nullable: true
   null_fraction: 0.9902544667027612
+  description: Profiled field payload.anomalies_found for dataset week5_events.
   stats:
     min: 0.0
     max: 0.0
     mean: 0.0
     stddev: 0.0
+  warnings:
+  - 'Suspicious distribution warning: payload.anomalies_found mean is below 0.01 and
+    may indicate sparse or mis-scaled values.'
 - name: payload.applicant_id
   type: string
   required: false
   nullable: true
   null_fraction: 0.9680563075257174
+  description: Profiled field payload.applicant_id for dataset week5_events.
 - name: payload.application_id
   type: string
   required: false
   nullable: true
   null_fraction: 0.46020573903627504
+  description: Profiled field payload.application_id for dataset week5_events.
 - name: payload.application_reference
   type: string
   required: false
   nullable: true
   null_fraction: 0.9794260963724959
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include ['APEX-0001', 'APEX-0002', 'APEX-0003']. Review semantic meaning with
+    the domain owner.
 - name: payload.approved_amount_usd
   type: number
   required: false
   nullable: true
   null_fraction: 0.9870059556036817
+  description: Profiled field payload.approved_amount_usd for dataset week5_events.
   stats:
     min: 95000.0
     max: 2115000.0
@@ -249,12 +275,14 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9935029778018408
+  description: Profiled field payload.approved_at for dataset week5_events.
   format: date-time
 - name: payload.approved_by
   type: string
   required: false
   nullable: true
   null_fraction: 0.9935029778018408
+  description: Profiled field payload.approved_by for dataset week5_events.
   enum:
   - auto
 - name: payload.assessed_at
@@ -262,12 +290,14 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9864645370871684
+  description: Profiled field payload.assessed_at for dataset week5_events.
   format: date-time
 - name: payload.auditor_notes
   type: string
   required: false
   nullable: true
   null_fraction: 0.9864645370871684
+  description: Profiled field payload.auditor_notes for dataset week5_events.
   enum:
   - Financial statements appear internally consistent. Balance sheet balances. Revenue
     consistent with prior year trajectory.
@@ -276,23 +306,27 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9615592853275582
+  description: Profiled field payload.called_at for dataset week5_events.
   format: date-time
 - name: payload.completed_at
   type: string
   required: false
   nullable: true
   null_fraction: 0.8917162966973471
+  description: Profiled field payload.completed_at for dataset week5_events.
   format: date-time
 - name: payload.conditions
   type: array
   required: false
   nullable: true
   null_fraction: 0.9853817000541418
+  description: Profiled field payload.conditions for dataset week5_events.
 - name: payload.confidence
   type: number
   required: false
   nullable: true
   null_fraction: 0.991878722252301
+  description: Profiled field payload.confidence for dataset week5_events.
   constraints:
     minimum: 0.0
     maximum: 1.0
@@ -306,22 +340,30 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9772604223064428
+  description: Profiled field payload.consumed_at for dataset week5_events.
   format: date-time
 - name: payload.contact_email
   type: string
   required: false
   nullable: true
   null_fraction: 0.9794260963724959
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include ['mitchellkathryn@example.com', 'glynch@example.com', 'dlong@example.org'].
+    Review semantic meaning with the domain owner.
 - name: payload.contact_name
   type: string
   required: false
   nullable: true
   null_fraction: 0.9794260963724959
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include ['Michael Davis', 'Lori Valentine', 'Jamie Davis']. Review semantic meaning
+    with the domain owner.
 - name: payload.context_source
   type: string
   required: false
   nullable: true
   null_fraction: 0.9485652409312398
+  description: Profiled field payload.context_source for dataset week5_events.
   enum:
   - fresh
 - name: payload.context_token_count
@@ -329,6 +371,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9485652409312398
+  description: Profiled field payload.context_token_count for dataset week5_events.
   stats:
     min: 618.0
     max: 3785.0
@@ -339,33 +382,43 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.991878722252301
+  description: Profiled field payload.contributing_sessions for dataset week5_events.
 - name: payload.created_at
   type: string
   required: false
   nullable: true
   null_fraction: 0.9794260963724959
+  description: Profiled field payload.created_at for dataset week5_events.
   format: date-time
 - name: payload.critical_missing_fields
   type: array
   required: false
   nullable: true
   null_fraction: 0.9864645370871684
+  description: Profiled field payload.critical_missing_fields for dataset week5_events.
 - name: payload.data_hash
   type: string
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include ['2f36de072040825f', '7aceb8f4fbb9491e', '53fea0b541d9f801']. Review semantic
+    meaning with the domain owner.
 - name: payload.deadline
   type: string
   required: false
   nullable: true
   null_fraction: 0.9794260963724959
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include ['2026-03-16T19:49:03.469747', '2026-03-30T19:53:03.474807', '2026-03-02T19:52:03.477909'].
+    Review semantic meaning with the domain owner.
   format: date-time
 - name: payload.decision.confidence
   type: number
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Profiled field payload.decision.confidence for dataset week5_events.
   constraints:
     minimum: 0.0
     maximum: 1.0
@@ -379,26 +432,37 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Profiled field payload.decision.data_quality_caveats for dataset week5_events.
 - name: payload.decision.key_concerns
   type: array
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Profiled field payload.decision.key_concerns for dataset week5_events.
 - name: payload.decision.policy_overrides_applied
   type: array
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Profiled field payload.decision.policy_overrides_applied for dataset
+    week5_events.
 - name: payload.decision.rationale
   type: string
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include ['Based on stable revenue trajectory and Debt/EBITDA of 2.7x, the company
+    demonstrates adequate debt service capacity.', 'Based on stable revenue trajectory
+    and Debt/EBITDA of 13.0x, the company demonstrates stressed debt service capacity.',
+    'Based on growth revenue trajectory and Debt/EBITDA of 11.2x, the company demonstrates
+    stressed debt service capacity.']. Review semantic meaning with the domain owner.
 - name: payload.decision.recommended_limit_usd
   type: number
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Profiled field payload.decision.recommended_limit_usd for dataset week5_events.
   stats:
     min: 80000.0
     max: 3835000.0
@@ -409,6 +473,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Profiled field payload.decision.risk_tier for dataset week5_events.
   enum:
   - MEDIUM
   - HIGH
@@ -418,11 +483,13 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9983757444504602
+  description: Profiled field payload.decline_reasons for dataset week5_events.
 - name: payload.declined_at
   type: string
   required: false
   nullable: true
   null_fraction: 0.9983757444504602
+  description: Profiled field payload.declined_at for dataset week5_events.
   format: date-time
   enum:
   - '2026-03-19T13:08:31.015663'
@@ -433,6 +500,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9983757444504602
+  description: Profiled field payload.declined_by for dataset week5_events.
   enum:
   - auto
   - compliance-system
@@ -441,6 +509,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.detected_format for dataset week5_events.
   enum:
   - pdf
 - name: payload.document_format
@@ -448,6 +517,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.8657282079047104
+  description: Profiled field payload.document_format for dataset week5_events.
   enum:
   - pdf
   - xlsx
@@ -456,16 +526,19 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.7709799675148891
+  description: Profiled field payload.document_id for dataset week5_events.
 - name: payload.document_ids_consumed
   type: array
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Profiled field payload.document_ids_consumed for dataset week5_events.
 - name: payload.document_type
   type: string
   required: false
   nullable: true
   null_fraction: 0.7845154304277207
+  description: Profiled field payload.document_type for dataset week5_events.
   enum:
   - application_proposal
   - income_statement
@@ -475,6 +548,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9864645370871684
+  description: Profiled field payload.documents_processed for dataset week5_events.
   stats:
     min: 3.0
     max: 3.0
@@ -485,16 +559,21 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.7401191120736329
+  description: Profiled field payload.duration_ms for dataset week5_events.
   stats:
     min: 80.0
     max: 11905.0
     mean: 1476.54375
     stddev: 2894.0775865986393
+  warnings:
+  - 'Suspicious distribution warning: payload.duration_ms mean is above 0.99 and may
+    indicate saturation or scale drift.'
 - name: payload.effective_date
   type: string
   required: false
   nullable: true
   null_fraction: 0.9935029778018408
+  description: Profiled field payload.effective_date for dataset week5_events.
   format: date-time
   enum:
   - '2026-03-28'
@@ -503,12 +582,14 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9496480779642664
+  description: Profiled field payload.evaluated_at for dataset week5_events.
   format: date-time
 - name: payload.evaluation_notes
   type: string
   required: false
   nullable: true
   null_fraction: 0.9593936112615051
+  description: Profiled field payload.evaluation_notes for dataset week5_events.
   enum:
   - 'Bank Secrecy Act (BSA): Clear.'
   - 'OFAC Sanctions: Clear.'
@@ -520,22 +601,28 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9485652409312398
+  description: Profiled field payload.events_written for dataset week5_events.
 - name: payload.evidence_hash
   type: string
   required: false
   nullable: true
   null_fraction: 0.9577693557119653
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include ['dc7ccdf5a72565ac', '747403cb6c6bc59c', '0dda729969ff5c67']. Review semantic
+    meaning with the domain owner.
 - name: payload.executed_at
   type: string
   required: false
   nullable: true
   null_fraction: 0.7401191120736329
+  description: Profiled field payload.executed_at for dataset week5_events.
   format: date-time
 - name: payload.executive_summary
   type: string
   required: false
   nullable: true
   null_fraction: 0.991878722252301
+  description: Profiled field payload.executive_summary for dataset week5_events.
   enum:
   - Approval recommended. RECOVERING trajectory. Compliance clear. Fraud screening
     low risk.
@@ -558,6 +645,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.extraction_model for dataset week5_events.
   enum:
   - mineru-1.0
 - name: payload.facts.accounts_receivable
@@ -565,6 +653,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.accounts_receivable for dataset week5_events.
   stats:
     min: 112831.87
     max: 5339401.82
@@ -575,16 +664,20 @@ fields:
   required: false
   nullable: true
   null_fraction: 1.0
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include []. Review semantic meaning with the domain owner.
 - name: payload.facts.balance_sheet_balances
   type: boolean
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.balance_sheet_balances for dataset week5_events.
 - name: payload.facts.cash_and_equivalents
   type: number
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.cash_and_equivalents for dataset week5_events.
   stats:
     min: 88344.19
     max: 5575794.99
@@ -595,6 +688,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.currency for dataset week5_events.
   enum:
   - USD
 - name: payload.facts.current_assets
@@ -602,6 +696,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.current_assets for dataset week5_events.
   stats:
     min: 268444.55
     max: 18262165.62
@@ -612,6 +707,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.current_liabilities for dataset week5_events.
   stats:
     min: 164961.78
     max: 8799679.96
@@ -622,16 +718,21 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.current_ratio for dataset week5_events.
   stats:
     min: 1.36
     max: 2.79
     mean: 2.0968
     stddev: 0.43936973040936717
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.current_ratio mean is above 0.99
+    and may indicate saturation or scale drift.'
 - name: payload.facts.debt_to_ebitda
   type: number
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.debt_to_ebitda for dataset week5_events.
   stats:
     min: 1.28
     max: 24.64
@@ -642,6 +743,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.debt_to_equity for dataset week5_events.
   stats:
     min: 0.34
     max: 1.53
@@ -652,6 +754,8 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.depreciation_amortization for dataset
+    week5_events.
   stats:
     min: 14666.15
     max: 816655.99
@@ -662,6 +766,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9864645370871684
+  description: Profiled field payload.facts.ebitda for dataset week5_events.
   stats:
     min: 114919.59
     max: 3628489.79
@@ -672,11 +777,14 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.extraction_notes for dataset week5_events.
 - name: payload.facts.field_confidence.net_income
   type: number
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.field_confidence.net_income for dataset
+    week5_events.
   constraints:
     minimum: 0.0
     maximum: 1.0
@@ -690,6 +798,8 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.field_confidence.total_assets for dataset
+    week5_events.
   constraints:
     minimum: 0.0
     maximum: 1.0
@@ -703,6 +813,8 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.field_confidence.total_revenue for dataset
+    week5_events.
   constraints:
     minimum: 0.0
     maximum: 1.0
@@ -716,11 +828,14 @@ fields:
   required: false
   nullable: true
   null_fraction: 1.0
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include []. Review semantic meaning with the domain owner.
 - name: payload.facts.fiscal_year_end
   type: string
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.fiscal_year_end for dataset week5_events.
   format: date-time
   enum:
   - '2024-12-31'
@@ -729,16 +844,20 @@ fields:
   required: false
   nullable: true
   null_fraction: 1.0
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include []. Review semantic meaning with the domain owner.
 - name: payload.facts.gaap_compliant
   type: boolean
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.gaap_compliant for dataset week5_events.
 - name: payload.facts.gross_margin
   type: number
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.gross_margin for dataset week5_events.
   stats:
     min: 0.19
     max: 0.64
@@ -749,6 +868,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.gross_profit for dataset week5_events.
   stats:
     min: 298285.12
     max: 11621054.47
@@ -759,11 +879,14 @@ fields:
   required: false
   nullable: true
   null_fraction: 1.0
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include []. Review semantic meaning with the domain owner.
 - name: payload.facts.interest_coverage
   type: number
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.interest_coverage for dataset week5_events.
   stats:
     min: 0.37
     max: 6.92
@@ -774,6 +897,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.interest_expense for dataset week5_events.
   stats:
     min: 26167.43
     max: 798274.92
@@ -784,6 +908,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.inventory for dataset week5_events.
   stats:
     min: 49072.3
     max: 5784083.54
@@ -794,11 +919,14 @@ fields:
   required: false
   nullable: true
   null_fraction: 1.0
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include []. Review semantic meaning with the domain owner.
 - name: payload.facts.long_term_debt
   type: number
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.long_term_debt for dataset week5_events.
   stats:
     min: 298305.65
     max: 13252116.65
@@ -809,6 +937,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.net_income for dataset week5_events.
   stats:
     min: -42576.17
     max: 1539074.24
@@ -819,6 +948,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.net_margin for dataset week5_events.
   stats:
     min: -0.02
     max: 0.15
@@ -829,6 +959,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.operating_cash_flow for dataset week5_events.
   stats:
     min: -44365.43
     max: 3042892.24
@@ -839,11 +970,14 @@ fields:
   required: false
   nullable: true
   null_fraction: 1.0
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include []. Review semantic meaning with the domain owner.
 - name: payload.facts.operating_income
   type: number
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.operating_income for dataset week5_events.
   stats:
     min: 24688.78
     max: 2811833.8
@@ -854,6 +988,8 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.page_references.net_income for dataset
+    week5_events.
   enum:
   - page 1, table 1, row 9
 - name: payload.facts.page_references.total_revenue
@@ -861,6 +997,8 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.page_references.total_revenue for dataset
+    week5_events.
   enum:
   - page 1, table 1, row 1
 - name: payload.facts.tax_expense
@@ -868,11 +1006,14 @@ fields:
   required: false
   nullable: true
   null_fraction: 1.0
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include []. Review semantic meaning with the domain owner.
 - name: payload.facts.total_assets
   type: number
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.total_assets for dataset week5_events.
   stats:
     min: 727798.42
     max: 52224041.59
@@ -883,6 +1024,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.total_equity for dataset week5_events.
   stats:
     min: 542656.61
     max: 33110493.55
@@ -893,6 +1035,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.total_liabilities for dataset week5_events.
   stats:
     min: 185141.81
     max: 26692565.79
@@ -903,6 +1046,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.facts.total_revenue for dataset week5_events.
   stats:
     min: 549024.54
     max: 22827789.95
@@ -913,11 +1057,16 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include ['Revenue $10,130,821, EBITDA $1,191,066, Net Income $451,558', 'Revenue
+    $7,174,763, EBITDA $826,763, Net Income $179,605', 'Revenue $16,933,150, EBITDA
+    $1,677,901, Net Income $207,742']. Review semantic meaning with the domain owner.
 - name: payload.failure_reason
   type: string
   required: false
   nullable: true
   null_fraction: 0.9983757444504602
+  description: Profiled field payload.failure_reason for dataset week5_events.
   enum:
   - Legal Entity Eligibility check failed.
   - Jurisdiction Eligibility check failed.
@@ -926,6 +1075,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.8657282079047104
+  description: Profiled field payload.file_hash for dataset week5_events.
   enum:
   - 8eb66e9cbdaaa5ba
   - d794b166001141a2
@@ -936,11 +1086,16 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9328641039523552
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include ['documents/COMP-038/APEX-0008_proposal.pdf', 'documents/COMP-038/APEX-0008_income_stmt_2024.pdf',
+    'documents/COMP-038/APEX-0008_balance_sheet_2024.pdf']. Review semantic meaning
+    with the domain owner.
 - name: payload.file_size_bytes
   type: integer
   required: false
   nullable: true
   null_fraction: 0.9328641039523552
+  description: Profiled field payload.file_size_bytes for dataset week5_events.
   stats:
     min: 50238.0
     max: 376302.0
@@ -951,11 +1106,15 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9328641039523552
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include ['APEX-0008_proposal.pdf', 'APEX-0008_income_stmt_2024.pdf', 'APEX-0008_balance_sheet_2024.pdf'].
+    Review semantic meaning with the domain owner.
 - name: payload.fiscal_year
   type: integer
   required: false
   nullable: true
   null_fraction: 0.9496480779642664
+  description: Profiled field payload.fiscal_year for dataset week5_events.
   stats:
     min: 2024.0
     max: 2024.0
@@ -966,11 +1125,13 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Profiled field payload.fiscal_years_loaded for dataset week5_events.
 - name: payload.fraud_score
   type: number
   required: false
   nullable: true
   null_fraction: 0.9902544667027612
+  description: Profiled field payload.fraud_score for dataset week5_events.
   stats:
     min: 0.08
     max: 0.2
@@ -981,78 +1142,97 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.991878722252301
+  description: Profiled field payload.generated_at for dataset week5_events.
   format: date-time
 - name: payload.has_defaults
   type: boolean
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Profiled field payload.has_defaults for dataset week5_events.
 - name: payload.has_hard_block
   type: boolean
   required: false
   nullable: true
   null_fraction: 0.9913373037357878
+  description: Profiled field payload.has_hard_block for dataset week5_events.
 - name: payload.has_prior_loans
   type: boolean
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Profiled field payload.has_prior_loans for dataset week5_events.
 - name: payload.has_quality_flags
   type: boolean
   required: false
   nullable: true
   null_fraction: 0.9864645370871684
+  description: Profiled field payload.has_quality_flags for dataset week5_events.
 - name: payload.initiated_at
   type: string
   required: false
   nullable: true
   null_fraction: 0.981591770438549
+  description: Profiled field payload.initiated_at for dataset week5_events.
   format: date-time
 - name: payload.input_data_hash
   type: string
   required: false
   nullable: true
   null_fraction: 0.9788846778559827
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include ['b5d1ed551a42d582', '74da291a8504fce5', '3123a3dae0ec2f12']. Review semantic
+    meaning with the domain owner.
 - name: payload.input_keys
   type: array
   required: false
   nullable: true
   null_fraction: 0.7401191120736329
+  description: Profiled field payload.input_keys for dataset week5_events.
 - name: payload.inputs_validated
   type: array
   required: false
   nullable: true
   null_fraction: 0.9485652409312398
+  description: Profiled field payload.inputs_validated for dataset week5_events.
 - name: payload.interest_rate_pct
   type: number
   required: false
   nullable: true
   null_fraction: 0.9935029778018408
+  description: Profiled field payload.interest_rate_pct for dataset week5_events.
   stats:
     min: 5.71
     max: 9.07
     mean: 7.225833333333333
     stddev: 1.1198248250904643
+  warnings:
+  - 'Suspicious distribution warning: payload.interest_rate_pct mean is above 0.99
+    and may indicate saturation or scale drift.'
 - name: payload.is_coherent
   type: boolean
   required: false
   nullable: true
   null_fraction: 0.9864645370871684
+  description: Profiled field payload.is_coherent for dataset week5_events.
 - name: payload.is_hard_block
   type: boolean
   required: false
   nullable: true
   null_fraction: 0.9983757444504602
+  description: Profiled field payload.is_hard_block for dataset week5_events.
 - name: payload.key_risks
   type: array
   required: false
   nullable: true
   null_fraction: 0.991878722252301
+  description: Profiled field payload.key_risks for dataset week5_events.
 - name: payload.langgraph_graph_version
   type: string
   required: false
   nullable: true
   null_fraction: 0.9485652409312398
+  description: Profiled field payload.langgraph_graph_version for dataset week5_events.
   enum:
   - 1.0.0-sim
 - name: payload.llm_called
@@ -1060,11 +1240,13 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.7401191120736329
+  description: Profiled field payload.llm_called for dataset week5_events.
 - name: payload.llm_cost_usd
   type: number
   required: false
   nullable: true
   null_fraction: 0.9572279371954521
+  description: Profiled field payload.llm_cost_usd for dataset week5_events.
   stats:
     min: 0.005739
     max: 0.021537
@@ -1075,6 +1257,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9572279371954521
+  description: Profiled field payload.llm_tokens_input for dataset week5_events.
   stats:
     min: 819.0
     max: 3499.0
@@ -1085,6 +1268,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9572279371954521
+  description: Profiled field payload.llm_tokens_output for dataset week5_events.
   stats:
     min: 209.0
     max: 895.0
@@ -1095,6 +1279,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9794260963724959
+  description: Profiled field payload.loan_purpose for dataset week5_events.
   enum:
   - working_capital
   - refinancing
@@ -1107,6 +1292,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9794260963724959
+  description: Profiled field payload.loan_term_months for dataset week5_events.
   stats:
     min: 24.0
     max: 60.0
@@ -1117,11 +1303,13 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Profiled field payload.model_deployment_id for dataset week5_events.
 - name: payload.model_version
   type: string
   required: false
   nullable: true
   null_fraction: 0.9371954520844613
+  description: Profiled field payload.model_version for dataset week5_events.
   enum:
   - claude-sonnet-4-20250514
 - name: payload.model_versions.orchestrator
@@ -1129,6 +1317,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.991878722252301
+  description: Profiled field payload.model_versions.orchestrator for dataset week5_events.
   enum:
   - claude-sonnet-4-20250514
 - name: payload.next_agent_triggered
@@ -1136,6 +1325,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9572279371954521
+  description: Profiled field payload.next_agent_triggered for dataset week5_events.
   enum:
   - credit_analysis
   - fraud_detection
@@ -1146,11 +1336,15 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.7401191120736329
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include ['validate_inputs', 'run_extraction', 'assess_quality']. Review semantic
+    meaning with the domain owner.
 - name: payload.node_sequence
   type: integer
   required: false
   nullable: true
   null_fraction: 0.7401191120736329
+  description: Profiled field payload.node_sequence for dataset week5_events.
   stats:
     min: 1.0
     max: 7.0
@@ -1161,6 +1355,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.991878722252301
+  description: Profiled field payload.note_text for dataset week5_events.
   enum:
   - Applicant jurisdiction qualifies for CRA consideration.
 - name: payload.note_type
@@ -1168,6 +1363,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.991878722252301
+  description: Profiled field payload.note_type for dataset week5_events.
   enum:
   - CRA_CONSIDERATION
 - name: payload.opened_at
@@ -1175,27 +1371,36 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Profiled field payload.opened_at for dataset week5_events.
   format: date-time
 - name: payload.orchestrator_session_id
   type: string
   required: false
   nullable: true
   null_fraction: 0.991878722252301
+  description: Profiled field payload.orchestrator_session_id for dataset week5_events.
 - name: payload.output_keys
   type: array
   required: false
   nullable: true
   null_fraction: 0.7401191120736329
+  description: Profiled field payload.output_keys for dataset week5_events.
 - name: payload.output_summary
   type: string
   required: false
   nullable: true
   null_fraction: 0.9485652409312398
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include ['3 documents processed, high confidence. Package ready for credit analysis.',
+    '3 documents processed, high confidence. Package ready for credit analysis.',
+    '3 documents processed, high confidence. Package ready for credit analysis.'].
+    Review semantic meaning with the domain owner.
 - name: payload.overall_confidence
   type: number
   required: false
   nullable: true
   null_fraction: 0.9864645370871684
+  description: Profiled field payload.overall_confidence for dataset week5_events.
   constraints:
     minimum: 0.0
     maximum: 1.0
@@ -1209,6 +1414,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9913373037357878
+  description: Profiled field payload.overall_verdict for dataset week5_events.
   enum:
   - CLEAR
   - CONDITIONAL
@@ -1218,11 +1424,13 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.8040064970221982
+  description: Profiled field payload.package_id for dataset week5_events.
 - name: payload.page_count
   type: integer
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.page_count for dataset week5_events.
   stats:
     min: 2.0
     max: 5.0
@@ -1233,6 +1441,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.pipeline_version for dataset week5_events.
   enum:
   - week3-v1.0
 - name: payload.priority
@@ -1240,6 +1449,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9864645370871684
+  description: Profiled field payload.priority for dataset week5_events.
   enum:
   - NORMAL
 - name: payload.processing_ms
@@ -1247,6 +1457,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.processing_ms for dataset week5_events.
   stats:
     min: 2137.0
     max: 7892.0
@@ -1257,21 +1468,27 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9864645370871684
+  description: Profiled field payload.quality_flag_count for dataset week5_events.
   stats:
     min: 0.0
     max: 0.0
     mean: 0.0
     stddev: 0.0
+  warnings:
+  - 'Suspicious distribution warning: payload.quality_flag_count mean is below 0.01
+    and may indicate sparse or mis-scaled values.'
 - name: payload.quality_flags_present
   type: boolean
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Profiled field payload.quality_flags_present for dataset week5_events.
 - name: payload.raw_text_length
   type: integer
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.raw_text_length for dataset week5_events.
   stats:
     min: 2028.0
     max: 5960.0
@@ -1282,12 +1499,14 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9864645370871684
+  description: Profiled field payload.ready_at for dataset week5_events.
   format: date-time
 - name: payload.recommendation
   type: string
   required: false
   nullable: true
   null_fraction: 0.9821331889550623
+  description: Profiled field payload.recommendation for dataset week5_events.
   enum:
   - PROCEED
   - APPROVE
@@ -1298,11 +1517,13 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9864645370871684
+  description: Profiled field payload.reextraction_recommended for dataset week5_events.
 - name: payload.regulation_set_version
   type: string
   required: false
   nullable: true
   null_fraction: 0.981591770438549
+  description: Profiled field payload.regulation_set_version for dataset week5_events.
   enum:
   - 2026-Q1
 - name: payload.regulatory_basis
@@ -1310,21 +1531,26 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Profiled field payload.regulatory_basis for dataset week5_events.
 - name: payload.remediation_available
   type: boolean
   required: false
   nullable: true
   null_fraction: 0.9983757444504602
+  description: Profiled field payload.remediation_available for dataset week5_events.
 - name: payload.remediation_description
   type: string
   required: false
   nullable: true
   null_fraction: 1.0
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include []. Review semantic meaning with the domain owner.
 - name: payload.requested_amount_usd
   type: number
   required: false
   nullable: true
   null_fraction: 0.9794260963724959
+  description: Profiled field payload.requested_amount_usd for dataset week5_events.
   stats:
     min: 98000.0
     max: 5009000.0
@@ -1335,27 +1561,34 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9572279371954521
+  description: Profiled field payload.requested_at for dataset week5_events.
   format: date-time
 - name: payload.requested_by
   type: string
   required: false
   nullable: true
   null_fraction: 0.9658906334596643
+  description: Ambiguous free-text field inferred from week5_events; sample values
+    include ['system', 'system', 'system']. Review semantic meaning with the domain
+    owner.
 - name: payload.required_document_types
   type: array
   required: false
   nullable: true
   null_fraction: 0.9794260963724959
+  description: Profiled field payload.required_document_types for dataset week5_events.
 - name: payload.required_documents
   type: array
   required: false
   nullable: true
   null_fraction: 0.9794260963724959
+  description: Profiled field payload.required_documents for dataset week5_events.
 - name: payload.revenue_trajectory
   type: string
   required: false
   nullable: true
   null_fraction: 0.9886302111532215
+  description: Profiled field payload.revenue_trajectory for dataset week5_events.
   enum:
   - STABLE
   - GROWTH
@@ -1367,6 +1600,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9902544667027612
+  description: Profiled field payload.risk_level for dataset week5_events.
   enum:
   - LOW
   - MEDIUM
@@ -1375,6 +1609,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9496480779642664
+  description: Profiled field payload.rule_id for dataset week5_events.
   enum:
   - REG-001
   - REG-002
@@ -1387,6 +1622,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9496480779642664
+  description: Profiled field payload.rule_name for dataset week5_events.
   enum:
   - Bank Secrecy Act (BSA)
   - OFAC Sanctions
@@ -1399,6 +1635,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9577693557119653
+  description: Profiled field payload.rule_version for dataset week5_events.
   enum:
   - 2026-Q1-v1
 - name: payload.rules_evaluated
@@ -1406,6 +1643,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9913373037357878
+  description: Profiled field payload.rules_evaluated for dataset week5_events.
   stats:
     min: 3.0
     max: 6.0
@@ -1416,6 +1654,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9913373037357878
+  description: Profiled field payload.rules_failed for dataset week5_events.
   stats:
     min: 0.0
     max: 1.0
@@ -1426,6 +1665,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9913373037357878
+  description: Profiled field payload.rules_noted for dataset week5_events.
   stats:
     min: 0.0
     max: 1.0
@@ -1436,6 +1676,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9913373037357878
+  description: Profiled field payload.rules_passed for dataset week5_events.
   stats:
     min: 2.0
     max: 5.0
@@ -1446,11 +1687,13 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.981591770438549
+  description: Profiled field payload.rules_to_evaluate for dataset week5_events.
 - name: payload.screening_model_version
   type: string
   required: false
   nullable: true
   null_fraction: 0.9805089334055225
+  description: Profiled field payload.screening_model_version for dataset week5_events.
   enum:
   - claude-sonnet-4-20250514
 - name: payload.session_id
@@ -1458,17 +1701,20 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.3746616134271792
+  description: Profiled field payload.session_id for dataset week5_events.
 - name: payload.started_at
   type: string
   required: false
   nullable: true
   null_fraction: 0.9214943151055766
+  description: Profiled field payload.started_at for dataset week5_events.
   format: date-time
 - name: payload.submission_channel
   type: string
   required: false
   nullable: true
   null_fraction: 0.9794260963724959
+  description: Profiled field payload.submission_channel for dataset week5_events.
   enum:
   - branch
   - mobile
@@ -1479,12 +1725,14 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9794260963724959
+  description: Profiled field payload.submitted_at for dataset week5_events.
   format: date-time
 - name: payload.tables_extracted
   type: integer
   required: false
   nullable: true
   null_fraction: 0.9729290741743367
+  description: Profiled field payload.tables_extracted for dataset week5_events.
   stats:
     min: 2.0
     max: 5.0
@@ -1495,6 +1743,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9935029778018408
+  description: Profiled field payload.term_months for dataset week5_events.
   stats:
     min: 24.0
     max: 60.0
@@ -1505,21 +1754,30 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9615592853275582
+  description: Profiled field payload.tool_duration_ms for dataset week5_events.
   stats:
     min: 57.0
     max: 7923.0
     mean: 3487.394366197183
     stddev: 2563.7467491488073
+  warnings:
+  - 'Suspicious distribution warning: payload.tool_duration_ms mean is above 0.99
+    and may indicate saturation or scale drift.'
 - name: payload.tool_input_summary
   type: string
   required: false
   nullable: true
   null_fraction: 0.9615592853275582
+  description: 'Ambiguous free-text field inferred from week5_events; sample values
+    include [''PDF extraction: income_statement'', ''PDF extraction: balance_sheet'',
+    ''PDF extraction: income_statement'']. Review semantic meaning with the domain
+    owner.'
 - name: payload.tool_name
   type: string
   required: false
   nullable: true
   null_fraction: 0.9615592853275582
+  description: Profiled field payload.tool_name for dataset week5_events.
   enum:
   - week3_extraction_pipeline
   - query_applicant_registry
@@ -1528,6 +1786,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9615592853275582
+  description: Profiled field payload.tool_output_summary for dataset week5_events.
   enum:
   - Extracted 12 financial line items
   - Extracted 8 financial line items
@@ -1543,6 +1802,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9485652409312398
+  description: Profiled field payload.total_cost_usd for dataset week5_events.
   stats:
     min: 0.0
     max: 0.06133
@@ -1553,16 +1813,21 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9485652409312398
+  description: Profiled field payload.total_duration_ms for dataset week5_events.
   stats:
     min: 3136.0
     max: 54617.0
     mean: 24066.35789473684
     stddev: 14247.237475470032
+  warnings:
+  - 'Suspicious distribution warning: payload.total_duration_ms mean is above 0.99
+    and may indicate saturation or scale drift.'
 - name: payload.total_llm_calls
   type: integer
   required: false
   nullable: true
   null_fraction: 0.9485652409312398
+  description: Profiled field payload.total_llm_calls for dataset week5_events.
   stats:
     min: 0.0
     max: 1.0
@@ -1573,6 +1838,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9485652409312398
+  description: Profiled field payload.total_nodes_executed for dataset week5_events.
   stats:
     min: 3.0
     max: 7.0
@@ -1583,6 +1849,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9485652409312398
+  description: Profiled field payload.total_tokens_used for dataset week5_events.
   stats:
     min: 546.0
     max: 6814.0
@@ -1593,17 +1860,20 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9707634001082837
+  description: Profiled field payload.triggered_by_event_id for dataset week5_events.
 - name: payload.uploaded_at
   type: string
   required: false
   nullable: true
   null_fraction: 0.9328641039523552
+  description: Profiled field payload.uploaded_at for dataset week5_events.
   format: date-time
 - name: payload.uploaded_by
   type: string
   required: false
   nullable: true
   null_fraction: 0.9328641039523552
+  description: Profiled field payload.uploaded_by for dataset week5_events.
   enum:
   - applicant
 - name: payload.validated_at
@@ -1611,31 +1881,39 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.9214943151055766
+  description: Profiled field payload.validated_at for dataset week5_events.
   format: date-time
 - name: payload.validation_duration_ms
   type: integer
   required: false
   nullable: true
   null_fraction: 0.9485652409312398
+  description: Profiled field payload.validation_duration_ms for dataset week5_events.
   stats:
     min: 42.0
     max: 298.0
     mean: 136.1578947368421
     stddev: 58.437607896118564
+  warnings:
+  - 'Suspicious distribution warning: payload.validation_duration_ms mean is above
+    0.99 and may indicate saturation or scale drift.'
 - name: payload.written_at
   type: string
   required: false
   nullable: true
   null_fraction: 0.9485652409312398
+  description: Profiled field payload.written_at for dataset week5_events.
   format: date-time
 - name: recorded_at
   type: string
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field recorded_at for dataset week5_events.
   format: date-time
 - name: stream_id
   type: string
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field stream_id for dataset week5_events.

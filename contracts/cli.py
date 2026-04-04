@@ -43,6 +43,7 @@ def _build_parser() -> argparse.ArgumentParser:
     baselines.set_defaults(func=cmd_snapshot_baselines)
 
     validate = subparsers.add_parser("validate")
+    validate.add_argument("--mode", choices=["AUDIT", "WARN", "ENFORCE"], default="AUDIT")
     validate.set_defaults(func=cmd_validate)
 
     analyze = subparsers.add_parser("analyze-schema")
@@ -95,7 +96,7 @@ def cmd_validate(args: argparse.Namespace, config: dict[str, Any]) -> int:
     for dataset in config["datasets"]:
         raw_records, records = load_dataset_records(dataset)
         contract = load_contract(dataset.contract_path)
-        summary, violations = validate_dataset(dataset, contract, records, baselines, config["validation"])
+        summary, violations = validate_dataset(dataset, contract, records, baselines, config["validation"], mode=args.mode)
         dataset_summaries.append(summary)
         all_violations.extend(violations)
         if dataset.text_fields:
@@ -121,6 +122,7 @@ def cmd_validate(args: argparse.Namespace, config: dict[str, Any]) -> int:
         "run_id": timestamp_slug(),
         "generated_at": __import__("datetime").datetime.now(__import__("datetime").UTC).isoformat(),
         "enforcement_location": "consumer_ingestion_boundary",
+        "validation_mode": args.mode,
         "dataset_summaries": dataset_summaries,
         "violations": [violation.to_dict() for violation in all_violations],
         "ai_checks": ai_checks,

@@ -45,7 +45,7 @@
     "The enforcer encountered an operational error around unknown field, which reduces confidence in monitoring coverage until the underlying issue is fixed."
   ],
   "data_health_score": 70,
-  "generated_at": "2026-04-04T07:26:25.656240+00:00",
+  "generated_at": "2026-04-04T08:25:06.130841+00:00",
   "recommended_actions": [
     "Increase contract registry coverage for high-value fields so blast radius is explicit before the next release.",
     "Confirm all consumer-ingestion validators are using the latest generated contracts and baselines before the next scheduled run.",
@@ -72,18 +72,400 @@
   "schema_changes": [],
   "summary": [
     {
+      "contract_id": "week3_extractions",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-04T07:26:10.448384+00:00",
+      "errored": 0,
+      "failed": 0,
+      "generated_at": "2026-04-04T08:24:14.969789+00:00",
+      "mode": "AUDIT",
+      "passed": 10,
+      "pipeline_action": "LOG",
       "record_count": 50,
+      "report_id": "week3_extractions-20260404T082414Z",
+      "results": [
+        {
+          "actual_value": null,
+          "check_id": "w3_event_type_fixed",
+          "column_name": "event_type",
+          "expected": {
+            "field": "event_type",
+            "type": "accepted_values",
+            "values": [
+              "ExtractionCompleted"
+            ]
+          },
+          "message": "The extraction dataset must only contain ExtractionCompleted events.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w3_document_type_enum",
+          "column_name": "payload.document_type",
+          "expected": {
+            "field": "payload.document_type",
+            "type": "accepted_values",
+            "values": [
+              "income_statement",
+              "balance_sheet"
+            ]
+          },
+          "message": "Only income statement and balance sheet extraction payloads are valid in the pilot.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w3_currency_usd",
+          "column_name": "payload.facts.currency",
+          "expected": {
+            "field": "payload.facts.currency",
+            "type": "accepted_values",
+            "values": [
+              "USD"
+            ]
+          },
+          "message": "Extracted financial facts must use USD in the pilot baseline.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w3_field_confidence_range",
+          "column_name": null,
+          "expected": {
+            "field_prefix": "payload.facts.field_confidence.",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "prefix_range"
+          },
+          "message": "All field confidence scores must remain on the 0.0 to 1.0 scale.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w3_processing_time_positive",
+          "column_name": "payload.processing_ms",
+          "expected": {
+            "field": "payload.processing_ms",
+            "minimum": 1,
+            "type": "min_value"
+          },
+          "message": "Extraction processing time must be a positive value.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w3_raw_text_positive",
+          "column_name": "payload.raw_text_length",
+          "expected": {
+            "field": "payload.raw_text_length",
+            "minimum": 1,
+            "type": "min_value"
+          },
+          "message": "Completed extractions must include non-zero raw text length.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w3_tables_extracted_nonnegative",
+          "column_name": "payload.tables_extracted",
+          "expected": {
+            "field": "payload.tables_extracted",
+            "minimum": 1,
+            "type": "min_value"
+          },
+          "message": "Completed extractions must report at least one extracted table in this pilot corpus.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w3_assets_cover_cash",
+          "column_name": null,
+          "expected": {
+            "left_field": "payload.facts.current_assets",
+            "right_field": "payload.facts.cash_and_equivalents",
+            "type": "field_gte"
+          },
+          "message": "Current assets must be greater than or equal to cash and equivalents.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w3_completion_after_recorded",
+          "column_name": null,
+          "expected": {
+            "earlier_field": "recorded_at",
+            "later_field": "payload.completed_at",
+            "type": "datetime_order"
+          },
+          "message": "Extraction completion time cannot occur before the event recorded time.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w3_balance_sheet_integrity",
+          "column_name": "payload.facts.balance_sheet_balances",
+          "expected": {
+            "field": "payload.facts.balance_sheet_balances",
+            "type": "conditional_equals",
+            "value": true,
+            "when_equals": "balance_sheet",
+            "when_field": "payload.document_type"
+          },
+          "message": "Balance sheet extractions must explicitly report that the balance sheet balances.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        }
+      ],
+      "run_timestamp": "2026-04-04T08:24:14.969693+00:00",
+      "snapshot_id": "2026-04-04T07:26:10.360709+00:00",
       "status": "PASS",
-      "violation_count": 0
+      "total_checks": 10,
+      "violation_count": 0,
+      "warned": 0
     },
     {
+      "contract_id": "week5_events",
       "dataset": "week5_events",
-      "generated_at": "2026-04-04T07:26:11.828565+00:00",
+      "errored": 0,
+      "failed": 0,
+      "generated_at": "2026-04-04T08:24:18.322612+00:00",
+      "mode": "AUDIT",
+      "passed": 11,
+      "pipeline_action": "LOG",
       "record_count": 1847,
+      "report_id": "week5_events-20260404T082418Z",
+      "results": [
+        {
+          "actual_value": null,
+          "check_id": "w5_stream_prefix",
+          "column_name": "stream_id",
+          "expected": {
+            "field": "stream_id",
+            "prefixes": [
+              "loan-",
+              "docpkg-",
+              "agent-",
+              "credit-",
+              "compliance-",
+              "fraud-",
+              "audit-"
+            ],
+            "type": "startswith_any"
+          },
+          "message": "Event stream ids must use one of the known aggregate prefixes.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w5_event_version_positive",
+          "column_name": "event_version",
+          "expected": {
+            "field": "event_version",
+            "minimum": 1,
+            "type": "min_value"
+          },
+          "message": "All event versions must be at least 1.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w5_recorded_at_iso",
+          "column_name": "recorded_at",
+          "expected": {
+            "field": "recorded_at",
+            "format": "date-time",
+            "type": "format"
+          },
+          "message": "Every event must have an ISO-8601 recorded timestamp.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w5_agent_type_enum",
+          "column_name": "payload.agent_type",
+          "expected": {
+            "field": "payload.agent_type",
+            "type": "accepted_values_if_present",
+            "values": [
+              "document_processing",
+              "credit_analysis",
+              "fraud_detection",
+              "compliance",
+              "decision_orchestrator"
+            ]
+          },
+          "message": "Agent events must use a recognized agent type when present.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w5_confidence_range",
+          "column_name": "payload.confidence",
+          "expected": {
+            "field": "payload.confidence",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "range_if_present"
+          },
+          "message": "Top-level confidence values must remain on the 0.0 to 1.0 scale.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w5_decision_confidence_range",
+          "column_name": "payload.decision.confidence",
+          "expected": {
+            "field": "payload.decision.confidence",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "type": "range_if_present"
+          },
+          "message": "Nested decision confidence values must remain on the 0.0 to 1.0 scale.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w5_document_format_enum",
+          "column_name": "payload.document_format",
+          "expected": {
+            "field": "payload.document_format",
+            "type": "accepted_values_if_present",
+            "values": [
+              "pdf",
+              "xlsx",
+              "csv"
+            ]
+          },
+          "message": "Document format values must stay within the known format set.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w5_decision_confidence_floor",
+          "column_name": null,
+          "expected": {
+            "less_than": 0.6,
+            "numeric_field": "payload.confidence",
+            "required_field": "payload.recommendation",
+            "required_value": "REFER",
+            "type": "conditional_numeric_floor_requires_value",
+            "when_equals": "DecisionGenerated",
+            "when_field": "event_type"
+          },
+          "message": "DecisionGenerated events below the confidence floor must resolve to REFER.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w5_extraction_runtime_positive",
+          "column_name": null,
+          "expected": {
+            "checks": [
+              {
+                "field": "payload.processing_ms",
+                "minimum": 1
+              },
+              {
+                "field": "payload.raw_text_length",
+                "minimum": 1
+              }
+            ],
+            "type": "conditional_min_pair",
+            "when_equals": "ExtractionCompleted",
+            "when_field": "event_type"
+          },
+          "message": "ExtractionCompleted events must report positive runtime and text volume.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w5_deadline_after_request",
+          "column_name": null,
+          "expected": {
+            "earlier_field": "recorded_at",
+            "later_field": "payload.deadline",
+            "type": "conditional_datetime_order",
+            "when_equals": "DocumentUploadRequested",
+            "when_field": "event_type"
+          },
+          "message": "Document upload deadlines must occur after the event recorded timestamp.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        },
+        {
+          "actual_value": null,
+          "check_id": "w5_credit_decision_enum",
+          "column_name": null,
+          "expected": {
+            "checks": [
+              {
+                "field": "payload.decision.risk_tier",
+                "type": "accepted_values",
+                "values": [
+                  "LOW",
+                  "MEDIUM",
+                  "HIGH"
+                ]
+              },
+              {
+                "field": "payload.decision.recommended_limit_usd",
+                "minimum": 1,
+                "type": "min_value"
+              }
+            ],
+            "type": "conditional_composite",
+            "when_equals": "CreditAnalysisCompleted",
+            "when_field": "event_type"
+          },
+          "message": "CreditAnalysisCompleted events must use a recognized risk tier and positive limit.",
+          "row_locator": null,
+          "severity": "LOW",
+          "status": "PASS"
+        }
+      ],
+      "run_timestamp": "2026-04-04T08:24:18.322387+00:00",
+      "snapshot_id": "2026-04-04T07:26:11.205272+00:00",
       "status": "PASS",
-      "violation_count": 0
+      "total_checks": 11,
+      "violation_count": 0,
+      "warned": 0
     }
   ],
   "validation_enforcement_location": "consumer_ingestion_boundary",
@@ -91,6 +473,7 @@
     {
       "actual": null,
       "category": "ai",
+      "check_id": null,
       "column": null,
       "dataset": "week3_extractions",
       "expected": null,
@@ -102,6 +485,7 @@
     {
       "actual": null,
       "category": "ai",
+      "check_id": null,
       "column": null,
       "dataset": "week5_events",
       "expected": null,

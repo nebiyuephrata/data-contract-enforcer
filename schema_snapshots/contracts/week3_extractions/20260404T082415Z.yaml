@@ -4,7 +4,7 @@ kind: data_contract
 version: '1.0'
 dataset: week3_extractions
 source: /home/rata/Documents/Ephrata/work/10Acadamy/training/apexLedger/data/seed_events.jsonl
-generated_at: '2026-04-04T08:25:06.115258+00:00'
+generated_at: '2026-04-04T08:24:14.832875+00:00'
 lineage:
   snapshot_path: /home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/schema_snapshots/lineage/apex_lineage_graph.json
   downstream_consumers:
@@ -104,6 +104,9 @@ fields:
     max: 1782.0
     mean: 814.56
     stddev: 540.0317827683848
+  warnings:
+  - 'Suspicious distribution warning: __source_line mean is above 0.99 and may indicate
+    saturation or scale drift.'
 - name: event_type
   type: string
   required: true
@@ -159,6 +162,9 @@ fields:
     max: 5339401.82
     mean: 2190496.8564
     stddev: 1631621.897854409
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.accounts_receivable mean is above
+    0.99 and may indicate saturation or scale drift.'
 - name: payload.facts.balance_discrepancy_usd
   type: string
   required: false
@@ -183,6 +189,9 @@ fields:
     max: 5575794.99
     mean: 1865996.316
     stddev: 1598045.7846267386
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.cash_and_equivalents mean is above
+    0.99 and may indicate saturation or scale drift.'
 - name: payload.facts.currency
   type: string
   required: true
@@ -202,6 +211,9 @@ fields:
     max: 18262165.62
     mean: 6773796.7628
     stddev: 4972857.75647881
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.current_assets mean is above 0.99
+    and may indicate saturation or scale drift.'
 - name: payload.facts.current_liabilities
   type: number
   required: true
@@ -213,6 +225,9 @@ fields:
     max: 8799679.96
     mean: 3298507.3308
     stddev: 2432331.5472133895
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.current_liabilities mean is above
+    0.99 and may indicate saturation or scale drift.'
 - name: payload.facts.current_ratio
   type: number
   required: true
@@ -238,6 +253,9 @@ fields:
     max: 24.64
     mean: 7.2148
     stddev: 5.436665978336356
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.debt_to_ebitda mean is above 0.99
+    and may indicate saturation or scale drift.'
 - name: payload.facts.debt_to_equity
   type: number
   required: true
@@ -261,6 +279,9 @@ fields:
     max: 816655.99
     mean: 271818.5068
     stddev: 199888.78299761706
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.depreciation_amortization mean
+    is above 0.99 and may indicate saturation or scale drift.'
 - name: payload.facts.ebitda
   type: number
   required: false
@@ -272,6 +293,9 @@ fields:
     max: 3628489.79
     mean: 1149279.1392
     stddev: 880979.3331262807
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.ebitda mean is above 0.99 and
+    may indicate saturation or scale drift.'
 - name: payload.facts.extraction_notes
   type: array
   required: true
@@ -374,6 +398,9 @@ fields:
     max: 11621054.47
     mean: 3309029.2048
     stddev: 2753275.9210733133
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.gross_profit mean is above 0.99
+    and may indicate saturation or scale drift.'
 - name: payload.facts.income_before_tax
   type: string
   required: false
@@ -392,6 +419,9 @@ fields:
     max: 6.92
     mean: 3.4256
     stddev: 1.545846253674666
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.interest_coverage mean is above
+    0.99 and may indicate saturation or scale drift.'
 - name: payload.facts.interest_expense
   type: number
   required: true
@@ -403,6 +433,9 @@ fields:
     max: 798274.92
     mean: 280288.5172
     stddev: 223905.1586333641
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.interest_expense mean is above
+    0.99 and may indicate saturation or scale drift.'
 - name: payload.facts.inventory
   type: number
   required: true
@@ -414,6 +447,9 @@ fields:
     max: 5784083.54
     mean: 2002957.1072
     stddev: 1440146.8703420681
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.inventory mean is above 0.99 and
+    may indicate saturation or scale drift.'
 - name: payload.facts.investing_cash_flow
   type: string
   required: false
@@ -432,6 +468,9 @@ fields:
     max: 13252116.65
     mean: 4014108.0092
     stddev: 3322216.8587950226
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.long_term_debt mean is above 0.99
+    and may indicate saturation or scale drift.'
 - name: payload.facts.net_income
   type: number
   required: true
@@ -443,6 +482,9 @@ fields:
     max: 1539074.24
     mean: 451514.0964
     stddev: 420798.28856094036
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.net_income mean is above 0.99
+    and may indicate saturation or scale drift.'
 - name: payload.facts.net_margin
   type: number
   required: true
@@ -465,6 +507,9 @@ fields:
     max: 3042892.24
     mean: 861455.876
     stddev: 716592.3308974762
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.operating_cash_flow mean is above
+    0.99 and may indicate saturation or scale drift.'
 - name: payload.facts.operating_expenses
   type: string
   required: false
@@ -483,6 +528,9 @@ fields:
     max: 2811833.8
     mean: 877460.6332
     stddev: 730295.6687896962
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.operating_income mean is above
+    0.99 and may indicate saturation or scale drift.'
 - name: payload.facts.page_references.net_income
   type: string
   required: true
@@ -519,6 +567,9 @@ fields:
     max: 52224041.59
     mean: 16772248.1944
     stddev: 13859616.120931642
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.total_assets mean is above 0.99
+    and may indicate saturation or scale drift.'
 - name: payload.facts.total_equity
   type: number
   required: true
@@ -530,6 +581,9 @@ fields:
     max: 33110493.55
     mean: 9257766.7184
     stddev: 7555667.135442747
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.total_equity mean is above 0.99
+    and may indicate saturation or scale drift.'
 - name: payload.facts.total_liabilities
   type: number
   required: true
@@ -541,6 +595,9 @@ fields:
     max: 26692565.79
     mean: 7514481.4784
     stddev: 6982877.448260393
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.total_liabilities mean is above
+    0.99 and may indicate saturation or scale drift.'
 - name: payload.facts.total_revenue
   type: number
   required: true
@@ -552,6 +609,9 @@ fields:
     max: 22827789.95
     mean: 8503581.0164
     stddev: 5835523.806139405
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.total_revenue mean is above 0.99
+    and may indicate saturation or scale drift.'
 - name: payload.package_id
   type: string
   required: true
@@ -569,6 +629,9 @@ fields:
     max: 7892.0
     mean: 5255.52
     stddev: 1817.5228883290577
+  warnings:
+  - 'Suspicious distribution warning: payload.processing_ms mean is above 0.99 and
+    may indicate saturation or scale drift.'
 - name: payload.raw_text_length
   type: integer
   required: true
@@ -580,6 +643,9 @@ fields:
     max: 5960.0
     mean: 3912.24
     stddev: 1107.4555442093376
+  warnings:
+  - 'Suspicious distribution warning: payload.raw_text_length mean is above 0.99 and
+    may indicate saturation or scale drift.'
 - name: payload.tables_extracted
   type: integer
   required: true
@@ -591,6 +657,9 @@ fields:
     max: 5.0
     mean: 3.38
     stddev: 1.0934349546269315
+  warnings:
+  - 'Suspicious distribution warning: payload.tables_extracted mean is above 0.99
+    and may indicate saturation or scale drift.'
 - name: recorded_at
   type: string
   required: true

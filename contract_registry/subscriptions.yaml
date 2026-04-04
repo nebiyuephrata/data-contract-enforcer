@@ -109,6 +109,38 @@ subscriptions:
     contact: compliance@apexledger.local
     registered_at: "2026-04-04T07:00:00Z"
 
+  - contract_id: week4_lineage_snapshot
+    subscriber_id: week7_contract_enforcer
+    fields_consumed:
+      - nodes
+      - edges
+      - generated_at
+    breaking_fields:
+      - field: edges
+        reason: Upstream and transitive contamination depth calculations depend on relationship edges being present and stable.
+      - field: nodes
+        reason: Evidence nodes are required to map failing fields back to producer files.
+    validation_mode: AUDIT
+    contact: governance@apexledger.local
+    registered_at: "2026-04-04T07:00:00Z"
+
+  - contract_id: langsmith_week3_traces
+    subscriber_id: week7_contract_enforcer
+    fields_consumed:
+      - name
+      - inputs
+      - outputs
+      - start_time
+      - end_time
+    breaking_fields:
+      - field: inputs
+        reason: Prompt input validation and trace-backed risk analysis require structured prompt inputs.
+      - field: outputs
+        reason: LLM output schema violation tracking needs the model outputs in a stable shape.
+    validation_mode: AUDIT
+    contact: ml-platform@apexledger.local
+    registered_at: "2026-04-04T07:00:00Z"
+
 migration_plans:
   - contract_id: week3_extractions
     plan_id: w3-confidence-range-hardening

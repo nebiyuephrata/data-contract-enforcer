@@ -4,7 +4,7 @@ kind: data_contract
 version: '1.0'
 dataset: week3_extractions
 source: /home/rata/Documents/Ephrata/work/10Acadamy/training/apexLedger/data/seed_events.jsonl
-generated_at: '2026-04-04T07:26:10.360709+00:00'
+generated_at: '2026-04-04T08:25:06.115258+00:00'
 lineage:
   snapshot_path: /home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/schema_snapshots/lineage/apex_lineage_graph.json
   downstream_consumers:
@@ -98,6 +98,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field __source_line for dataset week3_extractions.
   stats:
     min: 105.0
     max: 1782.0
@@ -108,6 +109,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field event_type for dataset week3_extractions.
   enum:
   - ExtractionCompleted
 - name: event_version
@@ -115,27 +117,34 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field event_version for dataset week3_extractions.
   stats:
     min: 1.0
     max: 1.0
     mean: 1.0
     stddev: 0.0
+  warnings:
+  - 'Suspicious distribution warning: event_version mean is above 0.99 and may indicate
+    saturation or scale drift.'
 - name: payload.completed_at
   type: string
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.completed_at for dataset week3_extractions.
   format: date-time
 - name: payload.document_id
   type: string
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.document_id for dataset week3_extractions.
 - name: payload.document_type
   type: string
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.document_type for dataset week3_extractions.
   enum:
   - income_statement
   - balance_sheet
@@ -144,6 +153,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.accounts_receivable for dataset week3_extractions.
   stats:
     min: 112831.87
     max: 5339401.82
@@ -154,16 +164,20 @@ fields:
   required: false
   nullable: true
   null_fraction: 1.0
+  description: Ambiguous free-text field inferred from week3_extractions; sample values
+    include []. Review semantic meaning with the domain owner.
 - name: payload.facts.balance_sheet_balances
   type: boolean
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.balance_sheet_balances for dataset week3_extractions.
 - name: payload.facts.cash_and_equivalents
   type: number
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.cash_and_equivalents for dataset week3_extractions.
   stats:
     min: 88344.19
     max: 5575794.99
@@ -174,6 +188,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.currency for dataset week3_extractions.
   enum:
   - USD
 - name: payload.facts.current_assets
@@ -181,6 +196,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.current_assets for dataset week3_extractions.
   stats:
     min: 268444.55
     max: 18262165.62
@@ -191,6 +207,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.current_liabilities for dataset week3_extractions.
   stats:
     min: 164961.78
     max: 8799679.96
@@ -201,16 +218,21 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.current_ratio for dataset week3_extractions.
   stats:
     min: 1.36
     max: 2.79
     mean: 2.0968
     stddev: 0.43936973040936717
+  warnings:
+  - 'Suspicious distribution warning: payload.facts.current_ratio mean is above 0.99
+    and may indicate saturation or scale drift.'
 - name: payload.facts.debt_to_ebitda
   type: number
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.debt_to_ebitda for dataset week3_extractions.
   stats:
     min: 1.28
     max: 24.64
@@ -221,6 +243,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.debt_to_equity for dataset week3_extractions.
   stats:
     min: 0.34
     max: 1.53
@@ -231,6 +254,8 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.depreciation_amortization for dataset
+    week3_extractions.
   stats:
     min: 14666.15
     max: 816655.99
@@ -241,6 +266,7 @@ fields:
   required: false
   nullable: true
   null_fraction: 0.5
+  description: Profiled field payload.facts.ebitda for dataset week3_extractions.
   stats:
     min: 114919.59
     max: 3628489.79
@@ -251,11 +277,14 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.extraction_notes for dataset week3_extractions.
 - name: payload.facts.field_confidence.net_income
   type: number
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.field_confidence.net_income for dataset
+    week3_extractions.
   constraints:
     minimum: 0.0
     maximum: 1.0
@@ -269,6 +298,8 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.field_confidence.total_assets for dataset
+    week3_extractions.
   constraints:
     minimum: 0.0
     maximum: 1.0
@@ -282,6 +313,8 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.field_confidence.total_revenue for dataset
+    week3_extractions.
   constraints:
     minimum: 0.0
     maximum: 1.0
@@ -295,11 +328,14 @@ fields:
   required: false
   nullable: true
   null_fraction: 1.0
+  description: Ambiguous free-text field inferred from week3_extractions; sample values
+    include []. Review semantic meaning with the domain owner.
 - name: payload.facts.fiscal_year_end
   type: string
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.fiscal_year_end for dataset week3_extractions.
   format: date-time
   enum:
   - '2024-12-31'
@@ -308,16 +344,20 @@ fields:
   required: false
   nullable: true
   null_fraction: 1.0
+  description: Ambiguous free-text field inferred from week3_extractions; sample values
+    include []. Review semantic meaning with the domain owner.
 - name: payload.facts.gaap_compliant
   type: boolean
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.gaap_compliant for dataset week3_extractions.
 - name: payload.facts.gross_margin
   type: number
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.gross_margin for dataset week3_extractions.
   stats:
     min: 0.19
     max: 0.64
@@ -328,6 +368,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.gross_profit for dataset week3_extractions.
   stats:
     min: 298285.12
     max: 11621054.47
@@ -338,11 +379,14 @@ fields:
   required: false
   nullable: true
   null_fraction: 1.0
+  description: Ambiguous free-text field inferred from week3_extractions; sample values
+    include []. Review semantic meaning with the domain owner.
 - name: payload.facts.interest_coverage
   type: number
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.interest_coverage for dataset week3_extractions.
   stats:
     min: 0.37
     max: 6.92
@@ -353,6 +397,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.interest_expense for dataset week3_extractions.
   stats:
     min: 26167.43
     max: 798274.92
@@ -363,6 +408,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.inventory for dataset week3_extractions.
   stats:
     min: 49072.3
     max: 5784083.54
@@ -373,11 +419,14 @@ fields:
   required: false
   nullable: true
   null_fraction: 1.0
+  description: Ambiguous free-text field inferred from week3_extractions; sample values
+    include []. Review semantic meaning with the domain owner.
 - name: payload.facts.long_term_debt
   type: number
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.long_term_debt for dataset week3_extractions.
   stats:
     min: 298305.65
     max: 13252116.65
@@ -388,6 +437,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.net_income for dataset week3_extractions.
   stats:
     min: -42576.17
     max: 1539074.24
@@ -398,6 +448,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.net_margin for dataset week3_extractions.
   stats:
     min: -0.02
     max: 0.15
@@ -408,6 +459,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.operating_cash_flow for dataset week3_extractions.
   stats:
     min: -44365.43
     max: 3042892.24
@@ -418,11 +470,14 @@ fields:
   required: false
   nullable: true
   null_fraction: 1.0
+  description: Ambiguous free-text field inferred from week3_extractions; sample values
+    include []. Review semantic meaning with the domain owner.
 - name: payload.facts.operating_income
   type: number
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.operating_income for dataset week3_extractions.
   stats:
     min: 24688.78
     max: 2811833.8
@@ -433,6 +488,8 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.page_references.net_income for dataset
+    week3_extractions.
   enum:
   - page 1, table 1, row 9
 - name: payload.facts.page_references.total_revenue
@@ -440,6 +497,8 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.page_references.total_revenue for dataset
+    week3_extractions.
   enum:
   - page 1, table 1, row 1
 - name: payload.facts.tax_expense
@@ -447,11 +506,14 @@ fields:
   required: false
   nullable: true
   null_fraction: 1.0
+  description: Ambiguous free-text field inferred from week3_extractions; sample values
+    include []. Review semantic meaning with the domain owner.
 - name: payload.facts.total_assets
   type: number
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.total_assets for dataset week3_extractions.
   stats:
     min: 727798.42
     max: 52224041.59
@@ -462,6 +524,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.total_equity for dataset week3_extractions.
   stats:
     min: 542656.61
     max: 33110493.55
@@ -472,6 +535,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.total_liabilities for dataset week3_extractions.
   stats:
     min: 185141.81
     max: 26692565.79
@@ -482,6 +546,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.facts.total_revenue for dataset week3_extractions.
   stats:
     min: 549024.54
     max: 22827789.95
@@ -492,11 +557,13 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.package_id for dataset week3_extractions.
 - name: payload.processing_ms
   type: integer
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.processing_ms for dataset week3_extractions.
   stats:
     min: 2137.0
     max: 7892.0
@@ -507,6 +574,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.raw_text_length for dataset week3_extractions.
   stats:
     min: 2028.0
     max: 5960.0
@@ -517,6 +585,7 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field payload.tables_extracted for dataset week3_extractions.
   stats:
     min: 2.0
     max: 5.0
@@ -527,9 +596,11 @@ fields:
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field recorded_at for dataset week3_extractions.
   format: date-time
 - name: stream_id
   type: string
   required: true
   nullable: false
   null_fraction: 0.0
+  description: Profiled field stream_id for dataset week3_extractions.

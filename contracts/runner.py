@@ -44,6 +44,7 @@ def validate_dataset(
     records: list[dict[str, Any]],
     baselines: dict[str, Any],
     validation_config: dict[str, Any],
+    mode: str = "AUDIT",
 ) -> tuple[dict[str, Any], list[Violation]]:
     violations: list[Violation] = []
     field_specs = {field["name"]: field for field in contract["fields"]}
@@ -63,6 +64,7 @@ def validate_dataset(
                             severity="CRITICAL",
                             category="structural",
                             message="Required field is missing.",
+                            check_id=f"{field_name}.required",
                             row_locator=row_locator,
                         )
                     )
@@ -81,6 +83,7 @@ def validate_dataset(
                         severity="HIGH",
                         category="operational",
                         message=f"Validation error: {exc}",
+                        check_id=f"{field_name}.validation_error",
                         row_locator=row_locator,
                     )
                 )
@@ -97,6 +100,7 @@ def validate_dataset(
                         severity="HIGH",
                         category="operational",
                         message=f"Clause evaluation error: {exc}",
+                        check_id=clause.get("id"),
                         row_locator=row_locator,
                     )
                 )
@@ -125,6 +129,7 @@ def validate_dataset(
                     severity="HIGH",
                     category="drift",
                     message=f"Mean drift exceeded 3 sigma: delta={delta:.4f}, stddev={stddev:.4f}",
+                    check_id=f"{column}.drift_3sigma",
                 )
             )
         elif multiplier > 2:
@@ -136,12 +141,26 @@ def validate_dataset(
                     severity="MEDIUM",
                     category="drift",
                     message=f"Mean drift exceeded 2 sigma: delta={delta:.4f}, stddev={stddev:.4f}",
+                    check_id=f"{column}.drift_2sigma",
                 )
             )
 
+    results = _build_result_entries(dataset.name, contract, violations)
     summary = {
+        "report_id": f"{dataset.name}-{timestamp_slug()}",
+        "contract_id": contract.get("id", dataset.name),
+        "snapshot_id": contract.get("generated_at", "latest"),
+        "run_timestamp": utc_now().isoformat(),
         "dataset": dataset.name,
         "record_count": len(records),
+        "mode": mode,
+        "pipeline_action": _pipeline_action(mode, violations, dataset.name),
+        "total_checks": len(results),
+        "passed": sum(1 for result in results if result["status"] == "PASS"),
+        "failed": sum(1 for result in results if result["status"] == "FAIL"),
+        "warned": sum(1 for result in results if result["status"] == "WARNING"),
+        "errored": sum(1 for result in results if result["status"] == "ERROR"),
+        "results": results,
         "status": _overall_status(violations, dataset.name),
         "violation_count": sum(1 for violation in violations if violation.dataset == dataset.name),
         "generated_at": utc_now().isoformat(),
@@ -173,6 +192,7 @@ def _validate_type(
                 severity="CRITICAL",
                 category="type",
                 message=f"Type mismatch. Expected {expected_type}, got {actual_type}.",
+                check_id=f"{field_name}.type",
                 row_locator=row_locator,
                 expected=expected_type,
                 actual=actual_type,
@@ -190,6 +210,7 @@ def _validate_type(
                 severity="CRITICAL",
                 category="format",
                 message="Value does not match UUID format.",
+                check_id=f"{field_name}.uuid_format",
                 row_locator=row_locator,
             )
         )
@@ -202,6 +223,7 @@ def _validate_type(
                 severity="CRITICAL",
                 category="format",
                 message="Value does not match ISO-8601 date-time format.",
+                check_id=f"{field_name}.datetime_format",
                 row_locator=row_locator,
             )
         )
@@ -214,6 +236,7 @@ def _validate_type(
                 severity="CRITICAL",
                 category="format",
                 message="Value does not match ISO-8601 date format.",
+                check_id=f"{field_name}.date_format",
                 row_locator=row_locator,
             )
         )
@@ -240,6 +263,7 @@ def _validate_constraints(
                 severity="HIGH",
                 category="operational",
                 message="Numeric constraint could not be evaluated against a non-numeric value.",
+                check_id=f"{field_name}.range_evaluation",
                 row_locator=row_locator,
             )
         )
@@ -255,6 +279,7 @@ def _validate_constraints(
                 severity="CRITICAL",
                 category="structural",
                 message=f"Value {numeric} is below minimum {minimum}.",
+                check_id=f"{field_name}.minimum",
                 row_locator=row_locator,
                 expected={"minimum": minimum},
                 actual=numeric,
@@ -269,6 +294,7 @@ def _validate_constraints(
                 severity="CRITICAL",
                 category="structural",
                 message=f"Value {numeric} is above maximum {maximum}.",
+                check_id=f"{field_name}.maximum",
                 row_locator=row_locator,
                 expected={"maximum": maximum},
                 actual=numeric,
@@ -294,6 +320,7 @@ def _validate_enum(
                 severity="CRITICAL",
                 category="structural",
                 message=f"Value {value!r} is not in the accepted enum set.",
+                check_id=f"{field_name}.enum",
                 row_locator=row_locator,
                 expected=enum_values,
                 actual=value,
@@ -310,6 +337,64 @@ def _overall_status(violations: list[Violation], dataset_name: str) -> str:
     if any(violation.status == "WARN" for violation in relevant):
         return "WARN"
     return "PASS"
+
+
+def _pipeline_action(mode: str, violations: list[Violation], dataset_name: str) -> str:
+    relevant = [violation for violation in violations if violation.dataset == dataset_name]
+    normalized_mode = mode.upper()
+    if normalized_mode == "AUDIT":
+        return "LOG"
+    if normalized_mode == "WARN":
+        return "BLOCK" if any(v.severity == "CRITICAL" and v.status == "FAIL" for v in relevant) else "WARN"
+    if normalized_mode == "ENFORCE":
+        return (
+            "BLOCK"
+            if any(v.status in {"FAIL", "ERROR"} and v.severity in {"CRITICAL", "HIGH"} for v in relevant)
+            else "PASS"
+        )
+    return "LOG"
+
+
+def _build_result_entries(dataset_name: str, contract: dict[str, Any], violations: list[Violation]) -> list[dict[str, Any]]:
+    relevant = [violation for violation in violations if violation.dataset == dataset_name]
+    results = [
+        {
+            "check_id": violation.check_id or _infer_check_id(violation),
+            "status": "WARNING" if violation.status == "WARN" else violation.status,
+            "severity": violation.severity,
+            "actual_value": violation.actual,
+            "expected": violation.expected,
+            "message": violation.message,
+            "column_name": violation.column,
+            "row_locator": violation.row_locator,
+        }
+        for violation in relevant
+    ]
+    existing_check_ids = {result["check_id"] for result in results}
+    for clause in contract.get("clauses", []):
+        if clause["id"] in existing_check_ids:
+            continue
+        results.append(
+            {
+                "check_id": clause["id"],
+                "status": "PASS",
+                "severity": "LOW",
+                "actual_value": None,
+                "expected": clause.get("check"),
+                "message": clause.get("description", "Clause passed for all evaluated records."),
+                "column_name": clause.get("check", {}).get("field"),
+                "row_locator": None,
+            }
+        )
+    return results
+
+
+def _infer_check_id(violation: Violation) -> str:
+    if violation.check_id:
+        return violation.check_id
+    if violation.column:
+        return f"{violation.column}.{violation.category}"
+    return f"{violation.dataset}.{violation.category}"
 
 
 def write_validation_outputs(
@@ -387,6 +472,7 @@ def _evaluate_clause(
                     severity="CRITICAL",
                     category="structural",
                     message=f"Clause {clause['id']} failed: {check['required_field']} must equal {check['required_value']} when {check['numeric_field']} is below {check['less_than']}.",
+                    check_id=clause["id"],
                     row_locator=row_locator,
                 )
             ]
@@ -516,5 +602,6 @@ def _clause_violation(
         severity=severity,
         category=category,
         message=f"Clause {clause_id} failed: {message}",
+        check_id=clause_id,
         row_locator=row_locator,
     )

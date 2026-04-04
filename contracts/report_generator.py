@@ -79,8 +79,9 @@ def build_recommended_actions(
     critical_violations = [item for item in violations if item.status == "FAIL" and item.category in {"structural", "type", "format"}]
     if critical_violations:
         top = critical_violations[0]
+        blamed_file = next((item.file_path for item in attributions if item.column == top.column), "contracts/runner.py")
         actions.append(
-            f"Stabilize the consumer ingestion boundary for {top.dataset} by fixing the failing contract clause on {top.column or 'unknown field'} before the next downstream load."
+            f"Update {blamed_file} to resolve check {top.check_id or top.column or 'unknown'} for {top.dataset} before the next downstream load."
         )
     failing_gate = next((item for item in registry_gate if item.get("status") == "FAIL"), None)
     if failing_gate:
@@ -90,7 +91,7 @@ def build_recommended_actions(
     confidence_owner = next((item for item in attributions if item.confidence > 0), None)
     if confidence_owner:
         actions.append(
-            f"Review {confidence_owner.file_path} and the blamed commit path for {confidence_owner.column} to stop repeated contamination at the source."
+            f"Review {confidence_owner.file_path} for column {confidence_owner.column} and fix the blamed path before rerunning contract enforcement."
         )
     drift_violation = next((item for item in violations if item.category == "drift" and item.status in {"WARN", "FAIL"}), None)
     if drift_violation and len(actions) < 3:

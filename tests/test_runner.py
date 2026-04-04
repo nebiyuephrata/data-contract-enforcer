@@ -56,3 +56,29 @@ def test_clause_logic_detects_invalid_confidence_scale():
         {"min_observations_for_drift": 20},
     )
     assert any("w3_field_confidence_range" in item.message for item in violations)
+
+
+def test_validation_summary_includes_report_fields_and_warn_mode_action():
+    dataset = DatasetConfig(name="demo", source="demo.jsonl")
+    contract = {
+        "id": "demo",
+        "generated_at": "2026-04-04T00:00:00Z",
+        "fields": [
+            {"name": "required_metric", "type": "number", "required": True, "nullable": False, "null_fraction": 0.0},
+        ],
+        "clauses": [{"id": "demo_clause", "description": "demo", "check": {"type": "min_value", "field": "required_metric", "minimum": 1}}],
+    }
+    summary, violations = validate_dataset(
+        dataset,
+        contract,
+        [{"required_metric": None, "__source_line": 1}],
+        {},
+        {"min_observations_for_drift": 20},
+        mode="WARN",
+    )
+    assert violations
+    assert summary["contract_id"] == "demo"
+    assert summary["snapshot_id"] == "2026-04-04T00:00:00Z"
+    assert summary["pipeline_action"] == "BLOCK"
+    assert summary["total_checks"] >= 1
+    assert any(result["check_id"] == "required_metric.required" for result in summary["results"])

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import UTC
+import os
 from pathlib import Path
 from typing import Any
 
@@ -10,6 +11,7 @@ from .lineage_loader import downstream_consumers, load_lineage_snapshot
 from .models import DatasetConfig
 from .registry import load_registry, registry_contract_subscribers
 from .utils import (
+    dump_json,
     flatten_record,
     infer_column_type,
     is_iso8601_date,
@@ -59,6 +61,8 @@ def profile_records(records: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
             "null_fraction": 0.0 if not values else (len(values) - len(non_null)) / len(values),
             "type": inferred_type,
             "required": bool(values) and all(value is not None for value in values),
+            "cardinality_estimate": len({repr(value) for value in non_null}),
+            "sample_values": [str(value) for value in non_null[:5]],
         }
         if non_null:
             sample_value = next((value for value in non_null if value is not None), None)
@@ -87,6 +91,7 @@ def build_contract(
     profile = profile_records(records)
     snapshot = load_lineage_snapshot(dataset.lineage_snapshot)
     registry = load_registry(registry_path or str(project_root() / "contract_registry" / "subscriptions.yaml"))
+    annotations = annotate_ambiguous_columns(dataset.name, profile)
     fields: list[dict[str, Any]] = []
     for name, metadata in profile.items():
         field: dict[str, Any] = {
@@ -95,7 +100,9 @@ def build_contract(
             "required": metadata["required"],
             "nullable": not metadata["required"],
             "null_fraction": metadata["null_fraction"],
+            "description": annotations.get(name, f"Profiled field {name} for dataset {dataset.name}."),
         }
+        warnings: list[str] = []
         if "format" in metadata:
             field["format"] = metadata["format"]
         if "enum" in metadata:
@@ -104,6 +111,11 @@ def build_contract(
             field["constraints"] = metadata["constraints"]
         if metadata.get("stats"):
             field["stats"] = metadata["stats"]
+            warning = suspicious_distribution_warning(name, metadata["stats"])
+            if warning:
+                warnings.append(warning)
+        if warnings:
+            field["warnings"] = warnings
         fields.append(field)
     clauses = build_contract_clauses(dataset)
     return {
@@ -196,6 +208,14 @@ def build_baselines(dataset: DatasetConfig, records: list[dict[str, Any]]) -> di
             "generated_at": utc_now().astimezone(UTC).isoformat(),
         }
     return baselines
+
+
+def write_baselines(dataset: DatasetConfig, records: list[dict[str, Any]], output_path: Path) -> dict[str, Any]:
+    baselines = build_baselines(dataset, records)
+    payload = {dataset.name: baselines}
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    dump_json(output_path, payload)
+    return payload
 
 
 def build_contract_clauses(dataset: DatasetConfig) -> list[dict[str, Any]]:
@@ -387,6 +407,88 @@ def build_contract_clauses(dataset: DatasetConfig) -> list[dict[str, Any]]:
             },
         },
     ]
+
+
+def suspicious_distribution_warning(column_name: str, stats: dict[str, Any]) -> str | None:
+    mean_value = stats.get("mean")
+    if mean_value is None:
+        return None
+    normalized_like = (stats.get("min", 0.0) >= 0.0 and stats.get("max", 1.0) <= 1.0) or any(
+        token in column_name.lower() for token in ("confidence", "ratio", "rate", "score")
+    )
+    if not normalized_like:
+        return None
+    if mean_value > 0.99:
+        return f"Suspicious distribution warning: {column_name} mean is above 0.99 and may indicate saturation or scale drift."
+    if mean_value < 0.01:
+        return f"Suspicious distribution warning: {column_name} mean is below 0.01 and may indicate sparse or mis-scaled values."
+    return None
+
+
+def annotate_ambiguous_columns(dataset_name: str, profile: dict[str, dict[str, Any]]) -> dict[str, str]:
+    annotations: dict[str, str] = {}
+    for column_name, metadata in profile.items():
+        if not _is_ambiguous_column(column_name, metadata):
+            continue
+        annotations[column_name] = _llm_or_heuristic_annotation(dataset_name, column_name, metadata)
+    return annotations
+
+
+def _is_ambiguous_column(column_name: str, metadata: dict[str, Any]) -> bool:
+    if metadata.get("type") != "string":
+        return False
+    if metadata.get("enum"):
+        return False
+    suffixes = ("_id", "_at", "_date")
+    return not column_name.endswith(suffixes)
+
+
+def _llm_or_heuristic_annotation(dataset_name: str, column_name: str, metadata: dict[str, Any]) -> str:
+    provider = "openrouter" if os.getenv("OPENROUTER_API_KEY") else "openai" if os.getenv("OPENAI_API_KEY") else None
+    if provider:
+        try:
+            return _llm_annotation_call(dataset_name, column_name, metadata, provider)
+        except Exception:
+            pass
+    return (
+        f"Ambiguous free-text field inferred from {dataset_name}; sample values include "
+        f"{metadata.get('sample_values', [])[:3]}. Review semantic meaning with the domain owner."
+    )
+
+
+def _llm_annotation_call(dataset_name: str, column_name: str, metadata: dict[str, Any], provider: str) -> str:
+    from openai import OpenAI
+
+    if provider == "openrouter":
+        client = OpenAI(
+            api_key=os.getenv("OPENROUTER_API_KEY"),
+            base_url="https://openrouter.ai/api/v1",
+        )
+        model = "google/gemini-2.5-flash"
+    else:
+        client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        model = "gpt-4.1-mini"
+
+    response = client.responses.create(
+        model=model,
+        input=[
+            {
+                "role": "system",
+                "content": "You summarize ambiguous contract columns in one short sentence for a data contract.",
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Dataset: {dataset_name}\n"
+                    f"Column: {column_name}\n"
+                    f"Type: {metadata.get('type')}\n"
+                    f"Sample values: {metadata.get('sample_values', [])[:5]}\n"
+                    "Return one plain-English sentence explaining what this field likely represents."
+                ),
+            },
+        ],
+    )
+    return getattr(response, "output_text", "").strip() or f"Ambiguous field {column_name} in dataset {dataset_name}."
 
 
 def build_dbt_model_tests(dataset_name: str) -> list[dict[str, Any]]:
