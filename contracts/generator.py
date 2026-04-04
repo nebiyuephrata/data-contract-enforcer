@@ -295,7 +295,8 @@ def build_contract_clauses(dataset: DatasetConfig) -> list[dict[str, Any]]:
                 },
             },
         ]
-    return [
+    if dataset.name == "week5_events":
+        return [
         {
             "id": "w5_stream_prefix",
             "description": "Event stream ids must use one of the known aggregate prefixes.",
@@ -406,7 +407,8 @@ def build_contract_clauses(dataset: DatasetConfig) -> list[dict[str, Any]]:
                 ],
             },
         },
-    ]
+        ]
+    return []
 
 
 def suspicious_distribution_warning(column_name: str, stats: dict[str, Any]) -> str | None:

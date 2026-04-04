@@ -38,6 +38,7 @@ def ensure_artifact_dirs(root: Path | None = None) -> None:
         "enforcer_report",
         "outputs",
         "outputs/quarantine",
+        "outputs/week2",
     ):
         (base / relative).mkdir(parents=True, exist_ok=True)
 

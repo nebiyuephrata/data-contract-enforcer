@@ -2,6 +2,17 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
 from typing import Any
+from uuid import uuid4
+
+from .utils import utc_now
+
+
+def _violation_id() -> str:
+    return f"violation-{uuid4().hex[:12]}"
+
+
+def _detected_at() -> str:
+    return utc_now().isoformat()
 
 
 @dataclass(slots=True)
@@ -25,6 +36,8 @@ class Violation:
     severity: str
     category: str
     message: str
+    violation_id: str = field(default_factory=_violation_id)
+    detected_at: str = field(default_factory=_detected_at)
     check_id: str | None = None
     row_locator: str | None = None
     expected: Any | None = None
@@ -36,17 +49,13 @@ class Violation:
 
 @dataclass(slots=True)
 class AttributionResult:
+    violation_id: str
+    check_id: str
+    detected_at: str
     dataset: str
     column: str
-    file_path: str
-    line_number: int | None
-    commit_hash: str | None
-    author: str | None
-    confidence: float
-    lineage_hops: int
-    rationale: str
-    impacted_consumers: list[str] = field(default_factory=list)
-    transitive_consumers: list[str] = field(default_factory=list)
+    blame_chain: list[dict[str, Any]] = field(default_factory=list)
+    blast_radius: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -59,6 +68,7 @@ class SchemaChange:
     compatibility: str
     change_type: str
     message: str
+    severity: str = "MEDIUM"
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

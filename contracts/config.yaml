@@ -5,6 +5,7 @@ paths:
   baselines: schema_snapshots/baselines.json
   embedding_baselines: schema_snapshots/embedding_baselines.json
   llm_violation_rates: schema_snapshots/llm_violation_rates.json
+  week2_verdict_records: outputs/week2/verdict_records.jsonl
   schema_snapshots: schema_snapshots/contracts
   schema_evolution: validation_reports/schema-evolution-latest.json
   attribution: validation_reports/attribution-latest.json
@@ -29,6 +30,7 @@ ai:
   embedding_base_url: https://openrouter.ai/api/v1
   text_sample_size: 200
   drift_threshold: 0.15
+  llm_violation_rate_threshold: 0.10
 
 datasets:
   week3_extractions:

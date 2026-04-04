@@ -5,7 +5,12 @@ from pathlib import Path
 import subprocess
 from typing import Any
 
-from .lineage_loader import downstream_consumers, lineage_candidate_files, load_lineage_snapshot
+from .lineage_loader import (
+    downstream_consumers,
+    lineage_blast_radius,
+    lineage_candidate_files,
+    load_lineage_snapshot,
+)
 from .models import AttributionResult, Violation
 from .registry import load_registry, registry_blast_radius
 from .utils import clamp
@@ -30,49 +35,93 @@ def attribute_violations(
     registry_path: str | None = None,
 ) -> list[AttributionResult]:
     results: list[AttributionResult] = []
-    snapshot = load_lineage_snapshot(lineage_snapshot_path)
     registry = load_registry(registry_path)
+    snapshot = load_lineage_snapshot(lineage_snapshot_path)
     apex_root = Path(repositories["apexLedger"])
+
     for violation in violations:
         if violation.status not in {"FAIL", "ERROR"} or not violation.column:
             continue
+
+        # Registry-first sourcing ensures subscriber impact is established before graph traversal.
+        registry_matches = registry_blast_radius(registry, violation.dataset, violation.column)
         candidate_files = _candidate_files(violation, apex_root, snapshot)
-        blast_radius = registry_blast_radius(registry, violation.dataset, violation.column)
-        transitive = downstream_consumers(snapshot, violation.dataset)
-        best_result = None
-        for candidate_info in candidate_files:
-            candidate = candidate_info["path"]
-            hops = candidate_info["lineage_hops"]
-            line_number = _find_line_number(candidate, violation.column)
-            blame = _git_blame(candidate, line_number)
-            confidence = _confidence_from_blame(blame.get("author_time"), hops)
-            result = AttributionResult(
+        ranked_candidates = _ranked_blame_chain(candidate_files, violation.column)
+        traversal_radius = lineage_blast_radius(snapshot, violation.dataset)
+        blast_radius = {
+            "subscribers": [
+                {
+                    "subscriber_id": item.get("subscriber_id"),
+                    "validation_mode": item.get("validation_mode"),
+                    "reason": item.get("reason"),
+                    "contact": item.get("contact"),
+                }
+                for item in registry_matches
+            ],
+            "affected_nodes": traversal_radius["affected_nodes"],
+            "affected_pipelines": traversal_radius["affected_pipelines"],
+            "contamination_depth": traversal_radius["contamination_depth"],
+            "transitive_consumers": downstream_consumers(snapshot, violation.dataset),
+        }
+        results.append(
+            AttributionResult(
+                violation_id=violation.violation_id,
+                check_id=violation.check_id or _infer_check_id(violation),
+                detected_at=violation.detected_at,
                 dataset=violation.dataset,
                 column=violation.column,
-                file_path=str(candidate),
-                line_number=line_number,
-                commit_hash=blame.get("commit_hash"),
-                author=blame.get("author"),
-                confidence=confidence,
-                lineage_hops=hops,
-                rationale=candidate_info["rationale"],
-                impacted_consumers=[
-                    subscriber.get("subscriber_id") or subscriber.get("name", "unknown") for subscriber in blast_radius
-                ],
-                transitive_consumers=transitive,
+                blame_chain=ranked_candidates[:5],
+                blast_radius=blast_radius,
             )
-            if best_result is None or result.confidence > best_result.confidence:
-                best_result = result
-        if best_result:
-            results.append(best_result)
+        )
     return results
+
+
+def _ranked_blame_chain(candidate_files: list[dict[str, Any]], column_name: str) -> list[dict[str, Any]]:
+    ranked: list[dict[str, Any]] = []
+    for candidate_info in candidate_files:
+        candidate = candidate_info["path"]
+        hops = candidate_info["lineage_hops"]
+        line_number = _find_line_number(candidate, column_name)
+        log_entries = _git_log_candidates(candidate)
+        if not log_entries:
+            ranked.append(
+                {
+                    "commit_hash": None,
+                    "author": None,
+                    "commit_timestamp": None,
+                    "commit_message": f"No git history found for {candidate.name}.",
+                    "confidence_score": _confidence_from_commit_timestamp(None, hops),
+                    "file_path": str(candidate),
+                    "line_number": line_number,
+                    "lineage_hops": hops,
+                    "rationale": candidate_info["rationale"],
+                }
+            )
+            continue
+        for log_entry in log_entries:
+            ranked.append(
+                {
+                    "commit_hash": log_entry["commit_hash"],
+                    "author": log_entry["author"],
+                    "commit_timestamp": log_entry["commit_timestamp"],
+                    "commit_message": log_entry["commit_message"],
+                    "confidence_score": _confidence_from_commit_timestamp(log_entry["commit_timestamp"], hops),
+                    "file_path": str(candidate),
+                    "line_number": line_number,
+                    "lineage_hops": hops,
+                    "rationale": candidate_info["rationale"],
+                }
+            )
+    ranked.sort(key=lambda item: item["confidence_score"], reverse=True)
+    return ranked
 
 
 def _candidate_files(
     violation: Violation,
     apex_root: Path,
     snapshot: dict[str, Any] | None,
-) -> list[Path]:
+) -> list[dict[str, Any]]:
     candidates: list[dict[str, Any]] = []
     snapshot_candidates = lineage_candidate_files(snapshot, violation.dataset, violation.column)
     for item in snapshot_candidates:
@@ -95,7 +144,7 @@ def _candidate_files(
                     "rationale": f"Matched {violation.column} to {path.name} using fallback evidence mapping.",
                 }
             )
-    if violation.column and "confidence" in violation.column.lower():
+    if "confidence" in violation.column.lower():
         for relative in CONFIDENCE_FILES:
             path = apex_root / relative
             if path.exists():
@@ -127,7 +176,7 @@ def _candidate_files(
 
 
 def _find_line_number(file_path: Path, column: str) -> int | None:
-    tokens = [part for part in column.split(".") if part and part not in {"payload", "facts"}]
+    tokens = [part for part in column.split(".") if part and part not in {"payload", "facts", "decision"}]
     contents = file_path.read_text(encoding="utf-8", errors="ignore").splitlines()
     for token in reversed(tokens):
         for index, line in enumerate(contents, start=1):
@@ -139,20 +188,20 @@ def _find_line_number(file_path: Path, column: str) -> int | None:
     return 1 if contents else None
 
 
-def _git_blame(file_path: Path, line_number: int | None) -> dict[str, Any]:
+def _git_log_candidates(file_path: Path, limit: int = 5) -> list[dict[str, Any]]:
     repo_root = _git_root(file_path)
-    if repo_root is None or line_number is None:
-        return {"commit_hash": None, "author": None, "author_time": None}
+    if repo_root is None:
+        return []
     try:
         completed = subprocess.run(
             [
                 "git",
                 "-C",
                 str(repo_root),
-                "blame",
-                "-L",
-                f"{line_number},{line_number}",
-                "--porcelain",
+                "log",
+                f"-n{limit}",
+                "--format=%H%x1f%an%x1f%aI%x1f%s",
+                "--",
                 str(file_path),
             ],
             check=True,
@@ -160,17 +209,21 @@ def _git_blame(file_path: Path, line_number: int | None) -> dict[str, Any]:
             text=True,
         )
     except subprocess.CalledProcessError:
-        return {"commit_hash": None, "author": None, "author_time": None}
-    author = None
-    author_time = None
-    lines = completed.stdout.splitlines()
-    commit_hash = lines[0].split()[0] if lines else None
-    for line in lines:
-        if line.startswith("author "):
-            author = line.removeprefix("author ").strip()
-        elif line.startswith("author-time "):
-            author_time = int(line.removeprefix("author-time ").strip())
-    return {"commit_hash": commit_hash, "author": author, "author_time": author_time}
+        return []
+    entries: list[dict[str, Any]] = []
+    for line in completed.stdout.splitlines():
+        if not line.strip():
+            continue
+        commit_hash, author, commit_timestamp, commit_message = (line.split("\x1f", 3) + ["", "", "", ""])[:4]
+        entries.append(
+            {
+                "commit_hash": commit_hash or None,
+                "author": author or None,
+                "commit_timestamp": commit_timestamp or None,
+                "commit_message": commit_message or None,
+            }
+        )
+    return entries
 
 
 def _git_root(file_path: Path) -> Path | None:
@@ -182,10 +235,25 @@ def _git_root(file_path: Path) -> Path | None:
     return None
 
 
-def _confidence_from_blame(author_time: int | None, hops: int) -> float:
-    if author_time is None:
+def _confidence_from_commit_timestamp(commit_timestamp: str | None, hops: int) -> float:
+    if commit_timestamp is None:
         return clamp(0.2 - (0.2 * max(hops - 1, 0)), 0.0, 1.0)
-    commit_time = datetime.fromtimestamp(author_time, tz=UTC)
+    commit_time = datetime.fromisoformat(commit_timestamp.replace("Z", "+00:00")).astimezone(UTC)
     days_since_commit = max((datetime.now(UTC) - commit_time).days, 0)
     base = 1.0 - (days_since_commit * 0.1)
     return clamp(base - (0.2 * hops), 0.0, 1.0)
+
+
+def _confidence_from_blame(author_time: int | None, hops: int) -> float:
+    if author_time is None:
+        return _confidence_from_commit_timestamp(None, hops)
+    commit_timestamp = datetime.fromtimestamp(author_time, tz=UTC).isoformat()
+    return _confidence_from_commit_timestamp(commit_timestamp, hops)
+
+
+def _infer_check_id(violation: Violation) -> str:
+    if violation.check_id:
+        return violation.check_id
+    if violation.column:
+        return f"{violation.column}.{violation.category}"
+    return f"{violation.dataset}.{violation.category}"

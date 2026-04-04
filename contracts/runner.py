@@ -50,6 +50,21 @@ def validate_dataset(
     field_specs = {field["name"]: field for field in contract["fields"]}
     clauses = contract.get("clauses", [])
     min_observations = validation_config.get("min_observations_for_drift", 20)
+    observed_columns = {column for record in records for column in record}
+    for field_name in field_specs:
+        if field_name in observed_columns:
+            continue
+        violations.append(
+            Violation(
+                dataset=dataset.name,
+                column=field_name,
+                status="ERROR",
+                severity="HIGH",
+                category="operational",
+                message="Contract field is missing from the evaluated dataset snapshot.",
+                check_id=f"{field_name}.missing_column",
+            )
+        )
     for record in records:
         row_locator = build_row_locator(dataset, record)
         for field_name, spec in field_specs.items():
@@ -152,6 +167,8 @@ def validate_dataset(
         "snapshot_id": contract.get("generated_at", "latest"),
         "run_timestamp": utc_now().isoformat(),
         "dataset": dataset.name,
+        "contract_path": dataset.contract_path,
+        "source_path": dataset.source,
         "record_count": len(records),
         "mode": mode,
         "pipeline_action": _pipeline_action(mode, violations, dataset.name),

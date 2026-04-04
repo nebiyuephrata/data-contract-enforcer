@@ -40,7 +40,7 @@ except ImportError:  # pragma: no cover - fallback for partially provisioned env
                 validate(value, subschema)
 
 from .models import Violation
-from .utils import clamp, cosine_distance, dump_json, utc_now
+from .utils import append_jsonl, cosine_distance, dump_json, load_jsonl, utc_now
 
 
 def _python_type(schema_type: str) -> type[Any]:
@@ -52,6 +52,21 @@ def _python_type(schema_type: str) -> type[Any]:
         "object": dict,
         "array": list,
     }.get(schema_type, object)
+
+
+PROMPT_INPUT_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "required": ["recorded_at", "source_event_type"],
+    "properties": {
+        "recorded_at": {"type": "string"},
+        "source_event_type": {"type": "string"},
+        "application_id": {"type": "string"},
+        "package_id": {"type": "string"},
+        "document_id": {"type": "string"},
+        "document_type": {"type": "string"},
+        "requested_document_types": {"type": "array"},
+    },
+}
 
 
 LLM_EVENT_SCHEMAS: dict[str, dict[str, Any]] = {
@@ -95,6 +110,57 @@ LLM_EVENT_SCHEMAS: dict[str, dict[str, Any]] = {
         },
     },
 }
+
+
+def run_ai_extensions(
+    dataset_name: str,
+    raw_records: list[dict[str, Any]],
+    records: list[dict[str, Any]],
+    text_fields: list[str],
+    ai_config: dict[str, Any],
+    paths: dict[str, str],
+) -> tuple[list[dict[str, Any]], list[Violation]]:
+    checks: list[dict[str, Any]] = []
+    violations: list[Violation] = []
+
+    if text_fields:
+        embedding_checks, embedding_violations = run_embedding_drift(
+            dataset_name,
+            records,
+            text_fields,
+            ai_config,
+            Path(paths["embedding_baselines"]),
+        )
+        checks.extend(embedding_checks)
+        violations.extend(embedding_violations)
+
+    prompt_checks, prompt_violations = run_prompt_input_schema_validation(
+        dataset_name,
+        raw_records,
+        Path(paths["quarantine"]),
+    )
+    checks.extend(prompt_checks)
+    violations.extend(prompt_violations)
+
+    output_checks, output_violations = run_llm_schema_checks(
+        dataset_name,
+        raw_records,
+        Path(paths["llm_violation_rates"]),
+        Path(paths["quarantine"]),
+    )
+    checks.extend(output_checks)
+    violations.extend(output_violations)
+
+    monitor_checks, monitor_violations = run_llm_output_violation_monitor(
+        dataset_name,
+        Path(paths["week2_verdict_records"]),
+        Path(paths["llm_violation_rates"]),
+        Path(paths["violation_log"]),
+        float(ai_config.get("llm_violation_rate_threshold", 0.1)),
+    )
+    checks.extend(monitor_checks)
+    violations.extend(monitor_violations)
+    return checks, violations
 
 
 def run_embedding_drift(
@@ -170,7 +236,7 @@ def run_embedding_drift(
 
     baseline_payload = {}
     if baseline_path.exists():
-        baseline_payload = __import__("json").loads(baseline_path.read_text(encoding="utf-8"))
+        baseline_payload = json.loads(baseline_path.read_text(encoding="utf-8"))
     baseline = baseline_payload.get(dataset_name)
     checks: list[dict[str, Any]] = []
     violations: list[Violation] = []
@@ -209,6 +275,52 @@ def run_embedding_drift(
         )
     baseline_payload[dataset_name] = {"centroid": centroid, "sample_count": len(texts), "generated_at": utc_now().isoformat()}
     dump_json(baseline_path, baseline_payload)
+    return checks, violations
+
+
+def run_prompt_input_schema_validation(
+    dataset_name: str,
+    raw_records: list[dict[str, Any]],
+    quarantine_dir: Path,
+) -> tuple[list[dict[str, Any]], list[Violation]]:
+    checks: list[dict[str, Any]] = []
+    violations: list[Violation] = []
+    quarantine_dir.mkdir(parents=True, exist_ok=True)
+    total = 0
+    invalid = 0
+    for record in raw_records:
+        metadata = _extract_document_metadata(record)
+        if not _should_validate_prompt_input(metadata):
+            continue
+        total += 1
+        try:
+            validate(metadata, PROMPT_INPUT_SCHEMA)
+            if not any(metadata.get(key) for key in ("application_id", "package_id", "document_id")):
+                raise ValidationError("Prompt input metadata must include application_id, package_id, or document_id.")
+        except ValidationError as exc:
+            invalid += 1
+            quarantine_path = quarantine_dir / f"{dataset_name}-prompt-input-{record.get('__source_line', 'unknown')}.json"
+            quarantine_path.write_text(json.dumps(record, indent=2, sort_keys=True), encoding="utf-8")
+            violations.append(
+                Violation(
+                    dataset=dataset_name,
+                    column="document_metadata",
+                    status="FAIL",
+                    severity="HIGH",
+                    category="ai",
+                    message=f"Prompt input schema violation: {getattr(exc, 'message', str(exc))}",
+                    row_locator=f"source_line={record.get('__source_line')}",
+                )
+            )
+    checks.append(
+        {
+            "dataset": dataset_name,
+            "check": "prompt_input_schema_validation",
+            "status": "PASS" if invalid == 0 else "FAIL",
+            "records_checked": total,
+            "invalid_records": invalid,
+        }
+    )
     return checks, violations
 
 
@@ -288,6 +400,72 @@ def run_llm_schema_checks(
     return checks, violations
 
 
+def run_llm_output_violation_monitor(
+    dataset_name: str,
+    verdict_records_path: Path,
+    rate_path: Path,
+    violation_log_path: Path,
+    threshold: float,
+) -> tuple[list[dict[str, Any]], list[Violation]]:
+    if not verdict_records_path.exists():
+        return (
+            [
+                {
+                    "dataset": dataset_name,
+                    "check": "llm_output_violation_rate",
+                    "status": "ERROR",
+                    "message": f"Week 2 verdict records not found at {verdict_records_path}.",
+                }
+            ],
+            [],
+        )
+
+    history = json.loads(rate_path.read_text(encoding="utf-8")) if rate_path.exists() else {}
+    verdict_records = load_jsonl(verdict_records_path)
+    relevant = [record for record in verdict_records if record.get("dataset") in {None, dataset_name}]
+    total = len(relevant)
+    invalid = sum(1 for record in relevant if _is_verdict_violation(record))
+    violation_rate = 0.0 if total == 0 else invalid / total
+    previous_rate = ((history.get(dataset_name) or {}).get("week2_verdict_records") or {}).get("violation_rate")
+    trend = "rising" if previous_rate is not None and violation_rate > previous_rate else "stable"
+    checks = [
+        {
+            "dataset": dataset_name,
+            "check": "llm_output_violation_rate",
+            "status": "WARN" if violation_rate > threshold else "PASS",
+            "violation_rate": violation_rate,
+            "previous_violation_rate": previous_rate,
+            "trend": trend,
+            "threshold": threshold,
+            "source_path": str(verdict_records_path),
+        }
+    ]
+    history.setdefault(dataset_name, {})["week2_verdict_records"] = {
+        "violation_rate": violation_rate,
+        "generated_at": utc_now().isoformat(),
+        "trend": trend,
+    }
+    dump_json(rate_path, history)
+
+    violations: list[Violation] = []
+    if violation_rate > threshold:
+        warning = Violation(
+            dataset=dataset_name,
+            column="week2_verdict_records",
+            status="WARN",
+            severity="WARNING",
+            category="ai",
+            message=(
+                f"LLM output schema violation rate {violation_rate:.2%} exceeded threshold "
+                f"{threshold:.2%} using {verdict_records_path} with trend={trend}."
+            ),
+            check_id="llm_output_violation_rate",
+        )
+        append_jsonl(violation_log_path, [warning.to_dict()])
+        violations.append(warning)
+    return checks, violations
+
+
 def _embedding_client_settings(ai_config: dict[str, Any]) -> dict[str, Any]:
     provider = str(ai_config.get("embedding_provider", "openai")).lower()
     if provider == "openrouter":
@@ -318,6 +496,39 @@ def _embedding_client_settings(ai_config: dict[str, Any]) -> dict[str, Any]:
         "base_url": ai_config.get("embedding_base_url"),
         "model": ai_config.get("embedding_model", "text-embedding-3-small"),
     }
+
+
+def _extract_document_metadata(record: dict[str, Any]) -> dict[str, Any]:
+    payload = record.get("payload", {}) if isinstance(record.get("payload"), dict) else {}
+    return {
+        "source_event_type": record.get("event_type"),
+        "recorded_at": record.get("recorded_at"),
+        "application_id": payload.get("application_id"),
+        "package_id": payload.get("package_id"),
+        "document_id": payload.get("document_id"),
+        "document_type": payload.get("document_type"),
+        "requested_document_types": payload.get("required_document_types") or payload.get("required_documents"),
+    }
+
+
+def _should_validate_prompt_input(metadata: dict[str, Any]) -> bool:
+    return metadata.get("source_event_type") in {
+        "DocumentUploadRequested",
+        "PackageCreated",
+        "ExtractionCompleted",
+        "QualityAssessmentCompleted",
+    }
+
+
+def _is_verdict_violation(record: dict[str, Any]) -> bool:
+    if record.get("schema_valid") is False:
+        return True
+    if int(record.get("violation_count", 0) or 0) > 0:
+        return True
+    if record.get("violations"):
+        return True
+    verdict = str(record.get("overall_verdict") or record.get("status") or "").upper()
+    return verdict in {"FAIL", "INVALID", "SCHEMA_VIOLATION"}
 
 
 def _collect_text_samples(records: list[dict[str, Any]], text_fields: list[str], limit: int) -> list[str]:

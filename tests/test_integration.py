@@ -7,7 +7,7 @@ from pathlib import Path
 from contracts.ai_extensions import run_llm_schema_checks
 from contracts.config import load_config
 from contracts.generator import build_baselines, build_contract, build_dbt_schema, load_dataset_records
-from contracts.report_generator import build_report_payload, compute_data_health_score
+from contracts.report_generator import build_report_payload, compute_data_health_score, load_reporting_inputs
 from contracts.runner import validate_dataset
 
 
@@ -105,3 +105,36 @@ def test_invalid_llm_payload_is_quarantined_and_trend_is_reported(tmp_path: Path
     assert any(check["trend"] == "rising" for check in checks)
     assert any(item.status == "WARN" and item.category == "ai" for item in violations)
     assert (tmp_path / "quarantine" / "week5_events-DecisionGenerated-7.json").exists()
+
+
+def test_report_inputs_are_loaded_from_artifact_paths(tmp_path: Path):
+    reports_dir = tmp_path / "validation_reports"
+    reports_dir.mkdir()
+    (reports_dir / "validation-latest.json").write_text(
+        json.dumps({"dataset_summaries": [], "ai_checks": []}),
+        encoding="utf-8",
+    )
+    (reports_dir / "validation-20260404T000000Z.json").write_text("{}", encoding="utf-8")
+    violation_log = tmp_path / "violations.jsonl"
+    violation_log.write_text(
+        json.dumps(
+            {
+                "dataset": "week5_events",
+                "column": "payload.confidence",
+                "status": "FAIL",
+                "severity": "CRITICAL",
+                "category": "structural",
+                "message": "broken",
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    attribution_path = tmp_path / "attribution.json"
+    attribution_path.write_text(json.dumps({"attributions": []}), encoding="utf-8")
+    schema_path = tmp_path / "schema.json"
+    schema_path.write_text(json.dumps({"changes": [], "reports": [], "registry_gate": []}), encoding="utf-8")
+    inputs = load_reporting_inputs(reports_dir, violation_log, attribution_path, schema_path)
+    assert inputs["source_paths"]["violation_log"] == str(violation_log)
+    assert inputs["validation_report_paths"]
+    assert inputs["violations"][0].dataset == "week5_events"

@@ -42,14 +42,19 @@
   ],
   "attributions": [],
   "business_risks": [
-    "The enforcer encountered an operational error around unknown field, which reduces confidence in monitoring coverage until the underlying issue is fixed."
+    "System week3_extractions failed on field unknown field with status ERROR; downstream impact: consumer impact not yet attributed.",
+    "System week5_events failed on field unknown field with status ERROR; downstream impact: consumer impact not yet attributed.",
+    "System week3_extractions failed on field payload.facts.field_confidence.total_revenue with status FAIL; downstream impact: consumer impact not yet attributed; this can distort confidence-driven decisions and raise hallucination risk.",
+    "System week5_events failed on field payload.facts.field_confidence.total_revenue with status FAIL; downstream impact: consumer impact not yet attributed; this can distort confidence-driven decisions and raise hallucination risk.",
+    "System week5_events failed on field payload.confidence with status FAIL; downstream impact: consumer impact not yet attributed; this can distort confidence-driven decisions and raise hallucination risk.",
+    "System week5_events failed on field payload (DecisionGenerated) with status FAIL; downstream impact: consumer impact not yet attributed."
   ],
-  "data_health_score": 70,
-  "generated_at": "2026-04-04T08:25:06.130841+00:00",
+  "data_health_score": 40,
+  "generated_at": "2026-04-04T09:43:13.443949+00:00",
   "recommended_actions": [
-    "Increase contract registry coverage for high-value fields so blast radius is explicit before the next release.",
-    "Confirm all consumer-ingestion validators are using the latest generated contracts and baselines before the next scheduled run.",
-    "Review quarantine outputs and clear recurring schema failures before promoting new producer or model changes."
+    "Update contracts/runner.py and review contract clause payload.facts.field_confidence.total_revenue in generated_contracts/unknown.odcs.yaml for dataset week3_extractions.",
+    "Re-run validation against generated_contracts/unknown.odcs.yaml and review clause set latest_snapshot for dataset week3_extractions.",
+    "Re-run validation against generated_contracts/unknown.odcs.yaml and review clause set latest_snapshot for dataset week5_events."
   ],
   "registry_gate": [
     {
@@ -59,29 +64,833 @@
       "message": "Registry gate satisfied for detected schema changes.",
       "missing_plans": [],
       "status": "PASS"
-    },
-    {
-      "breaking_change_count": 0,
-      "dataset": "week5_events",
-      "enforcement_location": "producer_predeploy_gate",
-      "message": "Registry gate satisfied for detected schema changes.",
-      "missing_plans": [],
-      "status": "PASS"
     }
   ],
   "schema_changes": [],
+  "schema_reports": [
+    {
+      "blast_radius": {
+        "subscriber_count": 0,
+        "subscribers": []
+      },
+      "compatibility_verdict": "COMPATIBLE",
+      "consumer_failure_modes": [],
+      "contract_id": "week3_extractions",
+      "current_snapshot": "/home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/schema_snapshots/contracts/week3_extractions/20260404T082506Z.yaml",
+      "diff": [],
+      "migration_checklist": [
+        "Regenerate the producer contract for week3_extractions and publish the updated snapshot before deployment.",
+        "Validate downstream readers for week3_extractions against the new contract snapshot in a staging environment."
+      ],
+      "previous_snapshot": "/home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/schema_snapshots/contracts/week3_extractions/20260404T082415Z.yaml",
+      "registry_gate": {
+        "breaking_change_count": 0,
+        "dataset": "week3_extractions",
+        "enforcement_location": "producer_predeploy_gate",
+        "message": "Registry gate satisfied for detected schema changes.",
+        "missing_plans": [],
+        "status": "PASS"
+      },
+      "rollback_plan": [
+        "Pause deployments for week3_extractions at the producer boundary if validation or migration gates fail.",
+        "Restore the previous contract snapshot from /home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/schema_snapshots/contracts/week3_extractions/20260404T082415Z.yaml.",
+        "Regenerate consumer-facing artifacts from /home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/schema_snapshots/contracts/week3_extractions/latest.yaml after rollback verification."
+      ]
+    }
+  ],
+  "sections": {
+    "AI system risk assessment": {
+      "ai_violations": [
+        {
+          "actual": null,
+          "category": "ai",
+          "check_id": null,
+          "column": null,
+          "dataset": "week3_extractions",
+          "detected_at": "2026-04-04T09:43:13.442415+00:00",
+          "expected": null,
+          "message": "Embedding drift could not run because no text samples were found.",
+          "row_locator": null,
+          "severity": "HIGH",
+          "status": "ERROR",
+          "violation_id": "violation-4008a79f089b"
+        },
+        {
+          "actual": null,
+          "category": "ai",
+          "check_id": null,
+          "column": null,
+          "dataset": "week5_events",
+          "detected_at": "2026-04-04T09:43:13.442489+00:00",
+          "expected": null,
+          "message": "Embedding drift skipped because OPENAI_API_KEY is not configured.",
+          "row_locator": null,
+          "severity": "HIGH",
+          "status": "ERROR",
+          "violation_id": "violation-92bad9978c30"
+        },
+        {
+          "actual": null,
+          "category": "ai",
+          "check_id": null,
+          "column": null,
+          "dataset": "week3_extractions",
+          "detected_at": "2026-04-04T09:43:13.442575+00:00",
+          "expected": null,
+          "message": "Embedding drift could not run because no text samples were found.",
+          "row_locator": null,
+          "severity": "HIGH",
+          "status": "ERROR",
+          "violation_id": "violation-4e047094d134"
+        },
+        {
+          "actual": null,
+          "category": "ai",
+          "check_id": null,
+          "column": null,
+          "dataset": "week5_events",
+          "detected_at": "2026-04-04T09:43:13.442677+00:00",
+          "expected": null,
+          "message": "Embedding drift skipped because OPENAI_API_KEY is not configured.",
+          "row_locator": null,
+          "severity": "HIGH",
+          "status": "ERROR",
+          "violation_id": "violation-cd236db53172"
+        },
+        {
+          "actual": null,
+          "category": "ai",
+          "check_id": null,
+          "column": "payload (DecisionGenerated)",
+          "dataset": "week5_events",
+          "detected_at": "2026-04-04T09:43:13.442706+00:00",
+          "expected": null,
+          "message": "LLM payload schema violation: 64.0 is greater than the maximum of 1.0",
+          "row_locator": "event_type=DecisionGenerated, source_line=542",
+          "severity": "HIGH",
+          "status": "FAIL",
+          "violation_id": "violation-aca5b0f85110"
+        },
+        {
+          "actual": null,
+          "category": "ai",
+          "check_id": null,
+          "column": null,
+          "dataset": "week3_extractions",
+          "detected_at": "2026-04-04T09:43:13.442730+00:00",
+          "expected": null,
+          "message": "Embedding drift could not run because no text samples were found.",
+          "row_locator": null,
+          "severity": "HIGH",
+          "status": "ERROR",
+          "violation_id": "violation-752c9102b4ef"
+        },
+        {
+          "actual": null,
+          "category": "ai",
+          "check_id": null,
+          "column": null,
+          "dataset": "week5_events",
+          "detected_at": "2026-04-04T09:43:13.442752+00:00",
+          "expected": null,
+          "message": "Embedding drift skipped because OPENAI_API_KEY is not configured.",
+          "row_locator": null,
+          "severity": "HIGH",
+          "status": "ERROR",
+          "violation_id": "violation-3f7616d45ced"
+        },
+        {
+          "actual": null,
+          "category": "ai",
+          "check_id": null,
+          "column": null,
+          "dataset": "week3_extractions",
+          "detected_at": "2026-04-04T09:43:13.442773+00:00",
+          "expected": null,
+          "message": "Embedding drift could not run because no text samples were found.",
+          "row_locator": null,
+          "severity": "HIGH",
+          "status": "ERROR",
+          "violation_id": "violation-ef67a8d7c253"
+        },
+        {
+          "actual": null,
+          "category": "ai",
+          "check_id": null,
+          "column": null,
+          "dataset": "week5_events",
+          "detected_at": "2026-04-04T09:43:13.442794+00:00",
+          "expected": null,
+          "message": "Embedding drift skipped because OPENAI_API_KEY is not configured.",
+          "row_locator": null,
+          "severity": "HIGH",
+          "status": "ERROR",
+          "violation_id": "violation-c345b56a2eeb"
+        },
+        {
+          "actual": null,
+          "category": "ai",
+          "check_id": null,
+          "column": null,
+          "dataset": "week3_extractions",
+          "detected_at": "2026-04-04T09:43:13.442814+00:00",
+          "expected": null,
+          "message": "Embedding drift could not run because no text samples were found.",
+          "row_locator": null,
+          "severity": "HIGH",
+          "status": "ERROR",
+          "violation_id": "violation-86e5e062badf"
+        },
+        {
+          "actual": null,
+          "category": "ai",
+          "check_id": null,
+          "column": null,
+          "dataset": "week5_events",
+          "detected_at": "2026-04-04T09:43:13.442834+00:00",
+          "expected": null,
+          "message": "Embedding drift skipped because OPENAI_API_KEY is not configured.",
+          "row_locator": null,
+          "severity": "HIGH",
+          "status": "ERROR",
+          "violation_id": "violation-9870b1b24d3d"
+        },
+        {
+          "actual": null,
+          "category": "ai",
+          "check_id": null,
+          "column": null,
+          "dataset": "week3_extractions",
+          "detected_at": "2026-04-04T09:43:13.442854+00:00",
+          "expected": null,
+          "message": "Embedding drift could not run because no text samples were found.",
+          "row_locator": null,
+          "severity": "HIGH",
+          "status": "ERROR",
+          "violation_id": "violation-8609501e6dd6"
+        },
+        {
+          "actual": null,
+          "category": "ai",
+          "check_id": null,
+          "column": null,
+          "dataset": "week5_events",
+          "detected_at": "2026-04-04T09:43:13.442874+00:00",
+          "expected": null,
+          "message": "Embedding drift skipped because OPENROUTER_API_KEY is not configured.",
+          "row_locator": null,
+          "severity": "HIGH",
+          "status": "ERROR",
+          "violation_id": "violation-0db651f182be"
+        },
+        {
+          "actual": null,
+          "category": "ai",
+          "check_id": null,
+          "column": null,
+          "dataset": "week3_extractions",
+          "detected_at": "2026-04-04T09:43:13.442896+00:00",
+          "expected": null,
+          "message": "Embedding drift could not run because no text samples were found.",
+          "row_locator": null,
+          "severity": "HIGH",
+          "status": "ERROR",
+          "violation_id": "violation-90601f2957bd"
+        },
+        {
+          "actual": null,
+          "category": "ai",
+          "check_id": null,
+          "column": null,
+          "dataset": "week5_events",
+          "detected_at": "2026-04-04T09:43:13.442954+00:00",
+          "expected": null,
+          "message": "Embedding drift skipped because OPENROUTER_API_KEY is not configured.",
+          "row_locator": null,
+          "severity": "HIGH",
+          "status": "ERROR",
+          "violation_id": "violation-d9c2214d2cc1"
+        },
+        {
+          "actual": null,
+          "category": "ai",
+          "check_id": null,
+          "column": null,
+          "dataset": "week3_extractions",
+          "detected_at": "2026-04-04T09:43:13.442977+00:00",
+          "expected": null,
+          "message": "Embedding drift could not run because no text samples were found.",
+          "row_locator": null,
+          "severity": "HIGH",
+          "status": "ERROR",
+          "violation_id": "violation-d3979ec7498e"
+        },
+        {
+          "actual": null,
+          "category": "ai",
+          "check_id": null,
+          "column": null,
+          "dataset": "week5_events",
+          "detected_at": "2026-04-04T09:43:13.442997+00:00",
+          "expected": null,
+          "message": "Embedding drift skipped because OPENROUTER_API_KEY is not configured.",
+          "row_locator": null,
+          "severity": "HIGH",
+          "status": "ERROR",
+          "violation_id": "violation-6f259a8d5687"
+        }
+      ],
+      "checks": [
+        {
+          "check": "embedding_drift",
+          "dataset": "week3_extractions",
+          "message": "No text samples available.",
+          "status": "ERROR"
+        },
+        {
+          "check": "embedding_drift",
+          "dataset": "week5_events",
+          "message": "OPENROUTER_API_KEY is not configured.",
+          "status": "ERROR"
+        },
+        {
+          "check": "llm_schema_QualityAssessmentCompleted",
+          "dataset": "week5_events",
+          "previous_violation_rate": 0.0,
+          "status": "PASS",
+          "total": 25,
+          "trend": "stable",
+          "violation_rate": 0.0
+        },
+        {
+          "check": "llm_schema_CreditAnalysisCompleted",
+          "dataset": "week5_events",
+          "previous_violation_rate": 0.0,
+          "status": "PASS",
+          "total": 21,
+          "trend": "stable",
+          "violation_rate": 0.0
+        },
+        {
+          "check": "llm_schema_DecisionGenerated",
+          "dataset": "week5_events",
+          "previous_violation_rate": 0.0,
+          "status": "PASS",
+          "total": 15,
+          "trend": "stable",
+          "violation_rate": 0.0
+        }
+      ],
+      "drift_alerts": [
+        {
+          "actual": null,
+          "category": "drift",
+          "check_id": null,
+          "column": "payload.facts.field_confidence.total_revenue",
+          "dataset": "week3_extractions",
+          "detected_at": "2026-04-04T09:43:13.442551+00:00",
+          "expected": null,
+          "message": "Mean drift exceeded 3 sigma: delta=1.8220, stddev=0.0258",
+          "row_locator": null,
+          "severity": "HIGH",
+          "status": "FAIL",
+          "violation_id": "violation-0b0897b84628"
+        },
+        {
+          "actual": null,
+          "category": "drift",
+          "check_id": null,
+          "column": "payload.facts.field_confidence.total_revenue",
+          "dataset": "week5_events",
+          "detected_at": "2026-04-04T09:43:13.442656+00:00",
+          "expected": null,
+          "message": "Mean drift exceeded 3 sigma: delta=1.8220, stddev=0.0258",
+          "row_locator": null,
+          "severity": "HIGH",
+          "status": "FAIL",
+          "violation_id": "violation-ed0d7bb46332"
+        }
+      ]
+    },
+    "Data Health Score": {
+      "dataset_summaries": [
+        {
+          "contract_id": "week3_extractions",
+          "dataset": "week3_extractions",
+          "errored": 0,
+          "failed": 0,
+          "generated_at": "2026-04-04T08:25:07.011063+00:00",
+          "mode": "AUDIT",
+          "passed": 10,
+          "pipeline_action": "LOG",
+          "record_count": 50,
+          "report_id": "week3_extractions-20260404T082507Z",
+          "results": [
+            {
+              "actual_value": null,
+              "check_id": "w3_event_type_fixed",
+              "column_name": "event_type",
+              "expected": {
+                "field": "event_type",
+                "type": "accepted_values",
+                "values": [
+                  "ExtractionCompleted"
+                ]
+              },
+              "message": "The extraction dataset must only contain ExtractionCompleted events.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w3_document_type_enum",
+              "column_name": "payload.document_type",
+              "expected": {
+                "field": "payload.document_type",
+                "type": "accepted_values",
+                "values": [
+                  "income_statement",
+                  "balance_sheet"
+                ]
+              },
+              "message": "Only income statement and balance sheet extraction payloads are valid in the pilot.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w3_currency_usd",
+              "column_name": "payload.facts.currency",
+              "expected": {
+                "field": "payload.facts.currency",
+                "type": "accepted_values",
+                "values": [
+                  "USD"
+                ]
+              },
+              "message": "Extracted financial facts must use USD in the pilot baseline.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w3_field_confidence_range",
+              "column_name": null,
+              "expected": {
+                "field_prefix": "payload.facts.field_confidence.",
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "prefix_range"
+              },
+              "message": "All field confidence scores must remain on the 0.0 to 1.0 scale.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w3_processing_time_positive",
+              "column_name": "payload.processing_ms",
+              "expected": {
+                "field": "payload.processing_ms",
+                "minimum": 1,
+                "type": "min_value"
+              },
+              "message": "Extraction processing time must be a positive value.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w3_raw_text_positive",
+              "column_name": "payload.raw_text_length",
+              "expected": {
+                "field": "payload.raw_text_length",
+                "minimum": 1,
+                "type": "min_value"
+              },
+              "message": "Completed extractions must include non-zero raw text length.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w3_tables_extracted_nonnegative",
+              "column_name": "payload.tables_extracted",
+              "expected": {
+                "field": "payload.tables_extracted",
+                "minimum": 1,
+                "type": "min_value"
+              },
+              "message": "Completed extractions must report at least one extracted table in this pilot corpus.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w3_assets_cover_cash",
+              "column_name": null,
+              "expected": {
+                "left_field": "payload.facts.current_assets",
+                "right_field": "payload.facts.cash_and_equivalents",
+                "type": "field_gte"
+              },
+              "message": "Current assets must be greater than or equal to cash and equivalents.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w3_completion_after_recorded",
+              "column_name": null,
+              "expected": {
+                "earlier_field": "recorded_at",
+                "later_field": "payload.completed_at",
+                "type": "datetime_order"
+              },
+              "message": "Extraction completion time cannot occur before the event recorded time.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w3_balance_sheet_integrity",
+              "column_name": "payload.facts.balance_sheet_balances",
+              "expected": {
+                "field": "payload.facts.balance_sheet_balances",
+                "type": "conditional_equals",
+                "value": true,
+                "when_equals": "balance_sheet",
+                "when_field": "payload.document_type"
+              },
+              "message": "Balance sheet extractions must explicitly report that the balance sheet balances.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            }
+          ],
+          "run_timestamp": "2026-04-04T08:25:07.010848+00:00",
+          "snapshot_id": "2026-04-04T08:24:14.832875+00:00",
+          "status": "PASS",
+          "total_checks": 10,
+          "violation_count": 0,
+          "warned": 0
+        },
+        {
+          "contract_id": "week5_events",
+          "dataset": "week5_events",
+          "errored": 0,
+          "failed": 0,
+          "generated_at": "2026-04-04T08:25:11.749599+00:00",
+          "mode": "AUDIT",
+          "passed": 11,
+          "pipeline_action": "LOG",
+          "record_count": 1847,
+          "report_id": "week5_events-20260404T082511Z",
+          "results": [
+            {
+              "actual_value": null,
+              "check_id": "w5_stream_prefix",
+              "column_name": "stream_id",
+              "expected": {
+                "field": "stream_id",
+                "prefixes": [
+                  "loan-",
+                  "docpkg-",
+                  "agent-",
+                  "credit-",
+                  "compliance-",
+                  "fraud-",
+                  "audit-"
+                ],
+                "type": "startswith_any"
+              },
+              "message": "Event stream ids must use one of the known aggregate prefixes.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w5_event_version_positive",
+              "column_name": "event_version",
+              "expected": {
+                "field": "event_version",
+                "minimum": 1,
+                "type": "min_value"
+              },
+              "message": "All event versions must be at least 1.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w5_recorded_at_iso",
+              "column_name": "recorded_at",
+              "expected": {
+                "field": "recorded_at",
+                "format": "date-time",
+                "type": "format"
+              },
+              "message": "Every event must have an ISO-8601 recorded timestamp.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w5_agent_type_enum",
+              "column_name": "payload.agent_type",
+              "expected": {
+                "field": "payload.agent_type",
+                "type": "accepted_values_if_present",
+                "values": [
+                  "document_processing",
+                  "credit_analysis",
+                  "fraud_detection",
+                  "compliance",
+                  "decision_orchestrator"
+                ]
+              },
+              "message": "Agent events must use a recognized agent type when present.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w5_confidence_range",
+              "column_name": "payload.confidence",
+              "expected": {
+                "field": "payload.confidence",
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "range_if_present"
+              },
+              "message": "Top-level confidence values must remain on the 0.0 to 1.0 scale.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w5_decision_confidence_range",
+              "column_name": "payload.decision.confidence",
+              "expected": {
+                "field": "payload.decision.confidence",
+                "maximum": 1.0,
+                "minimum": 0.0,
+                "type": "range_if_present"
+              },
+              "message": "Nested decision confidence values must remain on the 0.0 to 1.0 scale.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w5_document_format_enum",
+              "column_name": "payload.document_format",
+              "expected": {
+                "field": "payload.document_format",
+                "type": "accepted_values_if_present",
+                "values": [
+                  "pdf",
+                  "xlsx",
+                  "csv"
+                ]
+              },
+              "message": "Document format values must stay within the known format set.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w5_decision_confidence_floor",
+              "column_name": null,
+              "expected": {
+                "less_than": 0.6,
+                "numeric_field": "payload.confidence",
+                "required_field": "payload.recommendation",
+                "required_value": "REFER",
+                "type": "conditional_numeric_floor_requires_value",
+                "when_equals": "DecisionGenerated",
+                "when_field": "event_type"
+              },
+              "message": "DecisionGenerated events below the confidence floor must resolve to REFER.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w5_extraction_runtime_positive",
+              "column_name": null,
+              "expected": {
+                "checks": [
+                  {
+                    "field": "payload.processing_ms",
+                    "minimum": 1
+                  },
+                  {
+                    "field": "payload.raw_text_length",
+                    "minimum": 1
+                  }
+                ],
+                "type": "conditional_min_pair",
+                "when_equals": "ExtractionCompleted",
+                "when_field": "event_type"
+              },
+              "message": "ExtractionCompleted events must report positive runtime and text volume.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w5_deadline_after_request",
+              "column_name": null,
+              "expected": {
+                "earlier_field": "recorded_at",
+                "later_field": "payload.deadline",
+                "type": "conditional_datetime_order",
+                "when_equals": "DocumentUploadRequested",
+                "when_field": "event_type"
+              },
+              "message": "Document upload deadlines must occur after the event recorded timestamp.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            },
+            {
+              "actual_value": null,
+              "check_id": "w5_credit_decision_enum",
+              "column_name": null,
+              "expected": {
+                "checks": [
+                  {
+                    "field": "payload.decision.risk_tier",
+                    "type": "accepted_values",
+                    "values": [
+                      "LOW",
+                      "MEDIUM",
+                      "HIGH"
+                    ]
+                  },
+                  {
+                    "field": "payload.decision.recommended_limit_usd",
+                    "minimum": 1,
+                    "type": "min_value"
+                  }
+                ],
+                "type": "conditional_composite",
+                "when_equals": "CreditAnalysisCompleted",
+                "when_field": "event_type"
+              },
+              "message": "CreditAnalysisCompleted events must use a recognized risk tier and positive limit.",
+              "row_locator": null,
+              "severity": "LOW",
+              "status": "PASS"
+            }
+          ],
+          "run_timestamp": "2026-04-04T08:25:11.749490+00:00",
+          "snapshot_id": "2026-04-04T08:24:17.839615+00:00",
+          "status": "PASS",
+          "total_checks": 11,
+          "violation_count": 0,
+          "warned": 0
+        }
+      ],
+      "formula": "(checks_passed / total_checks) * 100 minus 20 points per CRITICAL failure",
+      "score": 40
+    },
+    "Recommended actions": [
+      "Update contracts/runner.py and review contract clause payload.facts.field_confidence.total_revenue in generated_contracts/unknown.odcs.yaml for dataset week3_extractions.",
+      "Re-run validation against generated_contracts/unknown.odcs.yaml and review clause set latest_snapshot for dataset week3_extractions.",
+      "Re-run validation against generated_contracts/unknown.odcs.yaml and review clause set latest_snapshot for dataset week5_events."
+    ],
+    "Schema changes detected": {
+      "breaking_changes": [],
+      "change_count": 0,
+      "registry_gate": [
+        {
+          "breaking_change_count": 0,
+          "dataset": "week3_extractions",
+          "enforcement_location": "producer_predeploy_gate",
+          "message": "Registry gate satisfied for detected schema changes.",
+          "missing_plans": [],
+          "status": "PASS"
+        }
+      ],
+      "reports": [
+        {
+          "blast_radius": {
+            "subscriber_count": 0,
+            "subscribers": []
+          },
+          "compatibility_verdict": "COMPATIBLE",
+          "consumer_failure_modes": [],
+          "contract_id": "week3_extractions",
+          "current_snapshot": "/home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/schema_snapshots/contracts/week3_extractions/20260404T082506Z.yaml",
+          "diff": [],
+          "migration_checklist": [
+            "Regenerate the producer contract for week3_extractions and publish the updated snapshot before deployment.",
+            "Validate downstream readers for week3_extractions against the new contract snapshot in a staging environment."
+          ],
+          "previous_snapshot": "/home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/schema_snapshots/contracts/week3_extractions/20260404T082415Z.yaml",
+          "registry_gate": {
+            "breaking_change_count": 0,
+            "dataset": "week3_extractions",
+            "enforcement_location": "producer_predeploy_gate",
+            "message": "Registry gate satisfied for detected schema changes.",
+            "missing_plans": [],
+            "status": "PASS"
+          },
+          "rollback_plan": [
+            "Pause deployments for week3_extractions at the producer boundary if validation or migration gates fail.",
+            "Restore the previous contract snapshot from /home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/schema_snapshots/contracts/week3_extractions/20260404T082415Z.yaml.",
+            "Regenerate consumer-facing artifacts from /home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/schema_snapshots/contracts/week3_extractions/latest.yaml after rollback verification."
+          ]
+        }
+      ]
+    },
+    "Violations this week": [
+      "System week3_extractions failed on field unknown field with status ERROR; downstream impact: consumer impact not yet attributed.",
+      "System week5_events failed on field unknown field with status ERROR; downstream impact: consumer impact not yet attributed.",
+      "System week3_extractions failed on field payload.facts.field_confidence.total_revenue with status FAIL; downstream impact: consumer impact not yet attributed; this can distort confidence-driven decisions and raise hallucination risk.",
+      "System week5_events failed on field payload.facts.field_confidence.total_revenue with status FAIL; downstream impact: consumer impact not yet attributed; this can distort confidence-driven decisions and raise hallucination risk.",
+      "System week5_events failed on field payload.confidence with status FAIL; downstream impact: consumer impact not yet attributed; this can distort confidence-driven decisions and raise hallucination risk.",
+      "System week5_events failed on field payload (DecisionGenerated) with status FAIL; downstream impact: consumer impact not yet attributed."
+    ]
+  },
+  "source_paths": {
+    "attribution": "/home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/validation_reports/attribution-latest.json",
+    "schema_evolution": "/home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/validation_reports/schema-evolution-latest.json",
+    "validation_reports": "/home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/validation_reports",
+    "violation_log": "/home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/violation_log/violations.jsonl"
+  },
   "summary": [
     {
       "contract_id": "week3_extractions",
       "dataset": "week3_extractions",
       "errored": 0,
       "failed": 0,
-      "generated_at": "2026-04-04T08:24:14.969789+00:00",
+      "generated_at": "2026-04-04T08:25:07.011063+00:00",
       "mode": "AUDIT",
       "passed": 10,
       "pipeline_action": "LOG",
       "record_count": 50,
-      "report_id": "week3_extractions-20260404T082414Z",
+      "report_id": "week3_extractions-20260404T082507Z",
       "results": [
         {
           "actual_value": null,
@@ -234,8 +1043,8 @@
           "status": "PASS"
         }
       ],
-      "run_timestamp": "2026-04-04T08:24:14.969693+00:00",
-      "snapshot_id": "2026-04-04T07:26:10.360709+00:00",
+      "run_timestamp": "2026-04-04T08:25:07.010848+00:00",
+      "snapshot_id": "2026-04-04T08:24:14.832875+00:00",
       "status": "PASS",
       "total_checks": 10,
       "violation_count": 0,
@@ -246,12 +1055,12 @@
       "dataset": "week5_events",
       "errored": 0,
       "failed": 0,
-      "generated_at": "2026-04-04T08:24:18.322612+00:00",
+      "generated_at": "2026-04-04T08:25:11.749599+00:00",
       "mode": "AUDIT",
       "passed": 11,
       "pipeline_action": "LOG",
       "record_count": 1847,
-      "report_id": "week5_events-20260404T082418Z",
+      "report_id": "week5_events-20260404T082511Z",
       "results": [
         {
           "actual_value": null,
@@ -460,15 +1269,14 @@
           "status": "PASS"
         }
       ],
-      "run_timestamp": "2026-04-04T08:24:18.322387+00:00",
-      "snapshot_id": "2026-04-04T07:26:11.205272+00:00",
+      "run_timestamp": "2026-04-04T08:25:11.749490+00:00",
+      "snapshot_id": "2026-04-04T08:24:17.839615+00:00",
       "status": "PASS",
       "total_checks": 11,
       "violation_count": 0,
       "warned": 0
     }
   ],
-  "validation_enforcement_location": "consumer_ingestion_boundary",
   "violations": [
     {
       "actual": null,
@@ -476,11 +1284,13 @@
       "check_id": null,
       "column": null,
       "dataset": "week3_extractions",
+      "detected_at": "2026-04-04T09:43:13.442415+00:00",
       "expected": null,
       "message": "Embedding drift could not run because no text samples were found.",
       "row_locator": null,
       "severity": "HIGH",
-      "status": "ERROR"
+      "status": "ERROR",
+      "violation_id": "violation-4008a79f089b"
     },
     {
       "actual": null,
@@ -488,11 +1298,299 @@
       "check_id": null,
       "column": null,
       "dataset": "week5_events",
+      "detected_at": "2026-04-04T09:43:13.442489+00:00",
+      "expected": null,
+      "message": "Embedding drift skipped because OPENAI_API_KEY is not configured.",
+      "row_locator": null,
+      "severity": "HIGH",
+      "status": "ERROR",
+      "violation_id": "violation-92bad9978c30"
+    },
+    {
+      "actual": 92.0,
+      "category": "structural",
+      "check_id": null,
+      "column": "payload.facts.field_confidence.total_revenue",
+      "dataset": "week3_extractions",
+      "detected_at": "2026-04-04T09:43:13.442524+00:00",
+      "expected": {
+        "maximum": 1.0
+      },
+      "message": "Value 92.0 is above maximum 1.0.",
+      "row_locator": "stream_id=docpkg-APEX-0014, payload.package_id=APEX-0014, payload.document_id=doc-0b5a0577",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "violation_id": "violation-6c0e5c59a59c"
+    },
+    {
+      "actual": null,
+      "category": "drift",
+      "check_id": null,
+      "column": "payload.facts.field_confidence.total_revenue",
+      "dataset": "week3_extractions",
+      "detected_at": "2026-04-04T09:43:13.442551+00:00",
+      "expected": null,
+      "message": "Mean drift exceeded 3 sigma: delta=1.8220, stddev=0.0258",
+      "row_locator": null,
+      "severity": "HIGH",
+      "status": "FAIL",
+      "violation_id": "violation-0b0897b84628"
+    },
+    {
+      "actual": null,
+      "category": "ai",
+      "check_id": null,
+      "column": null,
+      "dataset": "week3_extractions",
+      "detected_at": "2026-04-04T09:43:13.442575+00:00",
+      "expected": null,
+      "message": "Embedding drift could not run because no text samples were found.",
+      "row_locator": null,
+      "severity": "HIGH",
+      "status": "ERROR",
+      "violation_id": "violation-4e047094d134"
+    },
+    {
+      "actual": 92.0,
+      "category": "structural",
+      "check_id": null,
+      "column": "payload.facts.field_confidence.total_revenue",
+      "dataset": "week5_events",
+      "detected_at": "2026-04-04T09:43:13.442598+00:00",
+      "expected": {
+        "maximum": 1.0
+      },
+      "message": "Value 92.0 is above maximum 1.0.",
+      "row_locator": "stream_id=docpkg-APEX-0014, event_type=ExtractionCompleted, recorded_at=2026-02-26T01:34:48.528000",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "violation_id": "violation-069ca1d28241"
+    },
+    {
+      "actual": 64.0,
+      "category": "structural",
+      "check_id": null,
+      "column": "payload.confidence",
+      "dataset": "week5_events",
+      "detected_at": "2026-04-04T09:43:13.442632+00:00",
+      "expected": {
+        "maximum": 1.0
+      },
+      "message": "Value 64.0 is above maximum 1.0.",
+      "row_locator": "stream_id=loan-APEX-0023, event_type=DecisionGenerated, recorded_at=2026-03-02T13:10:42.666414",
+      "severity": "CRITICAL",
+      "status": "FAIL",
+      "violation_id": "violation-7f2720985b08"
+    },
+    {
+      "actual": null,
+      "category": "drift",
+      "check_id": null,
+      "column": "payload.facts.field_confidence.total_revenue",
+      "dataset": "week5_events",
+      "detected_at": "2026-04-04T09:43:13.442656+00:00",
+      "expected": null,
+      "message": "Mean drift exceeded 3 sigma: delta=1.8220, stddev=0.0258",
+      "row_locator": null,
+      "severity": "HIGH",
+      "status": "FAIL",
+      "violation_id": "violation-ed0d7bb46332"
+    },
+    {
+      "actual": null,
+      "category": "ai",
+      "check_id": null,
+      "column": null,
+      "dataset": "week5_events",
+      "detected_at": "2026-04-04T09:43:13.442677+00:00",
+      "expected": null,
+      "message": "Embedding drift skipped because OPENAI_API_KEY is not configured.",
+      "row_locator": null,
+      "severity": "HIGH",
+      "status": "ERROR",
+      "violation_id": "violation-cd236db53172"
+    },
+    {
+      "actual": null,
+      "category": "ai",
+      "check_id": null,
+      "column": "payload (DecisionGenerated)",
+      "dataset": "week5_events",
+      "detected_at": "2026-04-04T09:43:13.442706+00:00",
+      "expected": null,
+      "message": "LLM payload schema violation: 64.0 is greater than the maximum of 1.0",
+      "row_locator": "event_type=DecisionGenerated, source_line=542",
+      "severity": "HIGH",
+      "status": "FAIL",
+      "violation_id": "violation-aca5b0f85110"
+    },
+    {
+      "actual": null,
+      "category": "ai",
+      "check_id": null,
+      "column": null,
+      "dataset": "week3_extractions",
+      "detected_at": "2026-04-04T09:43:13.442730+00:00",
+      "expected": null,
+      "message": "Embedding drift could not run because no text samples were found.",
+      "row_locator": null,
+      "severity": "HIGH",
+      "status": "ERROR",
+      "violation_id": "violation-752c9102b4ef"
+    },
+    {
+      "actual": null,
+      "category": "ai",
+      "check_id": null,
+      "column": null,
+      "dataset": "week5_events",
+      "detected_at": "2026-04-04T09:43:13.442752+00:00",
+      "expected": null,
+      "message": "Embedding drift skipped because OPENAI_API_KEY is not configured.",
+      "row_locator": null,
+      "severity": "HIGH",
+      "status": "ERROR",
+      "violation_id": "violation-3f7616d45ced"
+    },
+    {
+      "actual": null,
+      "category": "ai",
+      "check_id": null,
+      "column": null,
+      "dataset": "week3_extractions",
+      "detected_at": "2026-04-04T09:43:13.442773+00:00",
+      "expected": null,
+      "message": "Embedding drift could not run because no text samples were found.",
+      "row_locator": null,
+      "severity": "HIGH",
+      "status": "ERROR",
+      "violation_id": "violation-ef67a8d7c253"
+    },
+    {
+      "actual": null,
+      "category": "ai",
+      "check_id": null,
+      "column": null,
+      "dataset": "week5_events",
+      "detected_at": "2026-04-04T09:43:13.442794+00:00",
+      "expected": null,
+      "message": "Embedding drift skipped because OPENAI_API_KEY is not configured.",
+      "row_locator": null,
+      "severity": "HIGH",
+      "status": "ERROR",
+      "violation_id": "violation-c345b56a2eeb"
+    },
+    {
+      "actual": null,
+      "category": "ai",
+      "check_id": null,
+      "column": null,
+      "dataset": "week3_extractions",
+      "detected_at": "2026-04-04T09:43:13.442814+00:00",
+      "expected": null,
+      "message": "Embedding drift could not run because no text samples were found.",
+      "row_locator": null,
+      "severity": "HIGH",
+      "status": "ERROR",
+      "violation_id": "violation-86e5e062badf"
+    },
+    {
+      "actual": null,
+      "category": "ai",
+      "check_id": null,
+      "column": null,
+      "dataset": "week5_events",
+      "detected_at": "2026-04-04T09:43:13.442834+00:00",
+      "expected": null,
+      "message": "Embedding drift skipped because OPENAI_API_KEY is not configured.",
+      "row_locator": null,
+      "severity": "HIGH",
+      "status": "ERROR",
+      "violation_id": "violation-9870b1b24d3d"
+    },
+    {
+      "actual": null,
+      "category": "ai",
+      "check_id": null,
+      "column": null,
+      "dataset": "week3_extractions",
+      "detected_at": "2026-04-04T09:43:13.442854+00:00",
+      "expected": null,
+      "message": "Embedding drift could not run because no text samples were found.",
+      "row_locator": null,
+      "severity": "HIGH",
+      "status": "ERROR",
+      "violation_id": "violation-8609501e6dd6"
+    },
+    {
+      "actual": null,
+      "category": "ai",
+      "check_id": null,
+      "column": null,
+      "dataset": "week5_events",
+      "detected_at": "2026-04-04T09:43:13.442874+00:00",
       "expected": null,
       "message": "Embedding drift skipped because OPENROUTER_API_KEY is not configured.",
       "row_locator": null,
       "severity": "HIGH",
-      "status": "ERROR"
+      "status": "ERROR",
+      "violation_id": "violation-0db651f182be"
+    },
+    {
+      "actual": null,
+      "category": "ai",
+      "check_id": null,
+      "column": null,
+      "dataset": "week3_extractions",
+      "detected_at": "2026-04-04T09:43:13.442896+00:00",
+      "expected": null,
+      "message": "Embedding drift could not run because no text samples were found.",
+      "row_locator": null,
+      "severity": "HIGH",
+      "status": "ERROR",
+      "violation_id": "violation-90601f2957bd"
+    },
+    {
+      "actual": null,
+      "category": "ai",
+      "check_id": null,
+      "column": null,
+      "dataset": "week5_events",
+      "detected_at": "2026-04-04T09:43:13.442954+00:00",
+      "expected": null,
+      "message": "Embedding drift skipped because OPENROUTER_API_KEY is not configured.",
+      "row_locator": null,
+      "severity": "HIGH",
+      "status": "ERROR",
+      "violation_id": "violation-d9c2214d2cc1"
+    },
+    {
+      "actual": null,
+      "category": "ai",
+      "check_id": null,
+      "column": null,
+      "dataset": "week3_extractions",
+      "detected_at": "2026-04-04T09:43:13.442977+00:00",
+      "expected": null,
+      "message": "Embedding drift could not run because no text samples were found.",
+      "row_locator": null,
+      "severity": "HIGH",
+      "status": "ERROR",
+      "violation_id": "violation-d3979ec7498e"
+    },
+    {
+      "actual": null,
+      "category": "ai",
+      "check_id": null,
+      "column": null,
+      "dataset": "week5_events",
+      "detected_at": "2026-04-04T09:43:13.442997+00:00",
+      "expected": null,
+      "message": "Embedding drift skipped because OPENROUTER_API_KEY is not configured.",
+      "row_locator": null,
+      "severity": "HIGH",
+      "status": "ERROR",
+      "violation_id": "violation-6f259a8d5687"
     }
   ]
 }

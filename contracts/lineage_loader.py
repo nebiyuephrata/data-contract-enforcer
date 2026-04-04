@@ -106,6 +106,70 @@ def lineage_candidate_files(
     return ranked
 
 
+def traverse_lineage(snapshot: dict[str, Any] | None, dataset_name: str) -> list[dict[str, Any]]:
+    if not snapshot:
+        return []
+    nodes = {node["id"]: node for node in snapshot.get("nodes", [])}
+    adjacency: dict[str, list[str]] = {}
+    for edge in snapshot.get("edges", []):
+        source = edge.get("source_dataset_id") or edge.get("source") or ""
+        target = edge.get("target_dataset_id") or edge.get("target") or ""
+        if not source or not target:
+            continue
+        adjacency.setdefault(source, []).append(target)
+
+    start_nodes = [node_id for node_id, node in nodes.items() if _matches_dataset_node(node, dataset_name)]
+    traversed: list[dict[str, Any]] = []
+    queue = deque((node_id, 0, [node_id]) for node_id in start_nodes)
+    seen = set(start_nodes)
+    while queue:
+        node_id, depth, path = queue.popleft()
+        if depth > 0:
+            node = nodes.get(node_id, {})
+            traversed.append(
+                {
+                    "node_id": node_id,
+                    "depth": depth,
+                    "path": path,
+                    "type": node.get("type"),
+                    "name": node.get("name", node_id),
+                    "metadata": node.get("metadata", {}),
+                }
+            )
+        for target in adjacency.get(node_id, []):
+            if target in seen:
+                continue
+            seen.add(target)
+            queue.append((target, depth + 1, [*path, target]))
+    return traversed
+
+
+def lineage_blast_radius(snapshot: dict[str, Any] | None, dataset_name: str) -> dict[str, Any]:
+    traversed = traverse_lineage(snapshot, dataset_name)
+    affected_nodes = [
+        {
+            "node_id": item["node_id"],
+            "name": item["name"],
+            "type": item["type"],
+            "depth": item["depth"],
+        }
+        for item in traversed
+    ]
+    affected_pipelines = sorted(
+        {
+            item["name"]
+            for item in traversed
+            if item["type"] in {"code", "pipeline", "job"}
+        }
+    )
+    contamination_depth = max((item["depth"] for item in traversed), default=0)
+    return {
+        "affected_nodes": affected_nodes,
+        "affected_pipelines": affected_pipelines,
+        "contamination_depth": contamination_depth,
+    }
+
+
 def _matches_dataset_node(node: dict[str, Any], dataset_name: str) -> bool:
     metadata = node.get("metadata", {})
     if metadata.get("dataset") == dataset_name:

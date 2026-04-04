@@ -57,6 +57,21 @@ subscriptions:
     contact: orchestrator@apexledger.local
     registered_at: "2026-04-04T07:00:00Z"
 
+  - contract_id: week3_extractions
+    subscriber_id: week4_lineage_snapshot
+    fields_consumed:
+      - payload.document_type
+      - payload.facts.field_confidence
+      - payload.completed_at
+    breaking_fields:
+      - field: payload.facts.field_confidence
+        reason: Week 4 lineage annotations depend on extraction confidence semantics staying stable.
+      - field: payload.completed_at
+        reason: Lineage timing analysis uses extraction completion timestamps for dependency sequencing.
+    validation_mode: AUDIT
+    contact: governance@apexledger.local
+    registered_at: "2026-04-04T07:00:00Z"
+
   - contract_id: week5_events
     subscriber_id: governance_health_dashboard
     fields_consumed:
@@ -107,6 +122,24 @@ subscriptions:
         reason: Deadline timestamps are used to trigger escalation paths and late-file alerts.
     validation_mode: ENFORCE
     contact: compliance@apexledger.local
+    registered_at: "2026-04-04T07:00:00Z"
+
+  - contract_id: week5_events
+    subscriber_id: week7_contract_enforcer
+    fields_consumed:
+      - payload.confidence
+      - payload.decision.confidence
+      - payload.document_format
+      - payload.deadline
+    breaking_fields:
+      - field: payload.confidence
+        reason: Week 7 validation checks enforce normalized confidence values.
+      - field: payload.document_format
+        reason: Week 7 governance logic checks document format enums for downstream routing safety.
+      - field: payload.deadline
+        reason: Week 7 validation checks alert when required deadlines become malformed or missing.
+    validation_mode: ENFORCE
+    contact: governance@apexledger.local
     registered_at: "2026-04-04T07:00:00Z"
 
   - contract_id: week4_lineage_snapshot

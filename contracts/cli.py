@@ -8,15 +8,15 @@ import shutil
 import tempfile
 from typing import Any
 
-from .ai_extensions import run_embedding_drift, run_llm_schema_checks
+from .ai_extensions import run_ai_extensions
 from .attributor import attribute_violations
 from .config import DEFAULT_CONFIG_PATH, load_config
 from .generator import build_baselines, build_contract, build_dbt_schema, load_dataset_records, write_contract_outputs
 from .models import AttributionResult, SchemaChange, Violation
 from .registry import load_registry
-from .report_generator import build_report_payload, write_report_outputs
+from .report_generator import build_report_payload, load_reporting_inputs, write_report_outputs
 from .runner import load_contract, validate_dataset, write_validation_outputs
-from .schema_analyzer import compare_contract_snapshots, evaluate_registry_gate
+from .schema_analyzer import build_migration_report, compare_contract_snapshots, select_snapshot_pair
 from .utils import dump_json, ensure_artifact_dirs, latest_file, project_root, timestamp_slug
 
 
@@ -47,6 +47,8 @@ def _build_parser() -> argparse.ArgumentParser:
     validate.set_defaults(func=cmd_validate)
 
     analyze = subparsers.add_parser("analyze-schema")
+    analyze.add_argument("--contract-id", dest="contract_id")
+    analyze.add_argument("--since", dest="since")
     analyze.set_defaults(func=cmd_analyze_schema)
 
     attribute = subparsers.add_parser("attribute")
@@ -99,24 +101,16 @@ def cmd_validate(args: argparse.Namespace, config: dict[str, Any]) -> int:
         summary, violations = validate_dataset(dataset, contract, records, baselines, config["validation"], mode=args.mode)
         dataset_summaries.append(summary)
         all_violations.extend(violations)
-        if dataset.text_fields:
-            checks, ai_violations = run_embedding_drift(
-                dataset.name,
-                records,
-                dataset.text_fields,
-                config["ai"],
-                Path(config["paths"]["embedding_baselines"]),
-            )
-            ai_checks.extend(checks)
-            all_violations.extend(ai_violations)
-        llm_checks, llm_violations = run_llm_schema_checks(
+        extension_checks, extension_violations = run_ai_extensions(
             dataset.name,
             raw_records,
-            Path(config["paths"]["llm_violation_rates"]),
-            Path(config["paths"]["quarantine"]),
+            records,
+            dataset.text_fields,
+            config["ai"],
+            config["paths"],
         )
-        ai_checks.extend(llm_checks)
-        all_violations.extend(llm_violations)
+        ai_checks.extend(extension_checks)
+        all_violations.extend(extension_violations)
 
     run_payload = {
         "run_id": timestamp_slug(),
@@ -138,20 +132,26 @@ def cmd_validate(args: argparse.Namespace, config: dict[str, Any]) -> int:
 def cmd_analyze_schema(args: argparse.Namespace, config: dict[str, Any]) -> int:
     all_changes: list[SchemaChange] = []
     registry_gate: list[dict[str, Any]] = []
+    reports: list[dict[str, Any]] = []
     registry = load_registry(config["paths"].get("registry"))
     for dataset in config["datasets"]:
+        if args.contract_id and dataset.name != args.contract_id:
+            continue
         snapshot_dir = project_root() / "schema_snapshots" / "contracts" / dataset.name
-        snapshots = sorted(path for path in snapshot_dir.glob("*.yaml") if path.name != "latest.yaml")
-        current_path = Path(dataset.contract_path)
-        previous_path = snapshots[-2] if len(snapshots) >= 2 else None
+        current_path, previous_path = select_snapshot_pair(snapshot_dir, args.since)
+        if current_path is None:
+            current_path = Path(dataset.contract_path)
         changes = compare_contract_snapshots(dataset.name, current_path, previous_path)
         all_changes.extend(changes)
-        registry_gate.append(evaluate_registry_gate(dataset.name, changes, registry))
+        report = build_migration_report(dataset.name, current_path, previous_path, registry)
+        reports.append(report)
+        registry_gate.append(report["registry_gate"])
     payload = {
         "generated_at": __import__("datetime").datetime.now(__import__("datetime").UTC).isoformat(),
         "enforcement_location": "producer_predeploy_gate",
         "changes": [change.to_dict() for change in all_changes],
         "registry_gate": registry_gate,
+        "reports": reports,
     }
     dump_json(Path(config["paths"]["schema_evolution"]), payload)
     print(f"Wrote schema evolution analysis to {config['paths']['schema_evolution']}")
@@ -179,18 +179,20 @@ def cmd_attribute(args: argparse.Namespace, config: dict[str, Any]) -> int:
 
 
 def cmd_report(args: argparse.Namespace, config: dict[str, Any]) -> int:
-    validation_payload = json.loads((Path(config["paths"]["validation_reports"]) / "validation-latest.json").read_text(encoding="utf-8"))
-    attribution_payload = _load_optional_json(Path(config["paths"]["attribution"]))
-    schema_payload = _load_optional_json(Path(config["paths"]["schema_evolution"]))
-    violations = [Violation(**violation) for violation in validation_payload.get("violations", [])]
-    attributions = [AttributionResult(**item) for item in attribution_payload.get("attributions", [])]
-    changes = [SchemaChange(**item) for item in schema_payload.get("changes", [])]
+    inputs = load_reporting_inputs(
+        Path(config["paths"]["validation_reports"]),
+        Path(config["paths"]["violation_log"]),
+        Path(config["paths"]["attribution"]),
+        Path(config["paths"]["schema_evolution"]),
+    )
     report_payload = build_report_payload(
-        validation_payload,
-        violations,
-        attributions,
-        changes,
-        schema_payload.get("registry_gate", []),
+        inputs["validation_payload"],
+        inputs["violations"],
+        inputs["attributions"],
+        inputs["schema_changes"],
+        inputs["registry_gate"],
+        inputs["schema_reports"],
+        inputs["source_paths"],
     )
     write_report_outputs(Path(config["paths"]["report_json"]), Path(config["paths"]["report_pdf"]), report_payload)
     print(f"Wrote report JSON to {config['paths']['report_json']}")
