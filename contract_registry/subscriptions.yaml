@@ -1,0 +1,92 @@
+datasets:
+  week3_extractions:
+    subscribers:
+      - consumer: credit_analysis_ingestion
+        boundary: consumer_ingestion
+        owner: credit-risk@apexledger.local
+        severity: high
+        depends_on_fields:
+          - payload.document_type
+          - payload.facts.total_revenue
+          - payload.facts.ebitda
+          - payload.facts.net_income
+          - payload.facts.debt_to_ebitda
+          - payload.facts.current_ratio
+          - payload.facts.field_confidence.total_revenue
+          - payload.facts.field_confidence.net_income
+        depends_on_prefixes:
+          - payload.facts.field_confidence.
+      - consumer: fraud_screening_ingestion
+        boundary: consumer_ingestion
+        owner: fraud@apexledger.local
+        severity: medium
+        depends_on_fields:
+          - payload.document_id
+          - payload.document_type
+          - payload.facts.total_assets
+          - payload.facts.total_liabilities
+          - payload.facts.balance_sheet_balances
+          - payload.processing_ms
+      - consumer: decision_orchestrator_ingestion
+        boundary: consumer_ingestion
+        owner: orchestrator@apexledger.local
+        severity: high
+        depends_on_fields:
+          - payload.facts.total_revenue
+          - payload.facts.ebitda
+          - payload.facts.net_income
+          - payload.facts.field_confidence.total_revenue
+          - payload.facts.field_confidence.total_assets
+          - payload.completed_at
+    migration_plans:
+      - plan_id: w3-confidence-range-hardening
+        field_name: payload.facts.field_confidence.total_revenue
+        change_type: metadata_change
+        status: approved
+      - plan_id: w3-balance-sheet-nullability
+        field_name: payload.facts.balance_sheet_balances
+        change_type: tighten_nullability
+        status: approved
+
+  week5_events:
+    subscribers:
+      - consumer: governance_health_dashboard
+        boundary: consumer_ingestion
+        owner: governance@apexledger.local
+        severity: medium
+        depends_on_fields:
+          - stream_id
+          - event_type
+          - event_version
+          - recorded_at
+          - payload.agent_type
+          - payload.confidence
+          - payload.decision.confidence
+      - consumer: executive_decisioning_dashboard
+        boundary: consumer_ingestion
+        owner: exec-ops@apexledger.local
+        severity: high
+        depends_on_fields:
+          - payload.recommendation
+          - payload.confidence
+          - payload.executive_summary
+          - payload.decision.risk_tier
+          - payload.decision.recommended_limit_usd
+      - consumer: compliance_boundary_gate
+        boundary: consumer_ingestion
+        owner: compliance@apexledger.local
+        severity: high
+        depends_on_fields:
+          - payload.document_format
+          - payload.deadline
+          - payload.decline_reasons
+          - payload.approved_amount_usd
+    migration_plans:
+      - plan_id: w5-recommendation-enum-broadening
+        field_name: payload.recommendation
+        change_type: widen_enum
+        status: approved
+      - plan_id: w5-confidence-floor-rule
+        field_name: payload.confidence
+        change_type: metadata_change
+        status: approved

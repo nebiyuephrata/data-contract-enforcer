@@ -12,3 +12,6 @@ validation_reports/*
 
 violation_log/*
 !violation_log/.gitkeep
+
+outputs/quarantine/*
+!outputs/quarantine/.gitkeep

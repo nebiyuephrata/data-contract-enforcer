@@ -5,8 +5,9 @@ from pathlib import Path
 import subprocess
 from typing import Any
 
-from .lineage_loader import lineage_candidate_files, load_lineage_snapshot
+from .lineage_loader import downstream_consumers, lineage_candidate_files, load_lineage_snapshot
 from .models import AttributionResult, Violation
+from .registry import load_registry, registry_blast_radius
 from .utils import clamp
 
 
@@ -26,14 +27,18 @@ def attribute_violations(
     violations: list[Violation],
     repositories: dict[str, str],
     lineage_snapshot_path: str | None = None,
+    registry_path: str | None = None,
 ) -> list[AttributionResult]:
     results: list[AttributionResult] = []
     snapshot = load_lineage_snapshot(lineage_snapshot_path)
+    registry = load_registry(registry_path)
     apex_root = Path(repositories["apexLedger"])
     for violation in violations:
         if violation.status not in {"FAIL", "ERROR"} or not violation.column:
             continue
         candidate_files = _candidate_files(violation, apex_root, snapshot)
+        blast_radius = registry_blast_radius(registry, violation.dataset, violation.column)
+        transitive = downstream_consumers(snapshot, violation.dataset)
         best_result = None
         for candidate_info in candidate_files:
             candidate = candidate_info["path"]
@@ -51,6 +56,8 @@ def attribute_violations(
                 confidence=confidence,
                 lineage_hops=hops,
                 rationale=candidate_info["rationale"],
+                impacted_consumers=[subscriber.get("name", "unknown") for subscriber in blast_radius],
+                transitive_consumers=transitive,
             )
             if best_result is None or result.confidence > best_result.confidence:
                 best_result = result

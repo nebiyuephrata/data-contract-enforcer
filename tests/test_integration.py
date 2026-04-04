@@ -62,7 +62,7 @@ def test_llm_schema_checks_run_on_pilot_events(apex_seed_events_path: Path, tmp_
     config = load_config()
     dataset = next(item for item in config["datasets"] if item.name == "week5_events")
     raw_records, _ = load_dataset_records(dataset)
-    checks, violations = run_llm_schema_checks(dataset.name, raw_records, tmp_path / "rates.json")
+    checks, violations = run_llm_schema_checks(dataset.name, raw_records, tmp_path / "rates.json", tmp_path / "quarantine")
     assert any(check["check"].startswith("llm_schema_") for check in checks)
     assert isinstance(violations, list)
 
@@ -80,3 +80,28 @@ def test_stress_violation_drops_score_and_mentions_business_impact(apex_seed_eve
     assert any(item.column == "payload.facts.field_confidence.total_revenue" for item in violations)
     assert report["data_health_score"] < 100
     assert any("hallucination risk" in text.lower() for text in report["business_risks"])
+    assert len(report["recommended_actions"]) == 3
+
+
+def test_invalid_llm_payload_is_quarantined_and_trend_is_reported(tmp_path: Path):
+    records = [
+        {
+            "__source_line": 7,
+            "event_type": "DecisionGenerated",
+            "payload": {
+                "application_id": "abc",
+                "recommendation": "approve",
+                "confidence": 55.0,
+                "generated_at": "2026-04-04T10:00:00Z",
+            },
+        }
+    ]
+    rate_path = tmp_path / "rates.json"
+    rate_path.write_text(
+        json.dumps({"week5_events": {"DecisionGenerated": {"violation_rate": 0.1, "generated_at": "2026-04-03T10:00:00Z"}}}),
+        encoding="utf-8",
+    )
+    checks, violations = run_llm_schema_checks("week5_events", records, rate_path, tmp_path / "quarantine")
+    assert any(check["trend"] == "rising" for check in checks)
+    assert any(item.status == "WARN" and item.category == "ai" for item in violations)
+    assert (tmp_path / "quarantine" / "week5_events-DecisionGenerated-7.json").exists()

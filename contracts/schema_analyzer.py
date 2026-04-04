@@ -7,6 +7,7 @@ from typing import Any
 import yaml
 
 from .models import SchemaChange
+from .registry import registry_migration_gate
 
 
 WIDENING_TYPES = {
@@ -67,6 +68,28 @@ def compare_contract_snapshots(dataset: str, current_path: Path, previous_path: 
     for field_name in sorted(set(current_fields) & set(previous_fields)):
         changes.extend(_compare_field(dataset, field_name, previous_fields[field_name], current_fields[field_name]))
     return changes
+
+
+def evaluate_registry_gate(dataset: str, changes: list[SchemaChange], registry: dict[str, Any]) -> dict[str, Any]:
+    breaking_changes = [
+        {
+            "dataset": change.dataset,
+            "field_name": change.field_name,
+            "change_type": change.change_type,
+            "message": change.message,
+        }
+        for change in changes
+        if change.compatibility == "BREAKING"
+    ]
+    gate = registry_migration_gate(registry, dataset, breaking_changes)
+    gate["dataset"] = dataset
+    gate["breaking_change_count"] = len(breaking_changes)
+    gate["enforcement_location"] = "producer_predeploy_gate"
+    if gate["status"] == "FAIL":
+        gate["message"] = "Breaking schema changes were detected without approved migration plans in the contract registry."
+    else:
+        gate["message"] = "Registry gate satisfied for detected schema changes."
+    return gate
 
 
 def _detect_renames(

@@ -3,7 +3,7 @@ kind: data_contract
 version: '1.0'
 dataset: week3_extractions
 source: /home/rata/Documents/Ephrata/work/10Acadamy/training/apexLedger/data/seed_events.jsonl
-generated_at: '2026-04-02T06:59:59.687788+00:00'
+generated_at: '2026-04-04T07:16:36.414530+00:00'
 lineage:
   snapshot_path: /home/rata/Documents/Ephrata/work/10Acadamy/training/data-contract-enforcer/schema_snapshots/lineage/apex_lineage_graph.json
   downstream_consumers:

@@ -4,7 +4,8 @@ from pathlib import Path
 
 import yaml
 
-from contracts.schema_analyzer import compare_contract_snapshots
+from contracts.models import SchemaChange
+from contracts.schema_analyzer import compare_contract_snapshots, evaluate_registry_gate
 
 
 def test_schema_analyzer_detects_breaking_non_nullable_addition(tmp_path: Path):
@@ -27,3 +28,22 @@ def test_schema_analyzer_detects_breaking_non_nullable_addition(tmp_path: Path):
     )
     changes = compare_contract_snapshots("demo", current, previous)
     assert any(change.change_type == "add_non_nullable_field" for change in changes)
+
+
+def test_registry_gate_fails_without_migration_plan():
+    registry = {"datasets": {"demo": {"migration_plans": []}}}
+    gate = evaluate_registry_gate(
+        "demo",
+        [
+            SchemaChange(
+                dataset="demo",
+                field_name="payload.amount",
+                compatibility="BREAKING",
+                change_type="narrow_type",
+                message="Type changed from number to integer.",
+            )
+        ],
+        registry,
+    )
+    assert gate["status"] == "FAIL"
+    assert gate["enforcement_location"] == "producer_predeploy_gate"

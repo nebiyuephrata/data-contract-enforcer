@@ -10,7 +10,7 @@ from .utils import dump_json, utc_now
 def compute_data_health_score(violations: list[Violation]) -> int:
     score = 100
     for violation in violations:
-        if violation.status == "FAIL" and violation.category in {"structural", "type", "format"}:
+        if violation.status == "FAIL" and violation.severity == "CRITICAL":
             score -= 20
         elif violation.status == "FAIL" and violation.category == "drift":
             score -= 10
@@ -50,18 +50,60 @@ def build_report_payload(
     violations: list[Violation],
     attributions: list[AttributionResult],
     schema_changes: list[SchemaChange],
+    registry_gate: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     score = compute_data_health_score(violations)
+    recommendations = build_recommended_actions(violations, attributions, schema_changes, registry_gate or [])
     return {
         "generated_at": utc_now().isoformat(),
         "data_health_score": score,
+        "validation_enforcement_location": validation_payload.get("enforcement_location", "consumer_ingestion_boundary"),
         "summary": validation_payload.get("dataset_summaries", []),
         "violations": [violation.to_dict() for violation in violations],
         "attributions": [attribution.to_dict() for attribution in attributions],
         "schema_changes": [change.to_dict() for change in schema_changes],
+        "registry_gate": registry_gate or [],
         "business_risks": build_business_narratives(violations),
         "ai_checks": validation_payload.get("ai_checks", []),
+        "recommended_actions": recommendations,
     }
+
+
+def build_recommended_actions(
+    violations: list[Violation],
+    attributions: list[AttributionResult],
+    schema_changes: list[SchemaChange],
+    registry_gate: list[dict[str, Any]],
+) -> list[str]:
+    actions: list[str] = []
+    critical_violations = [item for item in violations if item.status == "FAIL" and item.category in {"structural", "type", "format"}]
+    if critical_violations:
+        top = critical_violations[0]
+        actions.append(
+            f"Stabilize the consumer ingestion boundary for {top.dataset} by fixing the failing contract clause on {top.column or 'unknown field'} before the next downstream load."
+        )
+    failing_gate = next((item for item in registry_gate if item.get("status") == "FAIL"), None)
+    if failing_gate:
+        actions.append(
+            f"Add approved migration plans in the contract registry for {failing_gate['dataset']} before allowing producer-side schema deployment."
+        )
+    confidence_owner = next((item for item in attributions if item.confidence > 0), None)
+    if confidence_owner:
+        actions.append(
+            f"Review {confidence_owner.file_path} and the blamed commit path for {confidence_owner.column} to stop repeated contamination at the source."
+        )
+    drift_violation = next((item for item in violations if item.category == "drift" and item.status in {"WARN", "FAIL"}), None)
+    if drift_violation and len(actions) < 3:
+        actions.append(
+            f"Rebaseline or investigate the upstream process feeding {drift_violation.column or drift_violation.dataset} because silent drift has exceeded expected variance."
+        )
+    if len(actions) < 3:
+        actions.append("Increase contract registry coverage for high-value fields so blast radius is explicit before the next release.")
+    if len(actions) < 3:
+        actions.append("Confirm all consumer-ingestion validators are using the latest generated contracts and baselines before the next scheduled run.")
+    if len(actions) < 3:
+        actions.append("Review quarantine outputs and clear recurring schema failures before promoting new producer or model changes.")
+    return actions[:3]
 
 
 def write_report_outputs(report_json_path: Path, report_pdf_path: Path, payload: dict[str, Any]) -> None:
@@ -84,6 +126,9 @@ def _pdf_lines(payload: dict[str, Any]) -> list[str]:
     lines.append("Dataset Status:")
     for summary in payload.get("summary", []):
         lines.append(f"{summary['dataset']}: {summary['status']} ({summary['violation_count']} issues)")
+    lines.append("")
+    lines.append("Recommended Actions:")
+    lines.extend(payload.get("recommended_actions", []) or ["No immediate actions required."])
     return lines
 
 

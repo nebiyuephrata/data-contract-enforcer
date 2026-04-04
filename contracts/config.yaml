@@ -10,6 +10,8 @@ paths:
   attribution: validation_reports/attribution-latest.json
   report_json: enforcer_report/report.json
   report_pdf: enforcer_report/report.pdf
+  registry: contract_registry/subscriptions.yaml
+  quarantine: outputs/quarantine
 
 repositories:
   apexLedger: ../apexLedger

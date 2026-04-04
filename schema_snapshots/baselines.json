@@ -3,7 +3,7 @@
     "__source_line": {
       "column": "__source_line",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.087241+00:00",
+      "generated_at": "2026-04-04T07:16:40.942711+00:00",
       "mean": 814.56,
       "sample_size": 50,
       "stddev": 540.0317827683848
@@ -11,7 +11,7 @@
     "event_version": {
       "column": "event_version",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.087501+00:00",
+      "generated_at": "2026-04-04T07:16:40.942815+00:00",
       "mean": 1.0,
       "sample_size": 50,
       "stddev": 0.0
@@ -19,7 +19,7 @@
     "payload.facts.accounts_receivable": {
       "column": "payload.facts.accounts_receivable",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.088038+00:00",
+      "generated_at": "2026-04-04T07:16:40.943041+00:00",
       "mean": 2190496.8564,
       "sample_size": 50,
       "stddev": 1631621.897854409
@@ -27,7 +27,7 @@
     "payload.facts.cash_and_equivalents": {
       "column": "payload.facts.cash_and_equivalents",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.088566+00:00",
+      "generated_at": "2026-04-04T07:16:40.943236+00:00",
       "mean": 1865996.316,
       "sample_size": 50,
       "stddev": 1598045.7846267386
@@ -35,7 +35,7 @@
     "payload.facts.current_assets": {
       "column": "payload.facts.current_assets",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.089098+00:00",
+      "generated_at": "2026-04-04T07:16:40.943426+00:00",
       "mean": 6773796.7628,
       "sample_size": 50,
       "stddev": 4972857.75647881
@@ -43,7 +43,7 @@
     "payload.facts.current_liabilities": {
       "column": "payload.facts.current_liabilities",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.089622+00:00",
+      "generated_at": "2026-04-04T07:16:40.943729+00:00",
       "mean": 3298507.3308,
       "sample_size": 50,
       "stddev": 2432331.5472133895
@@ -51,7 +51,7 @@
     "payload.facts.current_ratio": {
       "column": "payload.facts.current_ratio",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.089845+00:00",
+      "generated_at": "2026-04-04T07:16:40.943875+00:00",
       "mean": 2.0968,
       "sample_size": 50,
       "stddev": 0.43936973040936717
@@ -59,7 +59,7 @@
     "payload.facts.debt_to_ebitda": {
       "column": "payload.facts.debt_to_ebitda",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.090047+00:00",
+      "generated_at": "2026-04-04T07:16:40.944077+00:00",
       "mean": 7.2148,
       "sample_size": 50,
       "stddev": 5.436665978336356
@@ -67,7 +67,7 @@
     "payload.facts.debt_to_equity": {
       "column": "payload.facts.debt_to_equity",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.090249+00:00",
+      "generated_at": "2026-04-04T07:16:40.944169+00:00",
       "mean": 0.7968,
       "sample_size": 50,
       "stddev": 0.36252139247222365
@@ -75,7 +75,7 @@
     "payload.facts.depreciation_amortization": {
       "column": "payload.facts.depreciation_amortization",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.090764+00:00",
+      "generated_at": "2026-04-04T07:16:40.944430+00:00",
       "mean": 271818.5068,
       "sample_size": 50,
       "stddev": 199888.78299761706
@@ -83,7 +83,7 @@
     "payload.facts.ebitda": {
       "column": "payload.facts.ebitda",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.091081+00:00",
+      "generated_at": "2026-04-04T07:16:40.944557+00:00",
       "mean": 1149279.1392,
       "sample_size": 25,
       "stddev": 880979.3331262807
@@ -91,7 +91,7 @@
     "payload.facts.field_confidence.net_income": {
       "column": "payload.facts.field_confidence.net_income",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.091287+00:00",
+      "generated_at": "2026-04-04T07:16:40.944650+00:00",
       "mean": 0.8822309817215591,
       "sample_size": 50,
       "stddev": 0.03830243110445218
@@ -99,7 +99,7 @@
     "payload.facts.field_confidence.total_assets": {
       "column": "payload.facts.field_confidence.total_assets",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.091502+00:00",
+      "generated_at": "2026-04-04T07:16:40.944722+00:00",
       "mean": 0.9247027891323012,
       "sample_size": 50,
       "stddev": 0.02239550887168622
@@ -107,7 +107,7 @@
     "payload.facts.field_confidence.total_revenue": {
       "column": "payload.facts.field_confidence.total_revenue",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.091707+00:00",
+      "generated_at": "2026-04-04T07:16:40.944799+00:00",
       "mean": 0.9331047518188438,
       "sample_size": 50,
       "stddev": 0.025834679097369008
@@ -115,7 +115,7 @@
     "payload.facts.gross_margin": {
       "column": "payload.facts.gross_margin",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.091915+00:00",
+      "generated_at": "2026-04-04T07:16:40.944873+00:00",
       "mean": 0.386,
       "sample_size": 50,
       "stddev": 0.15864425612041552
@@ -123,7 +123,7 @@
     "payload.facts.gross_profit": {
       "column": "payload.facts.gross_profit",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.092410+00:00",
+      "generated_at": "2026-04-04T07:16:40.945107+00:00",
       "mean": 3309029.2048,
       "sample_size": 50,
       "stddev": 2753275.9210733133
@@ -131,7 +131,7 @@
     "payload.facts.interest_coverage": {
       "column": "payload.facts.interest_coverage",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.092630+00:00",
+      "generated_at": "2026-04-04T07:16:40.945185+00:00",
       "mean": 3.4256,
       "sample_size": 50,
       "stddev": 1.545846253674666
@@ -139,7 +139,7 @@
     "payload.facts.interest_expense": {
       "column": "payload.facts.interest_expense",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.093128+00:00",
+      "generated_at": "2026-04-04T07:16:40.945371+00:00",
       "mean": 280288.5172,
       "sample_size": 50,
       "stddev": 223905.1586333641
@@ -147,7 +147,7 @@
     "payload.facts.inventory": {
       "column": "payload.facts.inventory",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.093633+00:00",
+      "generated_at": "2026-04-04T07:16:40.945560+00:00",
       "mean": 2002957.1072,
       "sample_size": 50,
       "stddev": 1440146.8703420681
@@ -155,7 +155,7 @@
     "payload.facts.long_term_debt": {
       "column": "payload.facts.long_term_debt",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.094134+00:00",
+      "generated_at": "2026-04-04T07:16:40.945748+00:00",
       "mean": 4014108.0092,
       "sample_size": 50,
       "stddev": 3322216.8587950226
@@ -163,7 +163,7 @@
     "payload.facts.net_income": {
       "column": "payload.facts.net_income",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.094655+00:00",
+      "generated_at": "2026-04-04T07:16:40.945947+00:00",
       "mean": 451514.0964,
       "sample_size": 50,
       "stddev": 420798.28856094036
@@ -171,7 +171,7 @@
     "payload.facts.net_margin": {
       "column": "payload.facts.net_margin",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.094854+00:00",
+      "generated_at": "2026-04-04T07:16:40.946020+00:00",
       "mean": 0.0564,
       "sample_size": 50,
       "stddev": 0.03686515970398067
@@ -179,7 +179,7 @@
     "payload.facts.operating_cash_flow": {
       "column": "payload.facts.operating_cash_flow",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.095363+00:00",
+      "generated_at": "2026-04-04T07:16:40.946208+00:00",
       "mean": 861455.876,
       "sample_size": 50,
       "stddev": 716592.3308974762
@@ -187,7 +187,7 @@
     "payload.facts.operating_income": {
       "column": "payload.facts.operating_income",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.095881+00:00",
+      "generated_at": "2026-04-04T07:16:40.946396+00:00",
       "mean": 877460.6332,
       "sample_size": 50,
       "stddev": 730295.6687896962
@@ -195,7 +195,7 @@
     "payload.facts.total_assets": {
       "column": "payload.facts.total_assets",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.096394+00:00",
+      "generated_at": "2026-04-04T07:16:40.946595+00:00",
       "mean": 16772248.1944,
       "sample_size": 50,
       "stddev": 13859616.120931642
@@ -203,7 +203,7 @@
     "payload.facts.total_equity": {
       "column": "payload.facts.total_equity",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.096932+00:00",
+      "generated_at": "2026-04-04T07:16:40.946792+00:00",
       "mean": 9257766.7184,
       "sample_size": 50,
       "stddev": 7555667.135442747
@@ -211,7 +211,7 @@
     "payload.facts.total_liabilities": {
       "column": "payload.facts.total_liabilities",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.097469+00:00",
+      "generated_at": "2026-04-04T07:16:40.946990+00:00",
       "mean": 7514481.4784,
       "sample_size": 50,
       "stddev": 6982877.448260393
@@ -219,7 +219,7 @@
     "payload.facts.total_revenue": {
       "column": "payload.facts.total_revenue",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.097967+00:00",
+      "generated_at": "2026-04-04T07:16:40.947170+00:00",
       "mean": 8503581.0164,
       "sample_size": 50,
       "stddev": 5835523.806139405
@@ -227,7 +227,7 @@
     "payload.processing_ms": {
       "column": "payload.processing_ms",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.098156+00:00",
+      "generated_at": "2026-04-04T07:16:40.947235+00:00",
       "mean": 5255.52,
       "sample_size": 50,
       "stddev": 1817.5228883290577
@@ -235,7 +235,7 @@
     "payload.raw_text_length": {
       "column": "payload.raw_text_length",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.098333+00:00",
+      "generated_at": "2026-04-04T07:16:40.947298+00:00",
       "mean": 3912.24,
       "sample_size": 50,
       "stddev": 1107.4555442093376
@@ -243,7 +243,7 @@
     "payload.tables_extracted": {
       "column": "payload.tables_extracted",
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:22.098536+00:00",
+      "generated_at": "2026-04-04T07:16:40.947360+00:00",
       "mean": 3.38,
       "sample_size": 50,
       "stddev": 1.0934349546269315
@@ -253,7 +253,7 @@
     "__source_line": {
       "column": "__source_line",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.897482+00:00",
+      "generated_at": "2026-04-04T07:16:41.374698+00:00",
       "mean": 924.0,
       "sample_size": 1847,
       "stddev": 533.1828954495821
@@ -261,7 +261,7 @@
     "event_version": {
       "column": "event_version",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.903025+00:00",
+      "generated_at": "2026-04-04T07:16:41.380523+00:00",
       "mean": 1.0194910665944776,
       "sample_size": 1847,
       "stddev": 0.13824313696342097
@@ -269,7 +269,7 @@
     "payload.analysis_duration_ms": {
       "column": "payload.analysis_duration_ms",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.905299+00:00",
+      "generated_at": "2026-04-04T07:16:41.382756+00:00",
       "mean": 30414.285714285714,
       "sample_size": 21,
       "stddev": 8246.552307842738
@@ -277,7 +277,7 @@
     "payload.anomalies_found": {
       "column": "payload.anomalies_found",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.908279+00:00",
+      "generated_at": "2026-04-04T07:16:41.384366+00:00",
       "mean": 0.0,
       "sample_size": 18,
       "stddev": 0.0
@@ -285,7 +285,7 @@
     "payload.approved_amount_usd": {
       "column": "payload.approved_amount_usd",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.911658+00:00",
+      "generated_at": "2026-04-04T07:16:41.386427+00:00",
       "mean": 1051000.0,
       "sample_size": 24,
       "stddev": 626570.5600063466
@@ -293,7 +293,7 @@
     "payload.confidence": {
       "column": "payload.confidence",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.914611+00:00",
+      "generated_at": "2026-04-04T07:16:41.388738+00:00",
       "mean": 0.78,
       "sample_size": 15,
       "stddev": 0.06592925501373928
@@ -301,7 +301,7 @@
     "payload.context_token_count": {
       "column": "payload.context_token_count",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.917619+00:00",
+      "generated_at": "2026-04-04T07:16:41.391099+00:00",
       "mean": 1618.0736842105264,
       "sample_size": 95,
       "stddev": 714.8295084491018
@@ -309,7 +309,7 @@
     "payload.decision.confidence": {
       "column": "payload.decision.confidence",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.920650+00:00",
+      "generated_at": "2026-04-04T07:16:41.393205+00:00",
       "mean": 0.7576190476190476,
       "sample_size": 21,
       "stddev": 0.041277777014798754
@@ -317,7 +317,7 @@
     "payload.decision.recommended_limit_usd": {
       "column": "payload.decision.recommended_limit_usd",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.924301+00:00",
+      "generated_at": "2026-04-04T07:16:41.395652+00:00",
       "mean": 1477761.9047619049,
       "sample_size": 21,
       "stddev": 1048378.2443901903
@@ -325,7 +325,7 @@
     "payload.documents_processed": {
       "column": "payload.documents_processed",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.927204+00:00",
+      "generated_at": "2026-04-04T07:16:41.397168+00:00",
       "mean": 3.0,
       "sample_size": 25,
       "stddev": 0.0
@@ -333,7 +333,7 @@
     "payload.duration_ms": {
       "column": "payload.duration_ms",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.931132+00:00",
+      "generated_at": "2026-04-04T07:16:41.399633+00:00",
       "mean": 1476.54375,
       "sample_size": 480,
       "stddev": 2894.0775865986393
@@ -341,7 +341,7 @@
     "payload.facts.accounts_receivable": {
       "column": "payload.facts.accounts_receivable",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.934855+00:00",
+      "generated_at": "2026-04-04T07:16:41.402066+00:00",
       "mean": 2190496.8564,
       "sample_size": 50,
       "stddev": 1631621.897854409
@@ -349,7 +349,7 @@
     "payload.facts.cash_and_equivalents": {
       "column": "payload.facts.cash_and_equivalents",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.938324+00:00",
+      "generated_at": "2026-04-04T07:16:41.404287+00:00",
       "mean": 1865996.316,
       "sample_size": 50,
       "stddev": 1598045.7846267386
@@ -357,7 +357,7 @@
     "payload.facts.current_assets": {
       "column": "payload.facts.current_assets",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.942127+00:00",
+      "generated_at": "2026-04-04T07:16:41.406575+00:00",
       "mean": 6773796.7628,
       "sample_size": 50,
       "stddev": 4972857.75647881
@@ -365,7 +365,7 @@
     "payload.facts.current_liabilities": {
       "column": "payload.facts.current_liabilities",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.945659+00:00",
+      "generated_at": "2026-04-04T07:16:41.408409+00:00",
       "mean": 3298507.3308,
       "sample_size": 50,
       "stddev": 2432331.5472133895
@@ -373,7 +373,7 @@
     "payload.facts.current_ratio": {
       "column": "payload.facts.current_ratio",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.949004+00:00",
+      "generated_at": "2026-04-04T07:16:41.409889+00:00",
       "mean": 2.0968,
       "sample_size": 50,
       "stddev": 0.43936973040936717
@@ -381,7 +381,7 @@
     "payload.facts.debt_to_ebitda": {
       "column": "payload.facts.debt_to_ebitda",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.952256+00:00",
+      "generated_at": "2026-04-04T07:16:41.411421+00:00",
       "mean": 7.2148,
       "sample_size": 50,
       "stddev": 5.436665978336356
@@ -389,7 +389,7 @@
     "payload.facts.debt_to_equity": {
       "column": "payload.facts.debt_to_equity",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.955395+00:00",
+      "generated_at": "2026-04-04T07:16:41.412891+00:00",
       "mean": 0.7968,
       "sample_size": 50,
       "stddev": 0.36252139247222365
@@ -397,7 +397,7 @@
     "payload.facts.depreciation_amortization": {
       "column": "payload.facts.depreciation_amortization",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.959176+00:00",
+      "generated_at": "2026-04-04T07:16:41.414440+00:00",
       "mean": 271818.5068,
       "sample_size": 50,
       "stddev": 199888.78299761706
@@ -405,7 +405,7 @@
     "payload.facts.ebitda": {
       "column": "payload.facts.ebitda",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.962784+00:00",
+      "generated_at": "2026-04-04T07:16:41.416238+00:00",
       "mean": 1149279.1392,
       "sample_size": 25,
       "stddev": 880979.3331262807
@@ -413,7 +413,7 @@
     "payload.facts.field_confidence.net_income": {
       "column": "payload.facts.field_confidence.net_income",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.966039+00:00",
+      "generated_at": "2026-04-04T07:16:41.417582+00:00",
       "mean": 0.8822309817215591,
       "sample_size": 50,
       "stddev": 0.03830243110445218
@@ -421,7 +421,7 @@
     "payload.facts.field_confidence.total_assets": {
       "column": "payload.facts.field_confidence.total_assets",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.969349+00:00",
+      "generated_at": "2026-04-04T07:16:41.418974+00:00",
       "mean": 0.9247027891323012,
       "sample_size": 50,
       "stddev": 0.02239550887168622
@@ -429,7 +429,7 @@
     "payload.facts.field_confidence.total_revenue": {
       "column": "payload.facts.field_confidence.total_revenue",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.972644+00:00",
+      "generated_at": "2026-04-04T07:16:41.420188+00:00",
       "mean": 0.9331047518188438,
       "sample_size": 50,
       "stddev": 0.025834679097369008
@@ -437,7 +437,7 @@
     "payload.facts.gross_margin": {
       "column": "payload.facts.gross_margin",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.975763+00:00",
+      "generated_at": "2026-04-04T07:16:41.422070+00:00",
       "mean": 0.386,
       "sample_size": 50,
       "stddev": 0.15864425612041552
@@ -445,7 +445,7 @@
     "payload.facts.gross_profit": {
       "column": "payload.facts.gross_profit",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.979215+00:00",
+      "generated_at": "2026-04-04T07:16:41.424708+00:00",
       "mean": 3309029.2048,
       "sample_size": 50,
       "stddev": 2753275.9210733133
@@ -453,7 +453,7 @@
     "payload.facts.interest_coverage": {
       "column": "payload.facts.interest_coverage",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.982353+00:00",
+      "generated_at": "2026-04-04T07:16:41.426729+00:00",
       "mean": 3.4256,
       "sample_size": 50,
       "stddev": 1.545846253674666
@@ -461,7 +461,7 @@
     "payload.facts.interest_expense": {
       "column": "payload.facts.interest_expense",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.985926+00:00",
+      "generated_at": "2026-04-04T07:16:41.428956+00:00",
       "mean": 280288.5172,
       "sample_size": 50,
       "stddev": 223905.1586333641
@@ -469,7 +469,7 @@
     "payload.facts.inventory": {
       "column": "payload.facts.inventory",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.989362+00:00",
+      "generated_at": "2026-04-04T07:16:41.431164+00:00",
       "mean": 2002957.1072,
       "sample_size": 50,
       "stddev": 1440146.8703420681
@@ -477,7 +477,7 @@
     "payload.facts.long_term_debt": {
       "column": "payload.facts.long_term_debt",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.992817+00:00",
+      "generated_at": "2026-04-04T07:16:41.432445+00:00",
       "mean": 4014108.0092,
       "sample_size": 50,
       "stddev": 3322216.8587950226
@@ -485,7 +485,7 @@
     "payload.facts.net_income": {
       "column": "payload.facts.net_income",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.996332+00:00",
+      "generated_at": "2026-04-04T07:16:41.433738+00:00",
       "mean": 451514.0964,
       "sample_size": 50,
       "stddev": 420798.28856094036
@@ -493,7 +493,7 @@
     "payload.facts.net_margin": {
       "column": "payload.facts.net_margin",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:22.999296+00:00",
+      "generated_at": "2026-04-04T07:16:41.435061+00:00",
       "mean": 0.0564,
       "sample_size": 50,
       "stddev": 0.03686515970398067
@@ -501,7 +501,7 @@
     "payload.facts.operating_cash_flow": {
       "column": "payload.facts.operating_cash_flow",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.002700+00:00",
+      "generated_at": "2026-04-04T07:16:41.436348+00:00",
       "mean": 861455.876,
       "sample_size": 50,
       "stddev": 716592.3308974762
@@ -509,7 +509,7 @@
     "payload.facts.operating_income": {
       "column": "payload.facts.operating_income",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.006062+00:00",
+      "generated_at": "2026-04-04T07:16:41.437572+00:00",
       "mean": 877460.6332,
       "sample_size": 50,
       "stddev": 730295.6687896962
@@ -517,7 +517,7 @@
     "payload.facts.total_assets": {
       "column": "payload.facts.total_assets",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.009566+00:00",
+      "generated_at": "2026-04-04T07:16:41.438786+00:00",
       "mean": 16772248.1944,
       "sample_size": 50,
       "stddev": 13859616.120931642
@@ -525,7 +525,7 @@
     "payload.facts.total_equity": {
       "column": "payload.facts.total_equity",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.013399+00:00",
+      "generated_at": "2026-04-04T07:16:41.439933+00:00",
       "mean": 9257766.7184,
       "sample_size": 50,
       "stddev": 7555667.135442747
@@ -533,7 +533,7 @@
     "payload.facts.total_liabilities": {
       "column": "payload.facts.total_liabilities",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.016855+00:00",
+      "generated_at": "2026-04-04T07:16:41.441122+00:00",
       "mean": 7514481.4784,
       "sample_size": 50,
       "stddev": 6982877.448260393
@@ -541,7 +541,7 @@
     "payload.facts.total_revenue": {
       "column": "payload.facts.total_revenue",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.020578+00:00",
+      "generated_at": "2026-04-04T07:16:41.442396+00:00",
       "mean": 8503581.0164,
       "sample_size": 50,
       "stddev": 5835523.806139405
@@ -549,7 +549,7 @@
     "payload.file_size_bytes": {
       "column": "payload.file_size_bytes",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.024186+00:00",
+      "generated_at": "2026-04-04T07:16:41.443926+00:00",
       "mean": 197821.2258064516,
       "sample_size": 124,
       "stddev": 93069.06588327023
@@ -557,7 +557,7 @@
     "payload.fiscal_year": {
       "column": "payload.fiscal_year",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.027484+00:00",
+      "generated_at": "2026-04-04T07:16:41.445126+00:00",
       "mean": 2024.0,
       "sample_size": 93,
       "stddev": 0.0
@@ -565,7 +565,7 @@
     "payload.fraud_score": {
       "column": "payload.fraud_score",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.030592+00:00",
+      "generated_at": "2026-04-04T07:16:41.446227+00:00",
       "mean": 0.1411111111111111,
       "sample_size": 18,
       "stddev": 0.03195289743232979
@@ -573,7 +573,7 @@
     "payload.interest_rate_pct": {
       "column": "payload.interest_rate_pct",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.033346+00:00",
+      "generated_at": "2026-04-04T07:16:41.447179+00:00",
       "mean": 7.225833333333333,
       "sample_size": 12,
       "stddev": 1.1198248250904643
@@ -581,7 +581,7 @@
     "payload.llm_cost_usd": {
       "column": "payload.llm_cost_usd",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.036516+00:00",
+      "generated_at": "2026-04-04T07:16:41.448163+00:00",
       "mean": 0.014108354430379747,
       "sample_size": 79,
       "stddev": 0.0034437916513154867
@@ -589,7 +589,7 @@
     "payload.llm_tokens_input": {
       "column": "payload.llm_tokens_input",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.039829+00:00",
+      "generated_at": "2026-04-04T07:16:41.449291+00:00",
       "mean": 2055.4430379746836,
       "sample_size": 79,
       "stddev": 788.0681514388776
@@ -597,7 +597,7 @@
     "payload.llm_tokens_output": {
       "column": "payload.llm_tokens_output",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.043032+00:00",
+      "generated_at": "2026-04-04T07:16:41.450346+00:00",
       "mean": 529.4683544303797,
       "sample_size": 79,
       "stddev": 189.9712726745702
@@ -605,7 +605,7 @@
     "payload.loan_term_months": {
       "column": "payload.loan_term_months",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.045991+00:00",
+      "generated_at": "2026-04-04T07:16:41.451395+00:00",
       "mean": 39.78947368421053,
       "sample_size": 38,
       "stddev": 14.065931021886371
@@ -613,7 +613,7 @@
     "payload.node_sequence": {
       "column": "payload.node_sequence",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.050079+00:00",
+      "generated_at": "2026-04-04T07:16:41.452666+00:00",
       "mean": 3.2375,
       "sample_size": 480,
       "stddev": 1.7398066223961022
@@ -621,7 +621,7 @@
     "payload.overall_confidence": {
       "column": "payload.overall_confidence",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.053054+00:00",
+      "generated_at": "2026-04-04T07:16:41.453570+00:00",
       "mean": 0.8740392352329206,
       "sample_size": 25,
       "stddev": 0.04908823986611192
@@ -629,7 +629,7 @@
     "payload.page_count": {
       "column": "payload.page_count",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.056762+00:00",
+      "generated_at": "2026-04-04T07:16:41.454399+00:00",
       "mean": 3.68,
       "sample_size": 50,
       "stddev": 1.1906300852909772
@@ -637,7 +637,7 @@
     "payload.processing_ms": {
       "column": "payload.processing_ms",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.060351+00:00",
+      "generated_at": "2026-04-04T07:16:41.455428+00:00",
       "mean": 5255.52,
       "sample_size": 50,
       "stddev": 1817.5228883290577
@@ -645,7 +645,7 @@
     "payload.quality_flag_count": {
       "column": "payload.quality_flag_count",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.063849+00:00",
+      "generated_at": "2026-04-04T07:16:41.456775+00:00",
       "mean": 0.0,
       "sample_size": 25,
       "stddev": 0.0
@@ -653,7 +653,7 @@
     "payload.raw_text_length": {
       "column": "payload.raw_text_length",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.067366+00:00",
+      "generated_at": "2026-04-04T07:16:41.457878+00:00",
       "mean": 3912.24,
       "sample_size": 50,
       "stddev": 1107.4555442093376
@@ -661,7 +661,7 @@
     "payload.requested_amount_usd": {
       "column": "payload.requested_amount_usd",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.071291+00:00",
+      "generated_at": "2026-04-04T07:16:41.459210+00:00",
       "mean": 1730578.9473684211,
       "sample_size": 38,
       "stddev": 1329392.8695694325
@@ -669,7 +669,7 @@
     "payload.rules_evaluated": {
       "column": "payload.rules_evaluated",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.074793+00:00",
+      "generated_at": "2026-04-04T07:16:41.460031+00:00",
       "mean": 5.8125,
       "sample_size": 16,
       "stddev": 0.7261843774138906
@@ -677,7 +677,7 @@
     "payload.rules_failed": {
       "column": "payload.rules_failed",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.078109+00:00",
+      "generated_at": "2026-04-04T07:16:41.460852+00:00",
       "mean": 0.1875,
       "sample_size": 16,
       "stddev": 0.3903123748998999
@@ -685,7 +685,7 @@
     "payload.rules_noted": {
       "column": "payload.rules_noted",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.081555+00:00",
+      "generated_at": "2026-04-04T07:16:41.461640+00:00",
       "mean": 0.9375,
       "sample_size": 16,
       "stddev": 0.24206145913796356
@@ -693,7 +693,7 @@
     "payload.rules_passed": {
       "column": "payload.rules_passed",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.084853+00:00",
+      "generated_at": "2026-04-04T07:16:41.462486+00:00",
       "mean": 4.6875,
       "sample_size": 16,
       "stddev": 0.7680128579652817
@@ -701,7 +701,7 @@
     "payload.tables_extracted": {
       "column": "payload.tables_extracted",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.088404+00:00",
+      "generated_at": "2026-04-04T07:16:41.463436+00:00",
       "mean": 3.38,
       "sample_size": 50,
       "stddev": 1.0934349546269315
@@ -709,7 +709,7 @@
     "payload.term_months": {
       "column": "payload.term_months",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.091930+00:00",
+      "generated_at": "2026-04-04T07:16:41.464384+00:00",
       "mean": 41.0,
       "sample_size": 12,
       "stddev": 15.066519173319364
@@ -717,7 +717,7 @@
     "payload.tool_duration_ms": {
       "column": "payload.tool_duration_ms",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.095511+00:00",
+      "generated_at": "2026-04-04T07:16:41.465458+00:00",
       "mean": 3487.394366197183,
       "sample_size": 71,
       "stddev": 2563.7467491488073
@@ -725,7 +725,7 @@
     "payload.total_cost_usd": {
       "column": "payload.total_cost_usd",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.099366+00:00",
+      "generated_at": "2026-04-04T07:16:41.466541+00:00",
       "mean": 0.023176947368421054,
       "sample_size": 95,
       "stddev": 0.01651059424310306
@@ -733,7 +733,7 @@
     "payload.total_duration_ms": {
       "column": "payload.total_duration_ms",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.103113+00:00",
+      "generated_at": "2026-04-04T07:16:41.467625+00:00",
       "mean": 24066.35789473684,
       "sample_size": 95,
       "stddev": 14247.237475470032
@@ -741,7 +741,7 @@
     "payload.total_llm_calls": {
       "column": "payload.total_llm_calls",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.106794+00:00",
+      "generated_at": "2026-04-04T07:16:41.468929+00:00",
       "mean": 0.8315789473684211,
       "sample_size": 95,
       "stddev": 0.37423976493960376
@@ -749,7 +749,7 @@
     "payload.total_nodes_executed": {
       "column": "payload.total_nodes_executed",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.110440+00:00",
+      "generated_at": "2026-04-04T07:16:41.469882+00:00",
       "mean": 5.08421052631579,
       "sample_size": 95,
       "stddev": 1.4485067294121745
@@ -757,7 +757,7 @@
     "payload.total_tokens_used": {
       "column": "payload.total_tokens_used",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.113851+00:00",
+      "generated_at": "2026-04-04T07:16:41.471135+00:00",
       "mean": 2690.8315789473686,
       "sample_size": 95,
       "stddev": 1656.6454034243359
@@ -765,7 +765,7 @@
     "payload.validation_duration_ms": {
       "column": "payload.validation_duration_ms",
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:23.117496+00:00",
+      "generated_at": "2026-04-04T07:16:41.472450+00:00",
       "mean": 136.1578947368421,
       "sample_size": 95,
       "stddev": 58.437607896118564

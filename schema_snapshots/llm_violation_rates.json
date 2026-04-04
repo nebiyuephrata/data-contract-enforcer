@@ -1,15 +1,15 @@
 {
   "week5_events": {
     "CreditAnalysisCompleted": {
-      "generated_at": "2026-04-02T07:00:02.548586+00:00",
+      "generated_at": "2026-04-04T07:16:49.285370+00:00",
       "violation_rate": 0.0
     },
     "DecisionGenerated": {
-      "generated_at": "2026-04-02T07:00:02.548600+00:00",
+      "generated_at": "2026-04-04T07:16:49.285386+00:00",
       "violation_rate": 0.0
     },
     "QualityAssessmentCompleted": {
-      "generated_at": "2026-04-02T07:00:02.548548+00:00",
+      "generated_at": "2026-04-04T07:16:49.285330+00:00",
       "violation_rate": 0.0
     }
   }

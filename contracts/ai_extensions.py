@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
+import json
 import os
 from pathlib import Path
 from typing import Any
@@ -203,10 +204,12 @@ def run_llm_schema_checks(
     dataset_name: str,
     raw_records: list[dict[str, Any]],
     rate_path: Path,
+    quarantine_dir: Path,
 ) -> tuple[list[dict[str, Any]], list[Violation]]:
     counts = defaultdict(lambda: {"valid": 0, "invalid": 0})
     violations: list[Violation] = []
     checks: list[dict[str, Any]] = []
+    quarantine_dir.mkdir(parents=True, exist_ok=True)
     for record in raw_records:
         event_type = record.get("event_type")
         schema = LLM_EVENT_SCHEMAS.get(event_type)
@@ -218,6 +221,9 @@ def run_llm_schema_checks(
             counts[event_type]["valid"] += 1
         except ValidationError as exc:
             counts[event_type]["invalid"] += 1
+            quarantine_path = quarantine_dir / f"{dataset_name}-{event_type}-{record.get('__source_line', 'unknown')}.json"
+            quarantine_path.write_text(json.dumps(record, indent=2, sort_keys=True), encoding="utf-8")
+            error_message = getattr(exc, "message", str(exc))
             violations.append(
                 Violation(
                     dataset=dataset_name,
@@ -225,25 +231,43 @@ def run_llm_schema_checks(
                     status="FAIL",
                     severity="HIGH",
                     category="ai",
-                    message=f"LLM payload schema violation: {exc.message}",
+                    message=f"LLM payload schema violation: {error_message}",
                     row_locator=f"event_type={event_type}, source_line={record.get('__source_line')}",
                 )
             )
     history = {}
     if rate_path.exists():
-        history = __import__("json").loads(rate_path.read_text(encoding="utf-8"))
+        history = json.loads(rate_path.read_text(encoding="utf-8"))
     for event_type, totals in counts.items():
         total = totals["valid"] + totals["invalid"]
         rate = 0.0 if total == 0 else totals["invalid"] / total
+        previous_rate = ((history.get(dataset_name) or {}).get(event_type) or {}).get("violation_rate")
+        is_rising = previous_rate is not None and rate > previous_rate
         checks.append(
             {
                 "dataset": dataset_name,
                 "check": f"llm_schema_{event_type}",
                 "status": "PASS" if totals["invalid"] == 0 else "FAIL",
                 "violation_rate": rate,
+                "previous_violation_rate": previous_rate,
+                "trend": "rising" if is_rising else "stable",
                 "total": total,
             }
         )
+        if is_rising:
+            violations.append(
+                Violation(
+                    dataset=dataset_name,
+                    column=f"payload ({event_type})",
+                    status="WARN",
+                    severity="MEDIUM",
+                    category="ai",
+                    message=(
+                        f"LLM schema violation rate for {event_type} is rising from "
+                        f"{previous_rate:.2%} to {rate:.2%}."
+                    ),
+                )
+            )
         history.setdefault(dataset_name, {})[event_type] = {
             "violation_rate": rate,
             "generated_at": utc_now().isoformat(),

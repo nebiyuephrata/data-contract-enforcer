@@ -12,14 +12,14 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
 endobj
 5 0 obj
-<< /Length 508 >>
+<< /Length 949 >>
 stream
 BT
 /F1 12 Tf
 72 760 Td
 (Data Contract Enforcer Report) Tj
 0 -16 Td
-(Generated: 2026-04-02T02:52:46.995081+00:00) Tj
+(Generated: 2026-04-04T07:17:06.031188+00:00) Tj
 0 -16 Td
 (Data Health Score: 70) Tj
 0 -16 Td
@@ -36,6 +36,16 @@ BT
 (week3_extractions: PASS \(0 issues\)) Tj
 0 -16 Td
 (week5_events: PASS \(0 issues\)) Tj
+0 -16 Td
+() Tj
+0 -16 Td
+(Recommended Actions:) Tj
+0 -16 Td
+(Increase contract registry coverage for high-value fields so blast radius is explicit before the next release.) Tj
+0 -16 Td
+(Confirm all consumer-ingestion validators are using the latest generated contracts and baselines before the next scheduled run.) Tj
+0 -16 Td
+(Review quarantine outputs and clear recurring schema failures before promoting new producer or model changes.) Tj
 ET
 endstream
 endobj
@@ -50,5 +60,5 @@ xref
 trailer
 << /Size 6 /Root 1 0 R >>
 startxref
-870
+1311
 %%EOF

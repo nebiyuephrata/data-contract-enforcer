@@ -44,6 +44,8 @@ class AttributionResult:
     confidence: float
     lineage_hops: int
     rationale: str
+    impacted_consumers: list[str] = field(default_factory=list)
+    transitive_consumers: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)

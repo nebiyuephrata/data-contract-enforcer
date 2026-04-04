@@ -34,7 +34,10 @@ def ensure_artifact_dirs(root: Path | None = None) -> None:
         "schema_snapshots",
         "schema_snapshots/contracts",
         "schema_snapshots/lineage",
+        "contract_registry",
         "enforcer_report",
+        "outputs",
+        "outputs/quarantine",
     ):
         (base / relative).mkdir(parents=True, exist_ok=True)
 

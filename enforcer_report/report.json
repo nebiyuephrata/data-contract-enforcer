@@ -15,22 +15,28 @@
     {
       "check": "llm_schema_QualityAssessmentCompleted",
       "dataset": "week5_events",
+      "previous_violation_rate": 0.0,
       "status": "PASS",
       "total": 25,
+      "trend": "stable",
       "violation_rate": 0.0
     },
     {
       "check": "llm_schema_CreditAnalysisCompleted",
       "dataset": "week5_events",
+      "previous_violation_rate": 0.0,
       "status": "PASS",
       "total": 21,
+      "trend": "stable",
       "violation_rate": 0.0
     },
     {
       "check": "llm_schema_DecisionGenerated",
       "dataset": "week5_events",
+      "previous_violation_rate": 0.0,
       "status": "PASS",
       "total": 15,
+      "trend": "stable",
       "violation_rate": 0.0
     }
   ],
@@ -39,24 +45,48 @@
     "The enforcer encountered an operational error around unknown field, which reduces confidence in monitoring coverage until the underlying issue is fixed."
   ],
   "data_health_score": 70,
-  "generated_at": "2026-04-02T02:52:46.995081+00:00",
+  "generated_at": "2026-04-04T07:17:06.031188+00:00",
+  "recommended_actions": [
+    "Increase contract registry coverage for high-value fields so blast radius is explicit before the next release.",
+    "Confirm all consumer-ingestion validators are using the latest generated contracts and baselines before the next scheduled run.",
+    "Review quarantine outputs and clear recurring schema failures before promoting new producer or model changes."
+  ],
+  "registry_gate": [
+    {
+      "breaking_change_count": 0,
+      "dataset": "week3_extractions",
+      "enforcement_location": "producer_predeploy_gate",
+      "message": "Registry gate satisfied for detected schema changes.",
+      "missing_plans": [],
+      "status": "PASS"
+    },
+    {
+      "breaking_change_count": 0,
+      "dataset": "week5_events",
+      "enforcement_location": "producer_predeploy_gate",
+      "message": "Registry gate satisfied for detected schema changes.",
+      "missing_plans": [],
+      "status": "PASS"
+    }
+  ],
   "schema_changes": [],
   "summary": [
     {
       "dataset": "week3_extractions",
-      "generated_at": "2026-04-02T02:52:35.113792+00:00",
+      "generated_at": "2026-04-04T07:16:47.572635+00:00",
       "record_count": 50,
       "status": "PASS",
       "violation_count": 0
     },
     {
       "dataset": "week5_events",
-      "generated_at": "2026-04-02T02:52:36.505358+00:00",
+      "generated_at": "2026-04-04T07:16:48.816702+00:00",
       "record_count": 1847,
       "status": "PASS",
       "violation_count": 0
     }
   ],
+  "validation_enforcement_location": "consumer_ingestion_boundary",
   "violations": [
     {
       "actual": null,
