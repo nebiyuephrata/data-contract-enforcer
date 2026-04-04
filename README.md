@@ -24,6 +24,11 @@ tests/                 unit and integration tests
 ```bash
 python3 -m venv .venv
 .venv/bin/pip install -e ".[dev]"
+cp .env.example .env
+# edit .env, then load it into your shell:
+set -a
+source .env
+set +a
 ```
 
 ## Embedding Providers

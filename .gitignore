@@ -6,6 +6,7 @@ __pycache__/
 .qodo/
 .codex
 *.egg-info/
+.env
 
 validation_reports/*
 !validation_reports/.gitkeep
